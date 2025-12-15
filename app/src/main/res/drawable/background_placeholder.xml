@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Placeholder background drawable
+
+    This is a temporary placeholder. Replace with your own cartoon background image:
+
+    To add your custom background image:
+    1. Place your image file in: app/src/main/res/drawable/
+    2. Recommended filename: cartoon_background.png or cartoon_background.jpg
+    3. Recommended size: 1920x1080 or higher resolution for tablets
+    4. Format: PNG or JPG (PNG preferred for better quality)
+    5. Style: Colorful, cartoon-ish, kid-friendly (ages 4-10)
+    6. Content: Simple patterns, characters, or nature scenes that won't distract
+
+    Example: cartoon_background.png
+    - Should be fun and engaging but not too busy
+    - Pastel or bright colors work well
+    - Avoid text or complex details that might compete with UI
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:angle="135"
+        android:startColor="#E3F2FD"
+        android:centerColor="#BBDEFB"
+        android:endColor="#90CAF9"
+        android:type="linear" />
+</shape>

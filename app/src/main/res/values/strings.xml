@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kid Player</string>
+
+    <!-- Navigation -->
+    <string name="nav_browse">Browse</string>
+    <string name="nav_player">Now Playing</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Setup Screen -->
+    <string name="setup_title">Welcome!</string>
+    <string name="setup_subtitle">Let\'s get started</string>
+    <string name="setup_server_url">Server URL</string>
+    <string name="setup_username">Username</string>
+    <string name="setup_password">Password</string>
+    <string name="setup_connect">Connect</string>
+
+    <!-- Browse Screen -->
+    <string name="browse_title">What do you want to watch?</string>
+    <string name="browse_loading">Loading videos...</string>
+    <string name="browse_error">Oops! Something went wrong</string>
+    <string name="browse_empty">No videos available</string>
+
+    <!-- Player Screen -->
+    <string name="player_loading">Loading video...</string>
+    <string name="player_error">Can\'t play this video</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Parent Settings</string>
+    <string name="settings_enter_pin">Enter PIN</string>
+    <string name="settings_server">Server Settings</string>
+    <string name="settings_downloads">Download Settings</string>
+    <string name="settings_about">About</string>
+    <string name="settings_autoplay_title">Autoplay</string>
+    <string name="settings_autoplay_description">Automatically play next video when current video ends</string>
+    <string name="settings_screen_time_title">Screen Time Limit</string>
+    <string name="settings_screen_time_description">Limit daily viewing time</string>
+
+    <!-- Autoplay -->
+    <string name="autoplay_up_next">Up Next</string>
+    <string name="autoplay_playing_in">Playing in %d second</string>
+    <string name="autoplay_playing_in_plural">Playing in %d seconds</string>
+    <string name="autoplay_play_now">Play Now</string>
+    <string name="autoplay_cancel">Cancel</string>
+
+    <!-- Common -->
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="retry">Try Again</string>
+    <string name="loading">Loading...</string>
+</resources>
