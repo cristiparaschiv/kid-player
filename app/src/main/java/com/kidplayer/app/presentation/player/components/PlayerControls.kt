@@ -1,10 +1,15 @@
 package com.kidplayer.app.presentation.player.components
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -17,10 +22,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kidplayer.app.domain.model.MediaItem
+import com.kidplayer.app.ui.theme.Dimensions
 import kotlinx.coroutines.delay
 
 /**
@@ -104,7 +112,7 @@ fun PlayerControls(
                     )
                 }
 
-                // Center controls
+                // Center controls with bouncy animations
                 Row(
                     modifier = Modifier
                         .align(Alignment.Center)
@@ -112,16 +120,14 @@ fun PlayerControls(
                     horizontalArrangement = Arrangement.spacedBy(48.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Seek backward button
-                    IconButton(
+                    // Seek backward button with bouncy animation
+                    BouncyControlButton(
                         onClick = {
                             onSeekBackClick()
                             lastInteractionTime = System.currentTimeMillis()
                         },
-                        modifier = Modifier
-                            .size(80.dp)
-                            .clip(CircleShape)
-                            .background(Color.White.copy(alpha = 0.2f))
+                        size = 80.dp,
+                        backgroundColor = Color.White.copy(alpha = 0.2f)
                     ) {
                         Icon(
                             imageVector = Icons.Default.Replay10,
@@ -131,16 +137,15 @@ fun PlayerControls(
                         )
                     }
 
-                    // Play/Pause button (large and prominent)
-                    IconButton(
+                    // Play/Pause button with bouncy animation (large and prominent)
+                    BouncyControlButton(
                         onClick = {
                             onPlayPauseClick()
                             lastInteractionTime = System.currentTimeMillis()
                         },
-                        modifier = Modifier
-                            .size(120.dp)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.primary)
+                        size = 120.dp,
+                        backgroundColor = MaterialTheme.colorScheme.primary,
+                        scaleOnPress = 0.88f
                     ) {
                         Icon(
                             imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
@@ -150,16 +155,14 @@ fun PlayerControls(
                         )
                     }
 
-                    // Seek forward button
-                    IconButton(
+                    // Seek forward button with bouncy animation
+                    BouncyControlButton(
                         onClick = {
                             onSeekForwardClick()
                             lastInteractionTime = System.currentTimeMillis()
                         },
-                        modifier = Modifier
-                            .size(80.dp)
-                            .clip(CircleShape)
-                            .background(Color.White.copy(alpha = 0.2f))
+                        size = 80.dp,
+                        backgroundColor = Color.White.copy(alpha = 0.2f)
                     ) {
                         Icon(
                             imageVector = Icons.Default.Forward10,
@@ -177,7 +180,10 @@ fun PlayerControls(
                         .fillMaxWidth()
                         .background(
                             Color.Black.copy(alpha = 0.7f),
-                            shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+                            shape = RoundedCornerShape(
+                                topStart = Dimensions.dialogCornerRadius,
+                                topEnd = Dimensions.dialogCornerRadius
+                            )
                         )
                 ) {
                     // Video recommendation row (shows if recommendations available)
@@ -244,5 +250,56 @@ fun PlayerControls(
                 }
             }
         }
+    }
+}
+
+/**
+ * Bouncy control button with spring animation on press
+ * Provides playful, tactile feedback for kid-friendly controls
+ */
+@Composable
+private fun BouncyControlButton(
+    onClick: () -> Unit,
+    size: androidx.compose.ui.unit.Dp,
+    backgroundColor: Color,
+    scaleOnPress: Float = 0.92f,
+    content: @Composable () -> Unit
+) {
+    var isPressed by remember { mutableStateOf(false) }
+
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) scaleOnPress else 1f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        ),
+        label = "bouncy_control_scale"
+    )
+
+    Box(
+        modifier = Modifier
+            .size(size)
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            }
+            .clip(CircleShape)
+            .background(backgroundColor)
+            .pointerInput(Unit) {
+                awaitPointerEventScope {
+                    while (true) {
+                        awaitFirstDown(requireUnconsumed = false)
+                        isPressed = true
+                        val up = waitForUpOrCancellation()
+                        isPressed = false
+                        if (up != null) {
+                            onClick()
+                        }
+                    }
+                }
+            },
+        contentAlignment = Alignment.Center
+    ) {
+        content()
     }
 }

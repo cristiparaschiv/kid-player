@@ -15,9 +15,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.media3.common.util.UnstableApi
 import com.kidplayer.app.presentation.player.components.AutoplayOverlay
 import com.kidplayer.app.presentation.player.components.BufferingIndicator
+import com.kidplayer.app.presentation.player.components.CircularTimeIndicator
 import com.kidplayer.app.presentation.player.components.PlayerControls
 import com.kidplayer.app.presentation.player.components.PlayerError
-import com.kidplayer.app.presentation.player.components.TimeRemainingIndicator
 import com.kidplayer.app.presentation.player.components.TimeLimitReachedOverlay
 import com.kidplayer.app.presentation.player.components.VideoPlayer
 import com.kidplayer.app.presentation.util.rememberSystemUiController
@@ -136,7 +136,7 @@ fun PlayerScreen(
                     }
                 )
 
-                // Time remaining indicator (top right)
+                // Circular time remaining indicator (top right)
                 if (uiState.screenTimeRemaining != null && uiState.screenTimeRemaining!! > 0) {
                     Box(
                         modifier = Modifier
@@ -144,9 +144,10 @@ fun PlayerScreen(
                             .padding(24.dp),
                         contentAlignment = Alignment.TopEnd
                     ) {
-                        TimeRemainingIndicator(
+                        CircularTimeIndicator(
                             isVisible = true,
-                            remainingMinutes = uiState.screenTimeRemaining!!
+                            remainingMinutes = uiState.screenTimeRemaining!!,
+                            totalMinutes = uiState.timeLimitDailyMinutes ?: 60
                         )
                     }
                 }

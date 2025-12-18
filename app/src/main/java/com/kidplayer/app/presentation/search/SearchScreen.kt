@@ -4,6 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -28,8 +31,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.kidplayer.app.presentation.browse.components.VideoCard
+import com.kidplayer.app.presentation.browse.components.CompactVideoCard
 import com.kidplayer.app.presentation.components.KidFriendlyBackgroundWrapper
+import com.kidplayer.app.presentation.components.OfflineBanner
 import com.kidplayer.app.R
 
 /**
@@ -44,6 +48,7 @@ fun SearchScreen(
     viewModel: SearchViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val networkState by viewModel.networkState.collectAsState()
     val keyboardController = LocalSoftwareKeyboardController.current
 
     KidFriendlyBackgroundWrapper(
@@ -64,34 +69,40 @@ fun SearchScreen(
             },
             containerColor = androidx.compose.ui.graphics.Color.Transparent
         ) { paddingValues ->
-            Box(
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
-            when {
-                uiState.showHistory() -> {
-                    SearchHistory(
-                        history = uiState.searchHistory,
-                        onHistoryItemClick = { viewModel.onHistoryItemClick(it) }
-                    )
+                // Offline banner at top
+                OfflineBanner(networkState = networkState)
+
+                // Main content
+                Box(modifier = Modifier.weight(1f)) {
+                    when {
+                        uiState.showHistory() -> {
+                            SearchHistory(
+                                history = uiState.searchHistory,
+                                onHistoryItemClick = { viewModel.onHistoryItemClick(it) }
+                            )
+                        }
+                        uiState.isSearching -> {
+                            LoadingState()
+                        }
+                        uiState.isEmpty() -> {
+                            EmptySearchState(query = uiState.query)
+                        }
+                        uiState.searchResults.isNotEmpty() -> {
+                            SearchResults(
+                                results = uiState.searchResults,
+                                onVideoClick = onVideoClick
+                            )
+                        }
+                        !uiState.hasSearched -> {
+                            InitialSearchState()
+                        }
+                    }
                 }
-                uiState.isSearching -> {
-                    LoadingState()
-                }
-                uiState.isEmpty() -> {
-                    EmptySearchState(query = uiState.query)
-                }
-                uiState.searchResults.isNotEmpty() -> {
-                    SearchResults(
-                        results = uiState.searchResults,
-                        onVideoClick = onVideoClick
-                    )
-                }
-                !uiState.hasSearched -> {
-                    InitialSearchState()
-                }
-            }
             }
         }
     }
@@ -233,28 +244,34 @@ fun SearchResults(
     results: List<com.kidplayer.app.domain.model.MediaItem>,
     onVideoClick: (String) -> Unit
 ) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+    Column(
+        modifier = Modifier.fillMaxSize()
     ) {
-        item {
-            Text(
-                text = "${results.size} result${if (results.size != 1) "s" else ""}",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-        }
+        // Results count header
+        Text(
+            text = "${results.size} result${if (results.size != 1) "s" else ""}",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
+        )
 
-        items(
-            items = results,
-            key = { it.id }
-        ) { mediaItem ->
-            VideoCard(
-                mediaItem = mediaItem,
-                onClick = { onVideoClick(mediaItem.id) },
-                onDownloadClick = { /* No download from search */ }
-            )
+        // Grid of compact video cards
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(minSize = 160.dp),
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(
+                items = results,
+                key = { it.id }
+            ) { mediaItem ->
+                CompactVideoCard(
+                    mediaItem = mediaItem,
+                    onClick = { onVideoClick(mediaItem.id) }
+                )
+            }
         }
     }
 }

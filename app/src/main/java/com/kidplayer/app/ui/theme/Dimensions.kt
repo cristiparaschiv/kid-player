@@ -50,8 +50,11 @@ object Dimensions {
 
     // CARD PROPERTIES
     val cardElevation = 4.dp
-    val cardCornerRadius = 16.dp
-    val chipCornerRadius = 8.dp
+    val cardCornerRadius = 20.dp // Increased for more playful look
+    val cardCornerRadiusSmall = 12.dp // For compact cards
+    val chipCornerRadius = 12.dp // Increased for rounder chips
+    val buttonCornerRadius = 16.dp // Rounded buttons for kid-friendly UI
+    val dialogCornerRadius = 24.dp // Extra rounded dialogs
 
     // PADDING
     val paddingXs = 4.dp

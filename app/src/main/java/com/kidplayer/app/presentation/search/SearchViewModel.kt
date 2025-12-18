@@ -2,6 +2,8 @@ package com.kidplayer.app.presentation.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kidplayer.app.data.network.NetworkMonitor
+import com.kidplayer.app.data.network.NetworkState
 import com.kidplayer.app.domain.usecase.AddSearchHistoryUseCase
 import com.kidplayer.app.domain.usecase.GetSearchHistoryUseCase
 import com.kidplayer.app.domain.usecase.SearchMediaItemsUseCase
@@ -24,11 +26,14 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     private val searchMediaItemsUseCase: SearchMediaItemsUseCase,
     private val getSearchHistoryUseCase: GetSearchHistoryUseCase,
-    private val addSearchHistoryUseCase: AddSearchHistoryUseCase
+    private val addSearchHistoryUseCase: AddSearchHistoryUseCase,
+    private val networkMonitor: NetworkMonitor
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SearchUiState())
     val uiState: StateFlow<SearchUiState> = _uiState.asStateFlow()
+
+    val networkState: StateFlow<NetworkState> = networkMonitor.networkState
 
     private var searchJob: Job? = null
 
