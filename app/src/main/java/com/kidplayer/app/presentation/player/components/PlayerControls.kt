@@ -48,11 +48,11 @@ fun PlayerControls(
     var isVisible by remember { mutableStateOf(true) }
     var lastInteractionTime by remember { mutableStateOf(System.currentTimeMillis()) }
 
-    // Auto-hide controls after 3 seconds of inactivity
+    // Auto-hide controls after 5 seconds of inactivity (extended for kids)
     LaunchedEffect(lastInteractionTime, isPlaying, autoHide) {
         if (autoHide && isPlaying) {
-            delay(3000)
-            if (System.currentTimeMillis() - lastInteractionTime >= 3000) {
+            delay(5000)
+            if (System.currentTimeMillis() - lastInteractionTime >= 5000) {
                 isVisible = false
             }
         }

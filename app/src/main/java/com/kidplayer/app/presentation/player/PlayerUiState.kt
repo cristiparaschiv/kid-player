@@ -24,7 +24,9 @@ data class PlayerUiState(
     val recommendedVideos: List<MediaItem> = emptyList(), // videos to show in recommendation row
     val timeLimitDailyMinutes: Int = 0, // daily limit in minutes for displaying in overlay
     val timeLimitUsedMinutes: Int = 0, // used minutes for displaying in overlay
-    val pinVerificationError: String? = null // error message when PIN verification fails
+    val pinVerificationError: String? = null, // error message when PIN verification fails
+    val resumePositionMs: Long = 0L, // position to resume from (synced from Jellyfin)
+    val hasResumedPlayback: Boolean = false // tracks if we've already seeked to resume position
 ) {
     /**
      * Returns true if the player has an error

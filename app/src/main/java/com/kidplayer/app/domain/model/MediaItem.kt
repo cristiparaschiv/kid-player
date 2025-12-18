@@ -22,7 +22,8 @@ data class MediaItem(
     val watchedPercentage: Float = 0f,
     val localFilePath: String? = null,
     val libraryId: String? = null,
-    val addedTimestamp: Long = 0L
+    val addedTimestamp: Long = 0L,
+    val playbackPositionTicks: Long = 0L // Resume position from Jellyfin (in ticks)
 ) {
     /**
      * Returns the duration in seconds
@@ -57,6 +58,21 @@ data class MediaItem(
      */
     fun isWatched(): Boolean {
         return watchedPercentage >= 0.9f
+    }
+
+    /**
+     * Returns the resume position in milliseconds
+     * Converts from Jellyfin ticks (1 tick = 100 nanoseconds) to milliseconds
+     */
+    fun getResumePositionMs(): Long {
+        return playbackPositionTicks / 10_000 // Convert ticks to milliseconds
+    }
+
+    /**
+     * Returns true if there's a resume position available
+     */
+    fun hasResumePosition(): Boolean {
+        return playbackPositionTicks > 0 && watchedPercentage > 0.01f && watchedPercentage < 0.95f
     }
 
     /**

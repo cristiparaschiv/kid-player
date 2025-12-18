@@ -33,7 +33,10 @@ object DatabaseModule {
             AppDatabase::class.java,
             AppDatabase.DATABASE_NAME
         )
-            .addMigrations(DatabaseMigrations.MIGRATION_4_5)
+            .addMigrations(
+                DatabaseMigrations.MIGRATION_4_5,
+                DatabaseMigrations.MIGRATION_5_6
+            )
             .fallbackToDestructiveMigration() // Fallback for other versions
             .build()
     }

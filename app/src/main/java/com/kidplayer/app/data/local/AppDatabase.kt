@@ -30,7 +30,7 @@ import com.kidplayer.app.data.local.entity.WatchHistoryEntity
         FavoriteEntity::class,
         SearchHistoryEntity::class
     ],
-    version = 5,
+    version = 6,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

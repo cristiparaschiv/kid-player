@@ -507,7 +507,7 @@ class JellyfinRepositoryImpl @Inject constructor(
                 val api = apiProvider.getApi(server.url)
                 val response = api.getItem(
                     userId = server.userId,
-                    itemId = itemId,
+                    ids = itemId,
                     authToken = server.authToken
                 )
 
@@ -658,6 +658,36 @@ class JellyfinRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun reportPlaybackStarted(itemId: String): Result<Unit> =
+        withContext(Dispatchers.IO) {
+            try {
+                val server = getServerConfig()
+                    ?: return@withContext Result.Error("Not authenticated")
+
+                val api = apiProvider.getApi(server.url)
+                val request = com.kidplayer.app.data.remote.dto.PlaybackStartInfo(
+                    itemId = itemId,
+                    canSeek = true,
+                    isPaused = false,
+                    isMuted = false,
+                    positionTicks = 0L
+                )
+                val response = api.reportPlaybackStarted(
+                    request = request,
+                    authToken = server.authToken
+                )
+
+                if (response.isSuccessful) {
+                    Result.Success(Unit)
+                } else {
+                    Result.Error("Failed to report playback started: ${response.code()}")
+                }
+            } catch (e: Exception) {
+                Timber.e(e, "Error reporting playback started")
+                Result.Error("Failed to report playback started: ${e.message ?: "Unknown error"}")
+            }
+        }
+
     override suspend fun reportPlaybackProgress(
         itemId: String,
         positionTicks: Long,
@@ -668,10 +698,15 @@ class JellyfinRepositoryImpl @Inject constructor(
                 ?: return@withContext Result.Error("Not authenticated")
 
             val api = apiProvider.getApi(server.url)
-            val response = api.reportPlaybackProgress(
+            val request = com.kidplayer.app.data.remote.dto.PlaybackProgressInfo(
                 itemId = itemId,
                 positionTicks = positionTicks,
+                canSeek = true,
                 isPaused = isPaused,
+                isMuted = false
+            )
+            val response = api.reportPlaybackProgress(
+                request = request,
                 authToken = server.authToken
             )
 
@@ -695,9 +730,12 @@ class JellyfinRepositoryImpl @Inject constructor(
                 ?: return@withContext Result.Error("Not authenticated")
 
             val api = apiProvider.getApi(server.url)
-            val response = api.reportPlaybackStopped(
+            val request = com.kidplayer.app.data.remote.dto.PlaybackStopInfo(
                 itemId = itemId,
-                positionTicks = positionTicks,
+                positionTicks = positionTicks
+            )
+            val response = api.reportPlaybackStopped(
+                request = request,
                 authToken = server.authToken
             )
 

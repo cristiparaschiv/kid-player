@@ -12,10 +12,12 @@ import com.kidplayer.app.data.local.ScreenTimeManager
 import com.kidplayer.app.data.local.dao.MediaItemDao
 import com.kidplayer.app.domain.model.Result
 import com.kidplayer.app.domain.usecase.GetAutoplaySettingUseCase
+import com.kidplayer.app.domain.usecase.GetMediaItemUseCase
 import com.kidplayer.app.domain.usecase.GetMediaItemsUseCase
 import com.kidplayer.app.domain.usecase.GetNextVideoUseCase
 import com.kidplayer.app.domain.usecase.GetStreamingUrlUseCase
 import com.kidplayer.app.domain.usecase.ReportPlaybackProgressUseCase
+import com.kidplayer.app.domain.usecase.ReportPlaybackStartedUseCase
 import com.kidplayer.app.domain.usecase.StopPlaybackUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -38,6 +40,8 @@ import javax.inject.Inject
 class PlayerViewModel @Inject constructor(
     private val player: ExoPlayer,
     private val getStreamingUrlUseCase: GetStreamingUrlUseCase,
+    private val getMediaItemUseCase: GetMediaItemUseCase,
+    private val reportPlaybackStartedUseCase: ReportPlaybackStartedUseCase,
     private val reportPlaybackProgressUseCase: ReportPlaybackProgressUseCase,
     private val stopPlaybackUseCase: StopPlaybackUseCase,
     private val getMediaItemsUseCase: GetMediaItemsUseCase,
@@ -85,6 +89,14 @@ class PlayerViewModel @Inject constructor(
                     val hasAudio = AudioTrackUtil.ensureAudioTrackSelected(player)
                     if (!hasAudio) {
                         Timber.w("Audio diagnostic: ${AudioTrackUtil.diagnoseAudioIssues(player)}")
+                    }
+
+                    // Seek to resume position if available and not already resumed
+                    val currentState = _uiState.value
+                    if (currentState.resumePositionMs > 0 && !currentState.hasResumedPlayback) {
+                        Timber.d("Resuming playback from ${currentState.resumePositionMs}ms")
+                        player.seekTo(currentState.resumePositionMs)
+                        _uiState.update { it.copy(hasResumedPlayback = true) }
                     }
                 }
                 Player.STATE_ENDED -> {
@@ -163,6 +175,7 @@ class PlayerViewModel @Inject constructor(
     /**
      * Load video metadata and streaming URL
      * Checks for local download first, falls back to streaming
+     * Fetches fresh data from Jellyfin to get current resume position
      */
     private fun loadVideo() {
         viewModelScope.launch {
@@ -172,6 +185,26 @@ class PlayerViewModel @Inject constructor(
             val mediaItemEntity = mediaItemDao.getMediaItemByIdOnly(videoId)
             val isOfflineAvailable = mediaItemEntity?.isDownloaded == true &&
                                      !mediaItemEntity.localFilePath.isNullOrEmpty()
+
+            // Get resume position - fetch fresh data from Jellyfin API for accurate position
+            var resumePositionMs = 0L
+            when (val mediaItemResult = getMediaItemUseCase(videoId)) {
+                is Result.Success -> {
+                    val freshMediaItem = mediaItemResult.data
+                    resumePositionMs = freshMediaItem.getResumePositionMs()
+                }
+                is Result.Error -> {
+                    // Fall back to cached position if API fails
+                    val cachedPositionTicks = mediaItemEntity?.playbackPositionTicks ?: 0L
+                    resumePositionMs = cachedPositionTicks / 10_000
+                    Timber.w("Failed to get fresh media item data, using cached position")
+                }
+                is Result.Loading -> {
+                    // Shouldn't happen, but use cached position
+                    val cachedPositionTicks = mediaItemEntity?.playbackPositionTicks ?: 0L
+                    resumePositionMs = cachedPositionTicks / 10_000
+                }
+            }
 
             val videoUrl = if (isOfflineAvailable) {
                 // Play from local file
@@ -209,12 +242,13 @@ class PlayerViewModel @Inject constructor(
                 }
             }
 
-            Timber.d("Video URL: $videoUrl")
+            Timber.d("Video URL: $videoUrl, Resume position: ${resumePositionMs}ms")
 
             _uiState.update {
                 it.copy(
                     streamingUrl = videoUrl,
-                    isLoading = false
+                    isLoading = false,
+                    resumePositionMs = resumePositionMs
                 )
             }
 
@@ -223,8 +257,16 @@ class PlayerViewModel @Inject constructor(
             player.setMediaItem(mediaItem)
             player.prepare()
 
+            // Report playback started to Jellyfin (required for progress tracking)
+            reportPlaybackStartedUseCase(videoId)
+
             // Auto-play: Start playback immediately when media is ready
             player.play()
+
+            // Log resume position for debugging
+            if (resumePositionMs > 0) {
+                Timber.d("Will resume playback from position: ${resumePositionMs}ms")
+            }
         }
     }
 

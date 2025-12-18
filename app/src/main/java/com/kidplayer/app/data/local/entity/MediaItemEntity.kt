@@ -48,5 +48,7 @@ data class MediaItemEntity(
 
     val addedTimestamp: Long = System.currentTimeMillis(),
 
-    val lastModifiedTimestamp: Long = System.currentTimeMillis()
+    val lastModifiedTimestamp: Long = System.currentTimeMillis(),
+
+    val playbackPositionTicks: Long = 0L // Resume position from Jellyfin (in ticks)
 )

@@ -92,4 +92,18 @@ object DatabaseMigrations {
             // may also need userId in the future for proper multi-user support
         }
     }
+
+    /**
+     * Migration from version 5 to 6
+     * Adds playbackPositionTicks column to media_items table
+     * for resume position sync with Jellyfin
+     */
+    val MIGRATION_5_6 = object : Migration(5, 6) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            // Add playbackPositionTicks column with default value of 0
+            database.execSQL(
+                "ALTER TABLE media_items ADD COLUMN playbackPositionTicks INTEGER NOT NULL DEFAULT 0"
+            )
+        }
+    }
 }

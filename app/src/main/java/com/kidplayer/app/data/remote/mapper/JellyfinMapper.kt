@@ -99,7 +99,8 @@ object JellyfinMapper {
             year = dto.productionYear,
             isDownloaded = false, // Will be updated from local database
             watchedPercentage = watchedPercentage,
-            localFilePath = null
+            localFilePath = null,
+            playbackPositionTicks = dto.userData?.playbackPositionTicks ?: 0L
         )
     }
 

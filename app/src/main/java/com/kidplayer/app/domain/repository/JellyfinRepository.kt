@@ -135,6 +135,14 @@ interface JellyfinRepository {
     suspend fun validateSession(): Result<Unit>
 
     /**
+     * Report playback started to Jellyfin
+     * Must be called when playback begins to create a session
+     *
+     * @param itemId Item ID
+     */
+    suspend fun reportPlaybackStarted(itemId: String): Result<Unit>
+
+    /**
      * Report playback progress to Jellyfin
      * Used to track watched status and resume position
      *

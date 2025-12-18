@@ -68,6 +68,7 @@ interface JellyfinApi {
      * @param sortOrder Sort direction (Ascending/Descending)
      * @param startIndex Pagination start index
      * @param limit Number of items to return
+     * @param enableUserData Include UserData (playback position, played status)
      * @param authToken Authentication token
      */
     @GET("Users/{userId}/Items")
@@ -80,20 +81,25 @@ interface JellyfinApi {
         @Query("sortOrder") sortOrder: String = "Ascending",
         @Query("startIndex") startIndex: Int = 0,
         @Query("limit") limit: Int = 100,
+        @Query("enableUserData") enableUserData: Boolean = true,
         @Header("X-Emby-Token") authToken: String
     ): Response<ItemsResponse>
 
     /**
      * Get a specific item by ID
+     * Uses the Items endpoint with ids filter to ensure consistent ItemsResponse format
+     * and proper UserData inclusion
      *
      * @param userId User ID
-     * @param itemId Item ID to fetch
+     * @param ids Comma-separated item IDs to fetch
+     * @param enableUserData Include UserData (playback position, played status)
      * @param authToken Authentication token
      */
-    @GET("Users/{userId}/Items/{itemId}")
+    @GET("Users/{userId}/Items")
     suspend fun getItem(
         @Path("userId") userId: String,
-        @Path("itemId") itemId: String,
+        @Query("ids") ids: String,
+        @Query("enableUserData") enableUserData: Boolean = true,
         @Header("X-Emby-Token") authToken: String
     ): Response<ItemsResponse>
 
@@ -104,6 +110,7 @@ interface JellyfinApi {
      * @param userId User ID
      * @param parentId Optional parent library ID
      * @param limit Number of items to return
+     * @param enableUserData Include UserData (playback position, played status)
      * @param authToken Authentication token
      */
     @GET("Users/{userId}/Items/Latest")
@@ -111,23 +118,34 @@ interface JellyfinApi {
         @Path("userId") userId: String,
         @Query("parentId") parentId: String? = null,
         @Query("limit") limit: Int = 20,
+        @Query("enableUserData") enableUserData: Boolean = true,
         @Header("X-Emby-Token") authToken: String
     ): Response<ItemsResponse>
+
+    /**
+     * Report playback started
+     * Must be called when playback begins to create a session
+     * Required before Progress/Stopped calls will save position
+     *
+     * @param request PlaybackStartInfo with item ID and initial state
+     * @param authToken Authentication token
+     */
+    @POST("Sessions/Playing")
+    suspend fun reportPlaybackStarted(
+        @Body request: com.kidplayer.app.data.remote.dto.PlaybackStartInfo,
+        @Header("X-Emby-Token") authToken: String
+    ): Response<Unit>
 
     /**
      * Report playback progress
      * Used to track watched status and resume position
      *
-     * @param itemId Item being played
-     * @param positionTicks Current playback position in ticks
-     * @param isPaused Whether playback is paused
+     * @param request PlaybackProgressInfo with position and state
      * @param authToken Authentication token
      */
     @POST("Sessions/Playing/Progress")
     suspend fun reportPlaybackProgress(
-        @Query("itemId") itemId: String,
-        @Query("positionTicks") positionTicks: Long,
-        @Query("isPaused") isPaused: Boolean = false,
+        @Body request: com.kidplayer.app.data.remote.dto.PlaybackProgressInfo,
         @Header("X-Emby-Token") authToken: String
     ): Response<Unit>
 
@@ -135,14 +153,12 @@ interface JellyfinApi {
      * Report playback stopped
      * Called when video playback ends
      *
-     * @param itemId Item that was played
-     * @param positionTicks Final playback position in ticks
+     * @param request PlaybackStopInfo with final position
      * @param authToken Authentication token
      */
     @POST("Sessions/Playing/Stopped")
     suspend fun reportPlaybackStopped(
-        @Query("itemId") itemId: String,
-        @Query("positionTicks") positionTicks: Long,
+        @Body request: com.kidplayer.app.data.remote.dto.PlaybackStopInfo,
         @Header("X-Emby-Token") authToken: String
     ): Response<Unit>
 

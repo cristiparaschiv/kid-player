@@ -39,7 +39,8 @@ object EntityMapper {
             libraryId = libraryId ?: mediaItem.libraryId,
             userId = userId,
             addedTimestamp = if (mediaItem.addedTimestamp > 0) mediaItem.addedTimestamp else System.currentTimeMillis(),
-            lastModifiedTimestamp = System.currentTimeMillis()
+            lastModifiedTimestamp = System.currentTimeMillis(),
+            playbackPositionTicks = mediaItem.playbackPositionTicks
         )
     }
 
@@ -71,7 +72,8 @@ object EntityMapper {
             watchedPercentage = entity.watchedPercentage,
             localFilePath = entity.localFilePath,
             libraryId = entity.libraryId,
-            addedTimestamp = entity.addedTimestamp
+            addedTimestamp = entity.addedTimestamp,
+            playbackPositionTicks = entity.playbackPositionTicks
         )
     }
 
