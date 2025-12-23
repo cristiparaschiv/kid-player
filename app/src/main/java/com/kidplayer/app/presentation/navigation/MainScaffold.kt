@@ -5,10 +5,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CloudDownload
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.SportsEsports
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.CloudDownload
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.SportsEsports
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -124,8 +126,14 @@ private val bottomNavItems = listOf(
         unselectedIcon = Icons.Outlined.Home
     ),
     BottomNavItem(
+        route = Screen.Games.route,
+        label = "Games",
+        selectedIcon = Icons.Filled.SportsEsports,
+        unselectedIcon = Icons.Outlined.SportsEsports
+    ),
+    BottomNavItem(
         route = Screen.Downloaded.route,
-        label = "Downloaded",
+        label = "Downloads",
         selectedIcon = Icons.Filled.CloudDownload,
         unselectedIcon = Icons.Outlined.CloudDownload
     ),

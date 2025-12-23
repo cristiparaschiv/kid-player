@@ -1,5 +1,6 @@
 package com.kidplayer.app.presentation.navigation
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -15,6 +16,12 @@ import androidx.navigation.navArgument
 import com.kidplayer.app.presentation.browse.BrowseScreen
 import com.kidplayer.app.presentation.downloaded.DownloadedScreen
 import com.kidplayer.app.presentation.favorites.FavoritesScreen
+import com.kidplayer.app.presentation.games.GamesScreen
+import com.kidplayer.app.presentation.games.memory.MemoryGameScreen
+import com.kidplayer.app.presentation.games.puzzle.grid.GridPuzzleScreen
+import com.kidplayer.app.presentation.games.puzzle.sliding.SlidingPuzzleScreen
+import com.kidplayer.app.presentation.games.shapepuzzle.ShapePuzzleScreen
+import com.kidplayer.app.presentation.games.tictactoe.TicTacToeScreen
 import com.kidplayer.app.presentation.home.HomeScreen
 import com.kidplayer.app.presentation.onboarding.SetupScreen
 import com.kidplayer.app.presentation.player.PlayerScreen
@@ -179,6 +186,58 @@ fun KidPlayerNavGraphPhase6(
             )
         }
 
+        // Games Hub Screen
+        composable(route = Screen.Games.route) {
+            GamesScreen(
+                onGameSelect = { gameId ->
+                    navController.navigate(Screen.Game.createRoute(gameId))
+                }
+            )
+        }
+
+        // Individual Game Screen
+        composable(
+            route = Screen.Game.route,
+            arguments = listOf(
+                navArgument("gameId") {
+                    type = NavType.StringType
+                }
+            )
+        ) { backStackEntry ->
+            val gameId = backStackEntry.arguments?.getString("gameId") ?: ""
+            when (gameId) {
+                "memory" -> MemoryGameScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+                "tictactoe" -> TicTacToeScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+                "puzzle" -> ShapePuzzleScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+                "sliding" -> SlidingPuzzleScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+                "gridpuzzle" -> GridPuzzleScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+                // Add more games here as they are implemented
+                else -> {
+                    // Coming soon placeholder for unimplemented games
+                    androidx.compose.foundation.layout.Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = androidx.compose.ui.Alignment.Center
+                    ) {
+                        androidx.compose.material3.Text(
+                            text = "Game: $gameId\nComing Soon!",
+                            style = androidx.compose.material3.MaterialTheme.typography.headlineMedium,
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        )
+                    }
+                }
+            }
+        }
+
         // Player Screen
         composable(
             route = Screen.Player.route,
@@ -249,6 +308,7 @@ fun shouldShowBottomNav(currentRoute: String?): Boolean {
         Screen.Browse.route,
         Screen.Downloaded.route,
         Screen.Search.route,
-        Screen.Favorites.route
+        Screen.Favorites.route,
+        Screen.Games.route
     )
 }

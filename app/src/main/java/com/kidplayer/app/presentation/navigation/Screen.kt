@@ -47,6 +47,19 @@ sealed class Screen(val route: String) {
     object Favorites : Screen("favorites")
 
     /**
+     * Games hub screen showing available mini-games
+     */
+    object Games : Screen("games")
+
+    /**
+     * Individual game screens
+     * Route includes gameId parameter: "games/{gameId}"
+     */
+    object Game : Screen("games/{gameId}") {
+        fun createRoute(gameId: String) = "games/$gameId"
+    }
+
+    /**
      * Video player screen
      * Route includes videoId parameter: "player/{videoId}"
      */
