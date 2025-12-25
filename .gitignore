@@ -76,3 +76,6 @@ google-services.json
 
 # Backup files
 *~.nib
+
+.claude
+*.md

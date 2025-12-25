@@ -17,10 +17,23 @@ import com.kidplayer.app.presentation.browse.BrowseScreen
 import com.kidplayer.app.presentation.downloaded.DownloadedScreen
 import com.kidplayer.app.presentation.favorites.FavoritesScreen
 import com.kidplayer.app.presentation.games.GamesScreen
+import com.kidplayer.app.presentation.games.addition.AdditionScreen
+import com.kidplayer.app.presentation.games.coloring.ColoringScreen
+import com.kidplayer.app.presentation.games.colormix.ColorMixScreen
+import com.kidplayer.app.presentation.games.compare.CompareScreen
+import com.kidplayer.app.presentation.games.dots.DotsScreen
+import com.kidplayer.app.presentation.games.lettermatch.LetterMatchScreen
+import com.kidplayer.app.presentation.games.match3.Match3Screen
+import com.kidplayer.app.presentation.games.maze.MazeScreen
 import com.kidplayer.app.presentation.games.memory.MemoryGameScreen
+import com.kidplayer.app.presentation.games.numberbonds.NumberBondsScreen
+import com.kidplayer.app.presentation.games.oddoneout.OddOneOutScreen
+import com.kidplayer.app.presentation.games.pattern.PatternScreen
 import com.kidplayer.app.presentation.games.puzzle.grid.GridPuzzleScreen
 import com.kidplayer.app.presentation.games.puzzle.sliding.SlidingPuzzleScreen
 import com.kidplayer.app.presentation.games.shapepuzzle.ShapePuzzleScreen
+import com.kidplayer.app.presentation.games.subtraction.SubtractionScreen
+import com.kidplayer.app.presentation.games.sudoku.SudokuScreen
 import com.kidplayer.app.presentation.games.tictactoe.TicTacToeScreen
 import com.kidplayer.app.presentation.home.HomeScreen
 import com.kidplayer.app.presentation.onboarding.SetupScreen
@@ -219,6 +232,45 @@ fun KidPlayerNavGraphPhase6(
                     onNavigateBack = { navController.popBackStack() }
                 )
                 "gridpuzzle" -> GridPuzzleScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+                "coloring" -> ColoringScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+                "match3" -> Match3Screen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+                "pattern" -> PatternScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+                "colormix" -> ColorMixScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+                "lettermatch" -> LetterMatchScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+                "maze" -> MazeScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+                "dots" -> DotsScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+                "addition" -> AdditionScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+                "subtraction" -> SubtractionScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+                "numberbonds" -> NumberBondsScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+                "compare" -> CompareScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+                "oddoneout" -> OddOneOutScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+                "sudoku" -> SudokuScreen(
                     onNavigateBack = { navController.popBackStack() }
                 )
                 // Add more games here as they are implemented

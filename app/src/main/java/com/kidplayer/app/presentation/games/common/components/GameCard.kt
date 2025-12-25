@@ -127,6 +127,17 @@ fun GameIcon(
             GameIconType.COLORING -> drawColoringIcon()
             GameIconType.SLIDING -> drawSlidingIcon()
             GameIconType.GRIDPUZZLE -> drawGridPuzzleIcon()
+            GameIconType.PATTERN -> drawPatternIcon()
+            GameIconType.COLORMIX -> drawColorMixIcon()
+            GameIconType.LETTERMATCH -> drawLetterMatchIcon()
+            GameIconType.MAZE -> drawMazeIcon()
+            GameIconType.DOTS -> drawDotsIcon()
+            GameIconType.ADDITION -> drawAdditionIcon()
+            GameIconType.SUBTRACTION -> drawSubtractionIcon()
+            GameIconType.NUMBERBONDS -> drawNumberBondsIcon()
+            GameIconType.COMPARE -> drawCompareIcon()
+            GameIconType.ODDONEOUT -> drawOddOneOutIcon()
+            GameIconType.SUDOKU -> drawSudokuIcon()
         }
     }
 }
@@ -516,4 +527,424 @@ private fun DrawScope.drawGridPuzzleIcon() {
         end = Offset(swapX2 - tileSize / 4, swapY + tileSize / 2),
         strokeWidth = 2.dp.toPx()
     )
+}
+
+private fun DrawScope.drawPatternIcon() {
+    val shapeSize = size.width / 4
+    val spacing = 8.dp.toPx()
+    val y = size.height / 2
+
+    val colors = listOf(
+        Color(0xFFE91E63),
+        Color(0xFF2196F3),
+        Color(0xFFE91E63),
+        Color(0xFF9E9E9E)
+    )
+
+    // Draw pattern: circle, square, circle, ?
+    for (i in 0 until 4) {
+        val x = spacing + i * (shapeSize + spacing / 2)
+        when (i) {
+            0, 2 -> drawCircle(
+                color = colors[i],
+                radius = shapeSize / 2.5f,
+                center = Offset(x + shapeSize / 2, y)
+            )
+            1 -> drawRect(
+                color = colors[i],
+                topLeft = Offset(x + shapeSize / 6, y - shapeSize / 3),
+                size = Size(shapeSize * 0.7f, shapeSize * 0.7f)
+            )
+            3 -> {
+                // Question mark
+                drawCircle(
+                    color = colors[i].copy(alpha = 0.5f),
+                    radius = shapeSize / 2.5f,
+                    center = Offset(x + shapeSize / 2, y),
+                    style = Stroke(width = 3.dp.toPx())
+                )
+            }
+        }
+    }
+}
+
+private fun DrawScope.drawColorMixIcon() {
+    val blobRadius = size.width / 4
+
+    // Red blob
+    drawCircle(
+        color = Color(0xFFE53935),
+        radius = blobRadius,
+        center = Offset(size.width * 0.3f, size.height * 0.4f)
+    )
+
+    // Yellow blob
+    drawCircle(
+        color = Color(0xFFFFEB3B),
+        radius = blobRadius,
+        center = Offset(size.width * 0.7f, size.height * 0.4f)
+    )
+
+    // Orange result (overlapping)
+    drawCircle(
+        color = Color(0xFFFF9800),
+        radius = blobRadius * 0.8f,
+        center = Offset(size.width * 0.5f, size.height * 0.65f)
+    )
+}
+
+private fun DrawScope.drawLetterMatchIcon() {
+    val letterSize = size.width / 3
+
+    // Draw "A"
+    drawRoundRect(
+        color = Color(0xFF2196F3),
+        topLeft = Offset(size.width * 0.1f, size.height * 0.2f),
+        size = Size(letterSize, letterSize),
+        cornerRadius = CornerRadius(8.dp.toPx())
+    )
+
+    // Draw apple emoji representation (red circle with stem)
+    drawCircle(
+        color = Color(0xFFE53935),
+        radius = letterSize / 2.5f,
+        center = Offset(size.width * 0.7f, size.height * 0.4f)
+    )
+
+    // Arrow between
+    drawLine(
+        color = Color.White,
+        start = Offset(size.width * 0.4f, size.height * 0.5f),
+        end = Offset(size.width * 0.55f, size.height * 0.5f),
+        strokeWidth = 3.dp.toPx()
+    )
+}
+
+private fun DrawScope.drawMazeIcon() {
+    val wallColor = Color(0xFF2D2D44)
+    val pathColor = Color(0xFFF5F5F5)
+    val wallWidth = 3.dp.toPx()
+
+    // Draw background
+    drawRect(pathColor)
+
+    // Draw simple maze walls
+    val lines = listOf(
+        // Outer walls
+        Pair(Offset(0f, 0f), Offset(size.width, 0f)),
+        Pair(Offset(0f, 0f), Offset(0f, size.height)),
+        Pair(Offset(size.width, 0f), Offset(size.width, size.height)),
+        Pair(Offset(0f, size.height), Offset(size.width, size.height)),
+        // Inner walls
+        Pair(Offset(size.width * 0.3f, 0f), Offset(size.width * 0.3f, size.height * 0.6f)),
+        Pair(Offset(size.width * 0.6f, size.height * 0.4f), Offset(size.width * 0.6f, size.height)),
+        Pair(Offset(0f, size.height * 0.5f), Offset(size.width * 0.15f, size.height * 0.5f)),
+    )
+
+    lines.forEach { (start, end) ->
+        drawLine(wallColor, start, end, wallWidth)
+    }
+
+    // Player dot
+    drawCircle(
+        color = Color(0xFF4CAF50),
+        radius = size.width / 10,
+        center = Offset(size.width * 0.15f, size.height * 0.15f)
+    )
+
+    // Goal
+    drawCircle(
+        color = Color(0xFFFF9800),
+        radius = size.width / 10,
+        center = Offset(size.width * 0.85f, size.height * 0.85f)
+    )
+}
+
+private fun DrawScope.drawDotsIcon() {
+    val dotRadius = size.width / 12
+    val lineColor = Color(0xFF2196F3)
+
+    // Dot positions (star shape)
+    val dots = listOf(
+        Offset(size.width * 0.5f, size.height * 0.15f),
+        Offset(size.width * 0.75f, size.height * 0.4f),
+        Offset(size.width * 0.65f, size.height * 0.75f),
+        Offset(size.width * 0.35f, size.height * 0.75f),
+        Offset(size.width * 0.25f, size.height * 0.4f)
+    )
+
+    // Draw connecting lines
+    for (i in 0 until dots.size - 1) {
+        drawLine(
+            color = lineColor,
+            start = dots[i],
+            end = dots[i + 1],
+            strokeWidth = 3.dp.toPx()
+        )
+    }
+
+    // Draw dots with numbers
+    dots.forEachIndexed { index, offset ->
+        drawCircle(
+            color = if (index < 3) lineColor else Color.Gray,
+            radius = dotRadius,
+            center = offset
+        )
+        drawCircle(
+            color = Color.White,
+            radius = dotRadius * 0.6f,
+            center = offset
+        )
+    }
+}
+
+private fun DrawScope.drawAdditionIcon() {
+    val circleRadius = size.width / 6
+    val circleColor = Color(0xFFE8F5E9)
+
+    // Draw apple circles (2 + 3 = ?)
+    // Left group (2)
+    drawCircle(color = Color(0xFFE53935), radius = circleRadius, center = Offset(size.width * 0.15f, size.height * 0.35f))
+    drawCircle(color = Color(0xFFE53935), radius = circleRadius, center = Offset(size.width * 0.35f, size.height * 0.35f))
+
+    // Plus sign
+    val plusStroke = 4.dp.toPx()
+    drawLine(Color.White, Offset(size.width * 0.5f - 12.dp.toPx(), size.height * 0.35f), Offset(size.width * 0.5f + 12.dp.toPx(), size.height * 0.35f), plusStroke)
+    drawLine(Color.White, Offset(size.width * 0.5f, size.height * 0.35f - 12.dp.toPx()), Offset(size.width * 0.5f, size.height * 0.35f + 12.dp.toPx()), plusStroke)
+
+    // Right group (3)
+    drawCircle(color = Color(0xFFE53935), radius = circleRadius, center = Offset(size.width * 0.65f, size.height * 0.35f))
+    drawCircle(color = Color(0xFFE53935), radius = circleRadius, center = Offset(size.width * 0.85f, size.height * 0.35f))
+    drawCircle(color = Color(0xFFE53935), radius = circleRadius, center = Offset(size.width * 0.75f, size.height * 0.55f))
+
+    // Equals and question mark
+    drawLine(Color.White, Offset(size.width * 0.3f, size.height * 0.75f), Offset(size.width * 0.5f, size.height * 0.75f), plusStroke)
+    drawLine(Color.White, Offset(size.width * 0.3f, size.height * 0.85f), Offset(size.width * 0.5f, size.height * 0.85f), plusStroke)
+
+    drawCircle(color = Color.White.copy(alpha = 0.5f), radius = circleRadius * 1.2f, center = Offset(size.width * 0.7f, size.height * 0.8f), style = Stroke(width = 3.dp.toPx()))
+}
+
+private fun DrawScope.drawSubtractionIcon() {
+    val animalRadius = size.width / 7
+
+    // Draw animals (5 animals, 2 crossed out)
+    val positions = listOf(
+        Offset(size.width * 0.15f, size.height * 0.4f),
+        Offset(size.width * 0.35f, size.height * 0.4f),
+        Offset(size.width * 0.55f, size.height * 0.4f),
+        Offset(size.width * 0.75f, size.height * 0.4f),
+        Offset(size.width * 0.45f, size.height * 0.65f)
+    )
+
+    positions.forEachIndexed { index, pos ->
+        val isCrossed = index >= 3
+        val alpha = if (isCrossed) 0.4f else 1f
+
+        // Animal circle
+        drawCircle(
+            color = Color(0xFFFFB74D).copy(alpha = alpha),
+            radius = animalRadius,
+            center = pos
+        )
+
+        // Cross out the last two
+        if (isCrossed) {
+            val crossSize = animalRadius * 0.7f
+            drawLine(
+                Color(0xFFE53935),
+                Offset(pos.x - crossSize, pos.y - crossSize),
+                Offset(pos.x + crossSize, pos.y + crossSize),
+                4.dp.toPx()
+            )
+            drawLine(
+                Color(0xFFE53935),
+                Offset(pos.x + crossSize, pos.y - crossSize),
+                Offset(pos.x - crossSize, pos.y + crossSize),
+                4.dp.toPx()
+            )
+        }
+    }
+
+    // Minus sign at bottom
+    drawLine(Color.White, Offset(size.width * 0.3f, size.height * 0.85f), Offset(size.width * 0.7f, size.height * 0.85f), 4.dp.toPx())
+}
+
+private fun DrawScope.drawNumberBondsIcon() {
+    val topRadius = size.width / 5
+    val bottomRadius = size.width / 6.5f
+
+    // Top circle (target number)
+    drawCircle(
+        color = Color(0xFF2196F3),
+        radius = topRadius,
+        center = Offset(size.width * 0.5f, size.height * 0.25f)
+    )
+
+    // Connecting lines
+    drawLine(
+        Color.White.copy(alpha = 0.7f),
+        Offset(size.width * 0.5f, size.height * 0.25f + topRadius),
+        Offset(size.width * 0.3f, size.height * 0.7f - bottomRadius),
+        3.dp.toPx()
+    )
+    drawLine(
+        Color.White.copy(alpha = 0.7f),
+        Offset(size.width * 0.5f, size.height * 0.25f + topRadius),
+        Offset(size.width * 0.7f, size.height * 0.7f - bottomRadius),
+        3.dp.toPx()
+    )
+
+    // Bottom circles (parts)
+    drawCircle(
+        color = Color.White,
+        radius = bottomRadius,
+        center = Offset(size.width * 0.3f, size.height * 0.7f)
+    )
+    drawCircle(
+        color = Color.White,
+        radius = bottomRadius,
+        center = Offset(size.width * 0.7f, size.height * 0.7f)
+    )
+
+    // Plus sign in middle
+    drawCircle(
+        color = Color(0xFF4CAF50),
+        radius = bottomRadius * 0.5f,
+        center = Offset(size.width * 0.5f, size.height * 0.7f)
+    )
+}
+
+private fun DrawScope.drawCompareIcon() {
+    val groupRadius = size.width / 10
+
+    // Left group (3 items)
+    for (i in 0 until 3) {
+        drawCircle(
+            color = Color(0xFF4CAF50),
+            radius = groupRadius,
+            center = Offset(size.width * 0.15f + i * groupRadius * 2.2f, size.height * 0.35f)
+        )
+    }
+
+    // Right group (5 items in 2 rows)
+    for (i in 0 until 3) {
+        drawCircle(
+            color = Color(0xFF2196F3),
+            radius = groupRadius,
+            center = Offset(size.width * 0.55f + i * groupRadius * 2.2f, size.height * 0.25f)
+        )
+    }
+    for (i in 0 until 2) {
+        drawCircle(
+            color = Color(0xFF2196F3),
+            radius = groupRadius,
+            center = Offset(size.width * 0.65f + i * groupRadius * 2.2f, size.height * 0.45f)
+        )
+    }
+
+    // Greater than / Less than symbol
+    val symbolX = size.width * 0.5f
+    val symbolY = size.height * 0.75f
+    val symbolSize = size.width / 6
+
+    // Draw < symbol
+    drawLine(Color.White, Offset(symbolX + symbolSize, symbolY - symbolSize * 0.6f), Offset(symbolX - symbolSize * 0.5f, symbolY), 5.dp.toPx())
+    drawLine(Color.White, Offset(symbolX - symbolSize * 0.5f, symbolY), Offset(symbolX + symbolSize, symbolY + symbolSize * 0.6f), 5.dp.toPx())
+}
+
+private fun DrawScope.drawOddOneOutIcon() {
+    val itemRadius = size.width / 8
+
+    // Draw 4 items - 3 same (circles), 1 different (square)
+    val positions = listOf(
+        Offset(size.width * 0.25f, size.height * 0.35f),
+        Offset(size.width * 0.75f, size.height * 0.35f),
+        Offset(size.width * 0.25f, size.height * 0.65f),
+        Offset(size.width * 0.75f, size.height * 0.65f)
+    )
+
+    positions.forEachIndexed { index, pos ->
+        if (index == 2) {
+            // Odd one - square
+            drawRect(
+                color = Color(0xFFE53935),
+                topLeft = Offset(pos.x - itemRadius, pos.y - itemRadius),
+                size = Size(itemRadius * 2, itemRadius * 2)
+            )
+            // Highlight ring
+            drawCircle(
+                color = Color(0xFFFFEB3B),
+                radius = itemRadius * 1.5f,
+                center = pos,
+                style = Stroke(width = 3.dp.toPx())
+            )
+        } else {
+            // Same - circles
+            drawCircle(
+                color = Color(0xFF4CAF50),
+                radius = itemRadius,
+                center = pos
+            )
+        }
+    }
+
+    // Magnifying glass
+    val glassX = size.width * 0.85f
+    val glassY = size.height * 0.15f
+    drawCircle(Color.White, radius = size.width / 12, center = Offset(glassX, glassY), style = Stroke(width = 3.dp.toPx()))
+    drawLine(Color.White, Offset(glassX + size.width / 15, glassY + size.width / 15), Offset(glassX + size.width / 8, glassY + size.width / 8), 3.dp.toPx())
+}
+
+private fun DrawScope.drawSudokuIcon() {
+    val gridSize = size.width * 0.9f
+    val cellSize = gridSize / 4
+    val startX = (size.width - gridSize) / 2
+    val startY = (size.height - gridSize) / 2
+    val cornerRadius = 4.dp.toPx()
+
+    // Background
+    drawRoundRect(
+        color = Color(0xFF333333),
+        topLeft = Offset(startX - 2.dp.toPx(), startY - 2.dp.toPx()),
+        size = Size(gridSize + 4.dp.toPx(), gridSize + 4.dp.toPx()),
+        cornerRadius = CornerRadius(cornerRadius)
+    )
+
+    // Draw 4x4 grid cells
+    val colors = listOf(
+        Color(0xFFE8F5E9), Color(0xFFE3F2FD), Color(0xFFFCE4EC), Color(0xFFFFF3E0),
+        Color(0xFFFFF3E0), Color(0xFFFCE4EC), Color(0xFFE8F5E9), Color(0xFFE3F2FD),
+        Color(0xFFE3F2FD), Color(0xFFE8F5E9), Color(0xFFFFF3E0), Color(0xFFFCE4EC),
+        Color(0xFFFCE4EC), Color(0xFFFFF3E0), Color(0xFFE3F2FD), Color(0xFFE8F5E9)
+    )
+
+    for (row in 0 until 4) {
+        for (col in 0 until 4) {
+            val cellX = startX + col * cellSize + 1.dp.toPx()
+            val cellY = startY + row * cellSize + 1.dp.toPx()
+            val actualCellSize = cellSize - 2.dp.toPx()
+
+            drawRoundRect(
+                color = colors[row * 4 + col],
+                topLeft = Offset(cellX, cellY),
+                size = Size(actualCellSize, actualCellSize),
+                cornerRadius = CornerRadius(2.dp.toPx())
+            )
+
+            // Draw some emoji-like dots in cells
+            if ((row + col) % 2 == 0) {
+                drawCircle(
+                    color = Color(0xFF9C27B0).copy(alpha = 0.6f),
+                    radius = cellSize / 5,
+                    center = Offset(cellX + actualCellSize / 2, cellY + actualCellSize / 2)
+                )
+            }
+        }
+    }
+
+    // Thicker lines for 2x2 box boundaries
+    val midX = startX + gridSize / 2
+    val midY = startY + gridSize / 2
+    drawLine(Color(0xFF333333), Offset(midX, startY), Offset(midX, startY + gridSize), 3.dp.toPx())
+    drawLine(Color(0xFF333333), Offset(startX, midY), Offset(startX + gridSize, midY), 3.dp.toPx())
 }

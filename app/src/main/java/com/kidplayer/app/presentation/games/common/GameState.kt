@@ -73,5 +73,16 @@ enum class GameIconType {
     MATCH3,      // Colorful tiles
     COLORING,    // Paintbrush/palette
     SLIDING,     // Sliding puzzle grid
-    GRIDPUZZLE   // Picture puzzle grid
+    GRIDPUZZLE,  // Picture puzzle grid
+    PATTERN,     // Pattern shapes
+    COLORMIX,    // Color blobs
+    LETTERMATCH, // ABC letters
+    MAZE,        // Maze path
+    DOTS,        // Connect dots
+    ADDITION,    // Plus sign with numbers
+    SUBTRACTION, // Minus sign with animals
+    NUMBERBONDS, // Number bond diagram
+    COMPARE,     // Greater/less than
+    ODDONEOUT,   // Magnifying glass
+    SUDOKU       // Grid puzzle
 }

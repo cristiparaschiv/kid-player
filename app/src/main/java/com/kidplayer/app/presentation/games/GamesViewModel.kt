@@ -77,7 +77,7 @@ class GamesViewModel @Inject constructor() : ViewModel() {
                 route = "games/match3",
                 backgroundColor = 0xFFFFB347, // Orange
                 iconType = GameIconType.MATCH3,
-                isAvailable = false // Coming soon
+                isAvailable = true
             ),
             GameInfo(
                 id = "coloring",
@@ -86,7 +86,106 @@ class GamesViewModel @Inject constructor() : ViewModel() {
                 route = "games/coloring",
                 backgroundColor = 0xFF77DD77, // Pastel Green
                 iconType = GameIconType.COLORING,
-                isAvailable = false // Coming soon
+                isAvailable = true
+            ),
+            GameInfo(
+                id = "pattern",
+                name = "Pattern",
+                description = "Complete the pattern",
+                route = "games/pattern",
+                backgroundColor = 0xFF9575CD, // Light Purple
+                iconType = GameIconType.PATTERN,
+                isAvailable = true
+            ),
+            GameInfo(
+                id = "colormix",
+                name = "Color Mix",
+                description = "Mix colors together",
+                route = "games/colormix",
+                backgroundColor = 0xFFEC407A, // Pink
+                iconType = GameIconType.COLORMIX,
+                isAvailable = true
+            ),
+            GameInfo(
+                id = "lettermatch",
+                name = "Letter Match",
+                description = "Match letters & pictures",
+                route = "games/lettermatch",
+                backgroundColor = 0xFF26A69A, // Teal
+                iconType = GameIconType.LETTERMATCH,
+                isAvailable = true
+            ),
+            GameInfo(
+                id = "maze",
+                name = "Maze Runner",
+                description = "Find your way out",
+                route = "games/maze",
+                backgroundColor = 0xFF5C6BC0, // Indigo
+                iconType = GameIconType.MAZE,
+                isAvailable = true
+            ),
+            GameInfo(
+                id = "dots",
+                name = "Connect Dots",
+                description = "Connect the dots",
+                route = "games/dots",
+                backgroundColor = 0xFFFFCA28, // Amber
+                iconType = GameIconType.DOTS,
+                isAvailable = true
+            ),
+            GameInfo(
+                id = "addition",
+                name = "Addition Adventure",
+                description = "Learn to add numbers",
+                route = "games/addition",
+                backgroundColor = 0xFF4CAF50, // Green
+                iconType = GameIconType.ADDITION,
+                isAvailable = true
+            ),
+            GameInfo(
+                id = "subtraction",
+                name = "Subtraction Safari",
+                description = "Learn to subtract",
+                route = "games/subtraction",
+                backgroundColor = 0xFFFF7043, // Deep Orange
+                iconType = GameIconType.SUBTRACTION,
+                isAvailable = true
+            ),
+            GameInfo(
+                id = "numberbonds",
+                name = "Number Bonds",
+                description = "Numbers that go together",
+                route = "games/numberbonds",
+                backgroundColor = 0xFF2196F3, // Blue
+                iconType = GameIconType.NUMBERBONDS,
+                isAvailable = true
+            ),
+            GameInfo(
+                id = "compare",
+                name = "Greater or Less",
+                description = "Compare numbers",
+                route = "games/compare",
+                backgroundColor = 0xFFAB47BC, // Purple
+                iconType = GameIconType.COMPARE,
+                isAvailable = true
+            ),
+            GameInfo(
+                id = "oddoneout",
+                name = "Odd One Out",
+                description = "Find what's different",
+                route = "games/oddoneout",
+                backgroundColor = 0xFFFF5722, // Deep Orange
+                iconType = GameIconType.ODDONEOUT,
+                isAvailable = true
+            ),
+            GameInfo(
+                id = "sudoku",
+                name = "Picture Sudoku",
+                description = "Fill the puzzle grid",
+                route = "games/sudoku",
+                backgroundColor = 0xFF7C4DFF, // Deep Purple
+                iconType = GameIconType.SUDOKU,
+                isAvailable = true
             )
         )
 
