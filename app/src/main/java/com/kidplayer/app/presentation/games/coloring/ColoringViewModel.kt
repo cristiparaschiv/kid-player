@@ -114,7 +114,7 @@ class ColoringViewModel @Inject constructor(
         if (undoStack.size >= 20) {
             undoStack.removeAt(0)
         }
-        undoStack.add(bitmap.copy(bitmap.config, true))
+        undoStack.add(bitmap.copy(bitmap.config ?: android.graphics.Bitmap.Config.ARGB_8888, true))
 
         // Perform flood fill
         val fillColor = _uiState.value.selectedColor.toArgb()
