@@ -117,7 +117,7 @@ private fun RoundIndicator(
             Text(text = "🦁", fontSize = 28.sp)
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "Question",
+                    text = "QUESTION",
                     style = MaterialTheme.typography.labelSmall,
                     color = Color(0xFF795548)
                 )
@@ -130,7 +130,7 @@ private fun RoundIndicator(
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "Correct",
+                    text = "CORRECT",
                     style = MaterialTheme.typography.labelSmall,
                     color = Color(0xFF795548)
                 )
@@ -192,7 +192,7 @@ private fun SubtractionProblemDisplay(
                     exit = fadeOut()
                 ) {
                     Text(
-                        text = "${problem.takeAway} ran away! How many are left?",
+                        text = "${problem.takeAway} RAN AWAY! HOW MANY ARE LEFT?",
                         style = MaterialTheme.typography.bodyLarge,
                         color = Color(0xFF795548),
                         textAlign = TextAlign.Center
@@ -208,13 +208,13 @@ private fun SubtractionProblemDisplay(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "${problem.correctAnswer} left!",
+                            text = "${problem.correctAnswer} LEFT!",
                             fontSize = 32.sp,
                             fontWeight = FontWeight.Bold,
                             color = if (isCorrect) Color(0xFF4CAF50) else Color(0xFFFF9800)
                         )
                         Text(
-                            text = if (isCorrect) "Excellent! 🌟" else "The answer was ${problem.correctAnswer}",
+                            text = if (isCorrect) "EXCELLENT!" else "THE ANSWER WAS ${problem.correctAnswer}",
                             style = MaterialTheme.typography.titleMedium,
                             color = if (isCorrect) Color(0xFF4CAF50) else Color(0xFFFF9800)
                         )

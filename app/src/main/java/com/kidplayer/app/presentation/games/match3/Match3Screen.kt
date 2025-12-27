@@ -116,7 +116,7 @@ private fun GameInfoBar(
             // Moves remaining
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "Moves",
+                    text = "MOVES",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

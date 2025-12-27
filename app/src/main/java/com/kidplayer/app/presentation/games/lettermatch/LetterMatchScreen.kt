@@ -65,8 +65,8 @@ fun LetterMatchScreen(
                 // Instruction text
                 Text(
                     text = when {
-                        uiState.showResult && uiState.isCorrect -> "Correct! 🎉"
-                        uiState.showResult -> "The answer was ${getCorrectAnswerText(puzzle)}"
+                        uiState.showResult && uiState.isCorrect -> "CORRECT!"
+                        uiState.showResult -> "THE ANSWER WAS ${getCorrectAnswerText(puzzle).uppercase()}"
                         else -> getInstructionText(puzzle.mode)
                     },
                     style = MaterialTheme.typography.titleLarge,
@@ -114,7 +114,7 @@ private fun RoundIndicator(
         ) {
             Text(text = "📚", fontSize = 24.sp)
             Text(
-                text = "Round $round of $totalRounds",
+                text = "ROUND $round OF $totalRounds",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onTertiaryContainer
@@ -286,9 +286,9 @@ private fun OptionsDisplay(
 
 private fun getInstructionText(mode: LetterMatchMode): String {
     return when (mode) {
-        LetterMatchMode.LETTER_TO_PICTURE -> "Find the picture that starts with this letter"
-        LetterMatchMode.PICTURE_TO_LETTER -> "What letter does this start with?"
-        LetterMatchMode.UPPER_TO_LOWER -> "Find the lowercase letter"
+        LetterMatchMode.LETTER_TO_PICTURE -> "FIND THE PICTURE THAT STARTS WITH THIS LETTER"
+        LetterMatchMode.PICTURE_TO_LETTER -> "WHAT LETTER DOES THIS START WITH?"
+        LetterMatchMode.UPPER_TO_LOWER -> "FIND THE LOWERCASE LETTER"
     }
 }
 

@@ -94,9 +94,9 @@ private fun DifficultySelector(
                 label = {
                     Text(
                         text = when (difficulty) {
-                            Difficulty.EASY -> "Easy (6)"
-                            Difficulty.MEDIUM -> "Medium (12)"
-                            Difficulty.HARD -> "Hard (16)"
+                            Difficulty.EASY -> "EASY (6)"
+                            Difficulty.MEDIUM -> "MEDIUM (12)"
+                            Difficulty.HARD -> "HARD (16)"
                         },
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                     )
@@ -121,8 +121,8 @@ private fun GameStats(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        StatItem(label = "Moves", value = moves.toString())
-        StatItem(label = "Matched", value = "$matchedPairs / $totalPairs")
+        StatItem(label = "MOVES", value = moves.toString())
+        StatItem(label = "MATCHED", value = "$matchedPairs / $totalPairs")
     }
 }
 

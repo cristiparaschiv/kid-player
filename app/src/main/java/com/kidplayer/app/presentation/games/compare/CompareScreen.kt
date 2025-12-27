@@ -70,10 +70,10 @@ fun CompareScreen(
                 // Question text
                 Text(
                     text = if (uiState.showResult) {
-                        if (uiState.isCorrect) "Correct! ${problem.leftCount} ${problem.correctSymbol} ${problem.rightCount} ⭐"
-                        else "The answer is ${problem.correctSymbol}"
+                        if (uiState.isCorrect) "CORRECT! ${problem.leftCount} ${problem.correctSymbol} ${problem.rightCount}"
+                        else "THE ANSWER IS ${problem.correctSymbol}"
                     } else {
-                        "Which side has more?"
+                        "WHICH SIDE HAS MORE?"
                     },
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Medium,
@@ -120,7 +120,7 @@ private fun RoundIndicator(
             Text(text = "⚖️", fontSize = 28.sp)
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "Round",
+                    text = "ROUND",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSecondaryContainer
                 )
@@ -133,7 +133,7 @@ private fun RoundIndicator(
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "Correct",
+                    text = "CORRECT",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSecondaryContainer
                 )

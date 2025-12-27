@@ -72,12 +72,12 @@ fun ColorMixScreen(
                 Text(
                     text = if (uiState.showResult) {
                         if (uiState.isCorrect) {
-                            "${puzzle.color1.displayName} + ${puzzle.color2.displayName} = ${puzzle.correctAnswer.displayName}! 🎨"
+                            "${puzzle.color1.displayName.uppercase()} + ${puzzle.color2.displayName.uppercase()} = ${puzzle.correctAnswer.displayName.uppercase()}!"
                         } else {
-                            "Not quite! It makes ${puzzle.correctAnswer.displayName} ${puzzle.correctAnswer.emoji}"
+                            "NOT QUITE! IT MAKES ${puzzle.correctAnswer.displayName.uppercase()}"
                         }
                     } else {
-                        "What color do these make?"
+                        "WHAT COLOR DO THESE MAKE?"
                     },
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
@@ -128,7 +128,7 @@ private fun RoundIndicator(
                 fontSize = 24.sp
             )
             Text(
-                text = "Round $round of $totalRounds",
+                text = "ROUND $round OF $totalRounds",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSecondaryContainer

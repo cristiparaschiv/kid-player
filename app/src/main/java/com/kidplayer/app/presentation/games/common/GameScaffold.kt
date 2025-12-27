@@ -26,6 +26,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.kidplayer.app.R
+import com.kidplayer.app.presentation.components.StarCelebration
+import com.kidplayer.app.presentation.components.StarDisplay
 import com.kidplayer.app.presentation.components.rememberHapticFeedback
 import com.kidplayer.app.presentation.util.bouncyClickable
 import com.kidplayer.app.ui.theme.Dimensions
@@ -44,6 +46,9 @@ fun GameScaffold(
     onResumeClick: () -> Unit,
     modifier: Modifier = Modifier,
     showScore: Boolean = true,
+    totalStars: Int = 0,
+    starsEarned: Int = 0,
+    onStarCelebrationComplete: () -> Unit = {},
     content: @Composable BoxScope.() -> Unit
 ) {
     val haptic = rememberHapticFeedback()
@@ -77,6 +82,7 @@ fun GameScaffold(
                 else -> 0
             },
             showScore = showScore && gameState is GameState.Playing,
+            totalStars = totalStars,
             onBackClick = {
                 haptic.performLight()
                 onBackClick()
@@ -90,6 +96,19 @@ fun GameScaffold(
                 onRestartClick()
             }
         )
+
+        // Star celebration overlay
+        AnimatedVisibility(
+            visible = starsEarned > 0,
+            enter = fadeIn() + scaleIn(),
+            exit = fadeOut() + scaleOut(),
+            modifier = Modifier.align(Alignment.Center)
+        ) {
+            StarCelebration(
+                starsEarned = starsEarned,
+                onDismiss = onStarCelebrationComplete
+            )
+        }
 
         // Pause overlay
         AnimatedVisibility(
@@ -145,87 +164,105 @@ private fun GameHeader(
     gameName: String,
     score: Int,
     showScore: Boolean,
+    totalStars: Int,
     onBackClick: () -> Unit,
     onPauseClick: () -> Unit,
     onRestartClick: () -> Unit
 ) {
-    Row(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(
                 MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
                 RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
             )
-            .padding(horizontal = 16.dp, vertical = 12.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
     ) {
-        // Back button
-        IconButton(
-            onClick = onBackClick,
-            modifier = Modifier
-                .size(56.dp)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primaryContainer)
-        ) {
-            Icon(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = "Back to games",
-                tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                modifier = Modifier.size(28.dp)
-            )
-        }
-
-        // Game name and score
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = gameName,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            if (showScore) {
-                Text(
-                    text = "Score: $score",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.primary
-                )
+        // Star display row at the very top
+        if (totalStars > 0) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp, end = 16.dp),
+                contentAlignment = Alignment.CenterEnd
+            ) {
+                StarDisplay(totalStars = totalStars)
             }
         }
 
-        // Control buttons
         Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = if (totalStars > 0) 8.dp else 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            // Back button
             IconButton(
-                onClick = onRestartClick,
+                onClick = onBackClick,
                 modifier = Modifier
                     .size(56.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.secondaryContainer)
+                    .background(MaterialTheme.colorScheme.primaryContainer)
             ) {
                 Icon(
-                    imageVector = Icons.Default.Refresh,
-                    contentDescription = "Restart game",
-                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Back to games",
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
                     modifier = Modifier.size(28.dp)
                 )
             }
-            IconButton(
-                onClick = onPauseClick,
-                modifier = Modifier
-                    .size(56.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.tertiaryContainer)
+
+            // Game name and score
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(
-                    imageVector = Icons.Default.Pause,
-                    contentDescription = "Pause game",
-                    tint = MaterialTheme.colorScheme.onTertiaryContainer,
-                    modifier = Modifier.size(28.dp)
+                Text(
+                    text = gameName.uppercase(),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
+                if (showScore) {
+                    Text(
+                        text = "SCORE: $score",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+
+            // Control buttons
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                IconButton(
+                    onClick = onRestartClick,
+                    modifier = Modifier
+                        .size(56.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Refresh,
+                        contentDescription = "Restart game",
+                        tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                        modifier = Modifier.size(28.dp)
+                    )
+                }
+                IconButton(
+                    onClick = onPauseClick,
+                    modifier = Modifier
+                        .size(56.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.tertiaryContainer)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Pause,
+                        contentDescription = "Pause game",
+                        tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                        modifier = Modifier.size(28.dp)
+                    )
+                }
             }
         }
     }
@@ -258,7 +295,7 @@ private fun PauseOverlay(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    text = "Game Paused",
+                    text = "GAME PAUSED",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold
                 )
@@ -273,7 +310,7 @@ private fun PauseOverlay(
                     shape = RoundedCornerShape(Dimensions.buttonCornerRadius)
                 ) {
                     Text(
-                        text = "Resume",
+                        text = "RESUME",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -287,7 +324,7 @@ private fun PauseOverlay(
                     shape = RoundedCornerShape(Dimensions.buttonCornerRadius)
                 ) {
                     Text(
-                        text = "Restart",
+                        text = "RESTART",
                         style = MaterialTheme.typography.titleMedium
                     )
                 }
@@ -297,7 +334,7 @@ private fun PauseOverlay(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = "Exit Game",
+                        text = "EXIT GAME",
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.error
                     )
@@ -337,7 +374,7 @@ private fun CompletionOverlay(
             ) {
                 // Title
                 Text(
-                    text = if (won) "Great Job!" else "Good Try!",
+                    text = if (won) "GREAT JOB!" else "GOOD TRY!",
                     style = MaterialTheme.typography.headlineLarge,
                     fontWeight = FontWeight.Bold,
                     color = if (won) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
@@ -357,7 +394,7 @@ private fun CompletionOverlay(
 
                 // Score
                 Text(
-                    text = "Score: $score",
+                    text = "SCORE: $score",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Medium
                 )
@@ -372,7 +409,7 @@ private fun CompletionOverlay(
                     shape = RoundedCornerShape(Dimensions.buttonCornerRadius)
                 ) {
                     Text(
-                        text = "Play Again",
+                        text = "PLAY AGAIN",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -386,7 +423,7 @@ private fun CompletionOverlay(
                     shape = RoundedCornerShape(Dimensions.buttonCornerRadius)
                 ) {
                     Text(
-                        text = "Back to Games",
+                        text = "BACK TO GAMES",
                         style = MaterialTheme.typography.titleMedium
                     )
                 }

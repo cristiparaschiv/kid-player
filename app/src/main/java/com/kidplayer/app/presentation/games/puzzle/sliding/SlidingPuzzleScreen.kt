@@ -27,6 +27,12 @@ import com.kidplayer.app.presentation.components.rememberHapticFeedback
 import com.kidplayer.app.presentation.games.common.Difficulty
 import com.kidplayer.app.presentation.games.common.GameScaffold
 import com.kidplayer.app.presentation.games.common.GameState
+import com.kidplayer.app.presentation.games.common.components.CategoryItem
+import com.kidplayer.app.presentation.games.common.components.ImageItem
+import com.kidplayer.app.presentation.games.common.components.KidFriendlyCategorySelector
+import com.kidplayer.app.presentation.games.common.components.KidFriendlyDifficultySelector
+import com.kidplayer.app.presentation.games.common.components.KidFriendlyImageSelector
+import com.kidplayer.app.presentation.games.common.components.KidFriendlyStartButton
 import com.kidplayer.app.presentation.games.puzzle.PuzzleCategory
 import com.kidplayer.app.presentation.games.puzzle.PuzzleImage
 import com.kidplayer.app.presentation.games.puzzle.PuzzleImageLoader
@@ -59,31 +65,71 @@ fun SlidingPuzzleScreen(
         ) {
             // Image selection and difficulty (only before game starts or when ready)
             if (uiState.gameState == GameState.Ready || uiState.pieces.isEmpty()) {
-                CategorySelector(
-                    selectedCategory = uiState.selectedCategory,
-                    onCategorySelect = { viewModel.selectCategory(it) },
-                    modifier = Modifier.padding(bottom = 8.dp)
+                val context = LocalContext.current
+
+                // Convert categories to CategoryItems
+                val categoryItems = remember {
+                    PuzzleCategory.entries.map { cat ->
+                        CategoryItem(
+                            id = cat.name,
+                            name = cat.displayName,
+                            emoji = cat.emoji,
+                            backgroundColor = Color(cat.backgroundColor)
+                        )
+                    }
+                }
+
+                // Convert images to ImageItems
+                val imageItems = remember(uiState.availableImages) {
+                    uiState.availableImages.map { img ->
+                        ImageItem(
+                            id = img.name,
+                            name = img.displayName,
+                            thumbnail = PuzzleImageLoader.loadFullImage(context, img)
+                        )
+                    }
+                }
+
+                // Kid-friendly category selector
+                KidFriendlyCategorySelector(
+                    categories = categoryItems,
+                    selectedCategoryId = uiState.selectedCategory.name,
+                    onCategorySelect = { id ->
+                        PuzzleCategory.fromId(id)?.let { viewModel.selectCategory(it) }
+                    },
+                    modifier = Modifier.padding(bottom = 16.dp)
                 )
 
-                ImageSelector(
-                    availableImages = uiState.availableImages,
-                    selectedImage = uiState.selectedImage,
-                    onImageSelect = { viewModel.selectImage(it) },
-                    modifier = Modifier.padding(bottom = 12.dp)
+                // Kid-friendly image selector
+                KidFriendlyImageSelector(
+                    images = imageItems,
+                    selectedImageId = uiState.selectedImage.name,
+                    onImageSelect = { id ->
+                        PuzzleImage.fromId(id)?.let { viewModel.selectImage(it) }
+                    },
+                    modifier = Modifier.padding(bottom = 16.dp)
                 )
 
-                DifficultySelector(
-                    currentDifficulty = uiState.config.difficulty,
-                    onDifficultyChange = { viewModel.setDifficulty(it) },
-                    modifier = Modifier.padding(bottom = 12.dp)
+                // Difficulty selector
+                KidFriendlyDifficultySelector(
+                    difficulties = listOf(
+                        "EASY" to "Easy 3x3",
+                        "MEDIUM" to "Medium 4x4",
+                        "HARD" to "Hard 5x5"
+                    ),
+                    selectedDifficultyId = uiState.config.difficulty.name,
+                    onDifficultySelect = { id ->
+                        Difficulty.valueOf(id).let { viewModel.setDifficulty(it) }
+                    },
+                    modifier = Modifier.padding(bottom = 20.dp)
                 )
 
-                Button(
+                // Start button
+                KidFriendlyStartButton(
+                    text = "Start Puzzle!",
                     onClick = { viewModel.startNewGame() },
                     modifier = Modifier.padding(bottom = 16.dp)
-                ) {
-                    Text("Start Puzzle")
-                }
+                )
             } else {
                 // Show difficulty during game
                 DifficultySelector(
@@ -140,99 +186,6 @@ fun SlidingPuzzleScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun CategorySelector(
-    selectedCategory: PuzzleCategory,
-    onCategorySelect: (PuzzleCategory) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "Choose a category:",
-            style = MaterialTheme.typography.labelLarge,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            PuzzleCategory.entries.forEach { category ->
-                FilterChip(
-                    selected = category == selectedCategory,
-                    onClick = { onCategorySelect(category) },
-                    label = { Text(category.displayName) },
-                    colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = MaterialTheme.colorScheme.tertiary,
-                        selectedLabelColor = MaterialTheme.colorScheme.onTertiary
-                    )
-                )
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun ImageSelector(
-    availableImages: List<PuzzleImage>,
-    selectedImage: PuzzleImage,
-    onImageSelect: (PuzzleImage) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val context = LocalContext.current
-
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "Choose a picture:",
-            style = MaterialTheme.typography.labelLarge,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            availableImages.forEach { image ->
-                key(image.name) {
-                    val isSelected = image == selectedImage
-                    val thumbnail = remember(image) {
-                        PuzzleImageLoader.loadFullImage(context, image)
-                    }
-
-                    Card(
-                        onClick = { onImageSelect(image) },
-                        modifier = Modifier
-                            .size(70.dp)
-                            .then(
-                                if (isSelected) {
-                                    Modifier.border(
-                                        width = 3.dp,
-                                        color = MaterialTheme.colorScheme.primary,
-                                        shape = RoundedCornerShape(12.dp)
-                                    )
-                                } else Modifier
-                            ),
-                        shape = RoundedCornerShape(12.dp),
-                        elevation = CardDefaults.cardElevation(
-                            defaultElevation = if (isSelected) 8.dp else 2.dp
-                        )
-                    ) {
-                        Image(
-                            bitmap = thumbnail,
-                            contentDescription = image.displayName,
-                            modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Crop
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

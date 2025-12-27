@@ -16,6 +16,9 @@ data class HomeUiState(
     val libraries: List<Library> = emptyList(),
     val selectedLibraryId: String? = null,
 
+    // Favorites
+    val favoriteIds: Set<String> = emptySet(),
+
     // Pagination state
     val totalItemCount: Int = 0,
     val hasMoreItems: Boolean = false,

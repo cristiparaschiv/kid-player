@@ -72,10 +72,10 @@ fun NumberBondsScreen(
                 // Question text
                 Text(
                     text = if (uiState.showResult) {
-                        if (uiState.isCorrect) "Correct! ${problem.givenNumber} + ${problem.correctAnswer} = ${problem.targetNumber} ⭐"
+                        if (uiState.isCorrect) "CORRECT! ${problem.givenNumber} + ${problem.correctAnswer} = ${problem.targetNumber}"
                         else "${problem.givenNumber} + ${problem.correctAnswer} = ${problem.targetNumber}"
                     } else {
-                        "What number goes with ${problem.givenNumber} to make ${problem.targetNumber}?"
+                        "WHAT NUMBER GOES WITH ${problem.givenNumber} TO MAKE ${problem.targetNumber}?"
                     },
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Medium,
@@ -123,7 +123,7 @@ private fun RoundIndicator(
             Text(text = "🔗", fontSize = 28.sp)
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "Round",
+                    text = "ROUND",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSecondaryContainer
                 )
@@ -136,7 +136,7 @@ private fun RoundIndicator(
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "Correct",
+                    text = "CORRECT",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSecondaryContainer
                 )

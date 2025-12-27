@@ -16,12 +16,22 @@ import androidx.navigation.navArgument
 import com.kidplayer.app.presentation.browse.BrowseScreen
 import com.kidplayer.app.presentation.downloaded.DownloadedScreen
 import com.kidplayer.app.presentation.favorites.FavoritesScreen
+import com.kidplayer.app.presentation.games.GameMusicController
+import com.kidplayer.app.presentation.games.GameMusicManager
 import com.kidplayer.app.presentation.games.GamesScreen
 import com.kidplayer.app.presentation.games.addition.AdditionScreen
+import com.kidplayer.app.presentation.games.ballsort.BallSortScreen
 import com.kidplayer.app.presentation.games.coloring.ColoringScreen
+import com.kidplayer.app.presentation.games.counting.CountingScreen
+import com.kidplayer.app.presentation.games.crossword.CrosswordScreen
 import com.kidplayer.app.presentation.games.colormix.ColorMixScreen
+import com.kidplayer.app.presentation.games.shapes.ShapesScreen
+import com.kidplayer.app.presentation.games.spelling.SpellingScreen
+import com.kidplayer.app.presentation.games.spotdiff.SpotDiffScreen
+import com.kidplayer.app.presentation.games.wordsearch.WordSearchScreen
 import com.kidplayer.app.presentation.games.compare.CompareScreen
 import com.kidplayer.app.presentation.games.dots.DotsScreen
+import com.kidplayer.app.presentation.games.hangman.HangmanScreen
 import com.kidplayer.app.presentation.games.lettermatch.LetterMatchScreen
 import com.kidplayer.app.presentation.games.match3.Match3Screen
 import com.kidplayer.app.presentation.games.maze.MazeScreen
@@ -101,8 +111,17 @@ fun rememberVideoNavigationHandler(
 fun KidPlayerNavGraphPhase6(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    startDestination: String = Screen.Splash.route
+    startDestination: String = Screen.Splash.route,
+    musicManager: GameMusicManager? = null
 ) {
+    // Control background music for games section
+    musicManager?.let { manager ->
+        GameMusicController(
+            navController = navController,
+            musicManager = manager
+        )
+    }
+
     NavHost(
         navController = navController,
         startDestination = startDestination,
@@ -200,7 +219,13 @@ fun KidPlayerNavGraphPhase6(
         }
 
         // Games Hub Screen
-        composable(route = Screen.Games.route) {
+        composable(
+            route = Screen.Games.route,
+            enterTransition = NavAnimations.enterSlideLeft,
+            exitTransition = NavAnimations.exitSlideLeft,
+            popEnterTransition = NavAnimations.popEnterSlideRight,
+            popExitTransition = NavAnimations.popExitSlideRight
+        ) {
             GamesScreen(
                 onGameSelect = { gameId ->
                     navController.navigate(Screen.Game.createRoute(gameId))
@@ -215,7 +240,11 @@ fun KidPlayerNavGraphPhase6(
                 navArgument("gameId") {
                     type = NavType.StringType
                 }
-            )
+            ),
+            enterTransition = NavAnimations.enterSlideLeft,
+            exitTransition = NavAnimations.exitSlideLeft,
+            popEnterTransition = NavAnimations.popEnterSlideRight,
+            popExitTransition = NavAnimations.popExitSlideRight
         ) { backStackEntry ->
             val gameId = backStackEntry.arguments?.getString("gameId") ?: ""
             when (gameId) {
@@ -271,6 +300,30 @@ fun KidPlayerNavGraphPhase6(
                     onNavigateBack = { navController.popBackStack() }
                 )
                 "sudoku" -> SudokuScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+                "ballsort" -> BallSortScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+                "hangman" -> HangmanScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+                "crossword" -> CrosswordScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+                "counting" -> CountingScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+                "shapes" -> ShapesScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+                "spelling" -> SpellingScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+                "wordsearch" -> WordSearchScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+                "spotdiff" -> SpotDiffScreen(
                     onNavigateBack = { navController.popBackStack() }
                 )
                 // Add more games here as they are implemented

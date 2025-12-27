@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -30,6 +31,16 @@ fun GamesScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
+    // Start background music when entering games hub
+    // Music continues playing when navigating to individual games
+    DisposableEffect(Unit) {
+        viewModel.musicManager.startMusic()
+        onDispose {
+            // Don't stop here - individual games will keep music playing
+            // Music stops when navigating completely out of games section
+        }
+    }
+
     KidFriendlyBackgroundWrapper(
         backgroundImageRes = R.drawable.cartoon_background
     ) {
@@ -53,13 +64,13 @@ fun GamesScreen(
                 }
             } else {
                 LazyVerticalGrid(
-                    columns = GridCells.Adaptive(minSize = 180.dp),
+                    columns = GridCells.Fixed(3),  // Fixed 3 columns for larger cards on tablets
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues),
-                    contentPadding = PaddingValues(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    contentPadding = PaddingValues(24.dp),
+                    horizontalArrangement = Arrangement.spacedBy(20.dp),
+                    verticalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
                     items(
                         items = uiState.games,

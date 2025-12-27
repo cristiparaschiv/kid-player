@@ -97,7 +97,7 @@ fun ShapePuzzleScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = if (selectedShapeId != null) "Tap matching outline!" else "Tap a shape",
+                    text = if (selectedShapeId != null) "TAP MATCHING OUTLINE!" else "TAP A SHAPE",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -111,7 +111,7 @@ fun ShapePuzzleScreen(
 
             // Target area (outlines)
             Text(
-                text = "Match the shapes:",
+                text = "MATCH THE SHAPES:",
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(bottom = 4.dp)
@@ -141,7 +141,7 @@ fun ShapePuzzleScreen(
 
             // Draggable shapes area
             Text(
-                text = "Your shapes:",
+                text = "YOUR SHAPES:",
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(bottom = 4.dp)
@@ -181,9 +181,9 @@ private fun DifficultySelector(
                 label = {
                     Text(
                         text = when (difficulty) {
-                            Difficulty.EASY -> "Easy (3)"
-                            Difficulty.MEDIUM -> "Medium (5)"
-                            Difficulty.HARD -> "Hard (7)"
+                            Difficulty.EASY -> "EASY (3)"
+                            Difficulty.MEDIUM -> "MEDIUM (5)"
+                            Difficulty.HARD -> "HARD (7)"
                         },
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                     )
@@ -327,7 +327,7 @@ private fun ShapeSelectionGrid(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "All shapes placed!",
+                    text = "ALL SHAPES PLACED!",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF4CAF50)

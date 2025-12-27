@@ -98,7 +98,7 @@ fun DotsScreen(
                                 fontSize = 80.sp
                             )
                             Text(
-                                text = "It's a ${puzzle.name}!",
+                                text = "IT'S A ${puzzle.name.uppercase()}!",
                                 style = MaterialTheme.typography.headlineMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = puzzle.color
@@ -117,7 +117,7 @@ fun DotsScreen(
                     )
                 ) {
                     Text(
-                        text = "Tap the dots in order: 1, 2, 3...",
+                        text = "TAP THE DOTS IN ORDER: 1, 2, 3...",
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp),
                         color = MaterialTheme.colorScheme.onSecondaryContainer
@@ -148,7 +148,7 @@ private fun PuzzleInfo(
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "Picture",
+                    text = "PICTURE",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
@@ -161,12 +161,12 @@ private fun PuzzleInfo(
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "Next Dot",
+                    text = "NEXT DOT",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
                 Text(
-                    text = if (nextDot <= totalDots) "$nextDot" else "Done!",
+                    text = if (nextDot <= totalDots) "$nextDot" else "DONE!",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onPrimaryContainer

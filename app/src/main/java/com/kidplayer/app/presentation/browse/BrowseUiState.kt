@@ -10,6 +10,7 @@ data class BrowseUiState(
     val libraries: List<Library> = emptyList(),
     val selectedLibraryId: String? = null,
     val mediaItems: List<MediaItem> = emptyList(),
+    val favoriteIds: Set<String> = emptySet(),
     val isLoading: Boolean = true,
     val isRefreshing: Boolean = false,
     val isLoadingMore: Boolean = false,

@@ -8,6 +8,7 @@ import com.kidplayer.app.data.local.dao.DownloadDao
 import com.kidplayer.app.data.local.dao.FavoriteDao
 import com.kidplayer.app.data.local.dao.LibraryDao
 import com.kidplayer.app.data.local.dao.MediaItemDao
+import com.kidplayer.app.data.local.dao.PlayerRewardDao
 import com.kidplayer.app.data.local.dao.SearchHistoryDao
 import com.kidplayer.app.data.local.dao.WatchHistoryDao
 import dagger.Module
@@ -35,7 +36,8 @@ object DatabaseModule {
         )
             .addMigrations(
                 DatabaseMigrations.MIGRATION_4_5,
-                DatabaseMigrations.MIGRATION_5_6
+                DatabaseMigrations.MIGRATION_5_6,
+                DatabaseMigrations.MIGRATION_6_7
             )
             .fallbackToDestructiveMigration() // Fallback for other versions
             .build()
@@ -75,5 +77,11 @@ object DatabaseModule {
     @Singleton
     fun provideSearchHistoryDao(database: AppDatabase): SearchHistoryDao {
         return database.searchHistoryDao()
+    }
+
+    @Provides
+    @Singleton
+    fun providePlayerRewardDao(database: AppDatabase): PlayerRewardDao {
+        return database.playerRewardDao()
     }
 }

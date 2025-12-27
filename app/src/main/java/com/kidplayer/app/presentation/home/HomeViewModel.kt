@@ -6,9 +6,11 @@ import com.kidplayer.app.data.network.NetworkMonitor
 import com.kidplayer.app.data.network.NetworkState
 import com.kidplayer.app.domain.model.Result
 import com.kidplayer.app.domain.usecase.CancelDownloadUseCase
+import com.kidplayer.app.domain.usecase.GetFavoritesUseCase
 import com.kidplayer.app.domain.usecase.GetLibrariesUseCase
 import com.kidplayer.app.domain.usecase.GetMediaItemsUseCase
 import com.kidplayer.app.domain.usecase.StartDownloadUseCase
+import com.kidplayer.app.domain.usecase.ToggleFavoriteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,6 +30,8 @@ class HomeViewModel @Inject constructor(
     private val getMediaItemsUseCase: GetMediaItemsUseCase,
     private val startDownloadUseCase: StartDownloadUseCase,
     private val cancelDownloadUseCase: CancelDownloadUseCase,
+    private val getFavoritesUseCase: GetFavoritesUseCase,
+    private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
     private val networkMonitor: NetworkMonitor
 ) : ViewModel() {
 
@@ -42,6 +46,34 @@ class HomeViewModel @Inject constructor(
 
     init {
         loadLibraries()
+        loadFavorites()
+    }
+
+    /**
+     * Load favorite video IDs
+     */
+    private fun loadFavorites() {
+        viewModelScope.launch {
+            getFavoritesUseCase().collect { favorites ->
+                val favoriteIds = favorites.map { it.id }.toSet()
+                _uiState.update { it.copy(favoriteIds = favoriteIds) }
+            }
+        }
+    }
+
+    /**
+     * Toggle favorite status for a media item
+     */
+    fun toggleFavorite(mediaItemId: String) {
+        viewModelScope.launch {
+            val result = toggleFavoriteUseCase(mediaItemId)
+            if (result.isSuccess) {
+                val isFavorite = result.getOrNull() ?: false
+                Timber.d("Toggled favorite for $mediaItemId: $isFavorite")
+            } else {
+                Timber.e("Error toggling favorite: ${result.exceptionOrNull()?.message}")
+            }
+        }
     }
 
     /**

@@ -7,12 +7,14 @@ import com.kidplayer.app.data.local.dao.DownloadDao
 import com.kidplayer.app.data.local.dao.FavoriteDao
 import com.kidplayer.app.data.local.dao.LibraryDao
 import com.kidplayer.app.data.local.dao.MediaItemDao
+import com.kidplayer.app.data.local.dao.PlayerRewardDao
 import com.kidplayer.app.data.local.dao.SearchHistoryDao
 import com.kidplayer.app.data.local.dao.WatchHistoryDao
 import com.kidplayer.app.data.local.entity.DownloadEntity
 import com.kidplayer.app.data.local.entity.FavoriteEntity
 import com.kidplayer.app.data.local.entity.LibraryEntity
 import com.kidplayer.app.data.local.entity.MediaItemEntity
+import com.kidplayer.app.data.local.entity.PlayerRewardEntity
 import com.kidplayer.app.data.local.entity.SearchHistoryEntity
 import com.kidplayer.app.data.local.entity.WatchHistoryEntity
 
@@ -28,9 +30,10 @@ import com.kidplayer.app.data.local.entity.WatchHistoryEntity
         DownloadEntity::class,
         WatchHistoryEntity::class,
         FavoriteEntity::class,
-        SearchHistoryEntity::class
+        SearchHistoryEntity::class,
+        PlayerRewardEntity::class
     ],
-    version = 6,
+    version = 7,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -65,6 +68,11 @@ abstract class AppDatabase : RoomDatabase() {
      * DAO for search history operations
      */
     abstract fun searchHistoryDao(): SearchHistoryDao
+
+    /**
+     * DAO for player reward operations
+     */
+    abstract fun playerRewardDao(): PlayerRewardDao
 
     companion object {
         const val DATABASE_NAME = "kid_player_database"

@@ -16,6 +16,7 @@ import androidx.media3.common.util.UnstableApi
 import androidx.navigation.compose.rememberNavController
 import com.kidplayer.app.data.local.ScreenTimeManager
 import com.kidplayer.app.data.network.NetworkMonitor
+import com.kidplayer.app.presentation.games.GameMusicManager
 import com.kidplayer.app.presentation.navigation.KidPlayerNavGraphPhase6
 import com.kidplayer.app.presentation.navigation.MainScaffold
 import com.kidplayer.app.presentation.navigation.Screen
@@ -41,6 +42,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var networkMonitor: NetworkMonitor
+
+    @Inject
+    lateinit var gameMusicManager: GameMusicManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,7 +82,8 @@ class MainActivity : ComponentActivity() {
                         KidPlayerNavGraphPhase6(
                             navController = navController,
                             modifier = modifier,
-                            startDestination = Screen.Splash.route
+                            startDestination = Screen.Splash.route,
+                            musicManager = gameMusicManager
                         )
                     }
                 }
@@ -90,17 +95,23 @@ class MainActivity : ComponentActivity() {
         super.onPause()
         Timber.d("MainActivity: onPause - Stopping network monitoring")
         networkMonitor.stopMonitoring()
+        // Pause game music when app goes to background
+        gameMusicManager.pauseMusic()
     }
 
     override fun onResume() {
         super.onResume()
         Timber.d("MainActivity: onResume - Starting network monitoring")
         networkMonitor.startMonitoring()
+        // Resume game music if it was playing
+        gameMusicManager.resumeMusic()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         Timber.d("MainActivity: onDestroy")
         networkMonitor.stopMonitoring()
+        // Stop and release music resources
+        gameMusicManager.stopMusic()
     }
 }

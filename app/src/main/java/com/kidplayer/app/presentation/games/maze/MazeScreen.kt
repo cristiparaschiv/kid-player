@@ -138,7 +138,7 @@ private fun LevelInfo(
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "Level",
+                    text = "LEVEL",
                     style = MaterialTheme.typography.labelSmall
                 )
                 Text(
@@ -149,7 +149,7 @@ private fun LevelInfo(
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "Moves",
+                    text = "MOVES",
                     style = MaterialTheme.typography.labelSmall
                 )
                 Text(
@@ -397,7 +397,7 @@ private fun LevelCompleteOverlay(
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Level $level Complete!",
+                text = "LEVEL $level COMPLETE!",
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = Color.White

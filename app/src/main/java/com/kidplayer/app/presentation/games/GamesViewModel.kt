@@ -14,7 +14,9 @@ import javax.inject.Inject
  * Manages available games list and navigation
  */
 @HiltViewModel
-class GamesViewModel @Inject constructor() : ViewModel() {
+class GamesViewModel @Inject constructor(
+    val musicManager: GameMusicManager
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(GamesUiState())
     val uiState: StateFlow<GamesUiState> = _uiState.asStateFlow()
@@ -185,6 +187,78 @@ class GamesViewModel @Inject constructor() : ViewModel() {
                 route = "games/sudoku",
                 backgroundColor = 0xFF7C4DFF, // Deep Purple
                 iconType = GameIconType.SUDOKU,
+                isAvailable = true
+            ),
+            GameInfo(
+                id = "ballsort",
+                name = "Ball Sort",
+                description = "Sort the colored balls",
+                route = "games/ballsort",
+                backgroundColor = 0xFF00ACC1, // Cyan
+                iconType = GameIconType.BALLSORT,
+                isAvailable = true
+            ),
+            GameInfo(
+                id = "hangman",
+                name = "Hangman",
+                description = "Guess the word",
+                route = "games/hangman",
+                backgroundColor = 0xFF8D6E63, // Brown
+                iconType = GameIconType.HANGMAN,
+                isAvailable = true
+            ),
+            GameInfo(
+                id = "crossword",
+                name = "Crossword",
+                description = "Solve the crossword",
+                route = "games/crossword",
+                backgroundColor = 0xFF5C6BC0, // Indigo
+                iconType = GameIconType.CROSSWORD,
+                isAvailable = true
+            ),
+            GameInfo(
+                id = "counting",
+                name = "Counting",
+                description = "Count the objects",
+                route = "games/counting",
+                backgroundColor = 0xFF66BB6A, // Green
+                iconType = GameIconType.COUNTING,
+                isAvailable = true
+            ),
+            GameInfo(
+                id = "shapes",
+                name = "Shapes Quiz",
+                description = "Learn your shapes",
+                route = "games/shapes",
+                backgroundColor = 0xFFE91E63, // Pink
+                iconType = GameIconType.SHAPES,
+                isAvailable = true
+            ),
+            GameInfo(
+                id = "spelling",
+                name = "Spelling Bee",
+                description = "Spell the word",
+                route = "games/spelling",
+                backgroundColor = 0xFFFFB300, // Amber
+                iconType = GameIconType.SPELLING,
+                isAvailable = true
+            ),
+            GameInfo(
+                id = "wordsearch",
+                name = "Word Search",
+                description = "Find hidden words",
+                route = "games/wordsearch",
+                backgroundColor = 0xFF29B6F6, // Light Blue
+                iconType = GameIconType.WORDSEARCH,
+                isAvailable = true
+            ),
+            GameInfo(
+                id = "spotdiff",
+                name = "Spot Difference",
+                description = "Find the differences",
+                route = "games/spotdiff",
+                backgroundColor = 0xFF8E24AA, // Purple
+                iconType = GameIconType.SPOTDIFF,
                 isAvailable = true
             )
         )

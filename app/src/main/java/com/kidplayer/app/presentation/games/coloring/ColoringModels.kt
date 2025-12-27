@@ -10,12 +10,16 @@ import androidx.compose.ui.graphics.asImageBitmap
 import com.kidplayer.app.R
 
 /**
- * Coloring image categories
+ * Coloring image categories with emojis for kid-friendly display
  */
-enum class ColoringCategory(val displayName: String) {
-    ANIMALS("Animals"),
-    CARS("Cars"),
-    SPACE("Space");
+enum class ColoringCategory(
+    val displayName: String,
+    val emoji: String,
+    val backgroundColor: Long
+) {
+    ANIMALS("Animals", "🐻", 0xFF4CAF50),  // Green
+    CARS("Cars", "🚗", 0xFF2196F3),        // Blue
+    SPACE("Space", "🚀", 0xFF9C27B0);      // Purple
 
     companion object {
         fun fromId(id: String): ColoringCategory? = entries.find { it.name == id }

@@ -114,9 +114,13 @@ fun BrowseScreen(
                                 isLoadingMore = uiState.isLoadingMore,
                                 hasMoreItems = uiState.hasMoreItems,
                                 totalItemCount = uiState.totalItemCount,
+                                favoriteIds = uiState.favoriteIds,
                                 onVideoClick = onVideoClick,
                                 onDownloadClick = { mediaItemId ->
                                     viewModel.onDownloadClick(mediaItemId)
+                                },
+                                onFavoriteClick = { mediaItemId ->
+                                    viewModel.toggleFavorite(mediaItemId)
                                 },
                                 onLoadMore = { viewModel.loadMoreItems() },
                                 modifier = Modifier.weight(1f)
@@ -230,8 +234,10 @@ fun VideoGrid(
     isLoadingMore: Boolean,
     hasMoreItems: Boolean,
     totalItemCount: Int,
+    favoriteIds: Set<String>,
     onVideoClick: (String) -> Unit,
     onDownloadClick: (String) -> Unit,
+    onFavoriteClick: (String) -> Unit,
     onLoadMore: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -269,7 +275,10 @@ fun VideoGrid(
             VideoCard(
                 mediaItem = mediaItem,
                 onClick = { onVideoClick(mediaItem.id) },
-                onDownloadClick = { onDownloadClick(mediaItem.id) }
+                onDownloadClick = { onDownloadClick(mediaItem.id) },
+                showFavorite = true,
+                isFavorite = mediaItem.id in favoriteIds,
+                onFavoriteClick = { onFavoriteClick(mediaItem.id) }
             )
         }
 

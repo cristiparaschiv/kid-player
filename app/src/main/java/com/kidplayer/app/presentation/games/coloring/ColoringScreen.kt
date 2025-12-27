@@ -14,6 +14,11 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Undo
 import androidx.compose.material3.*
+import com.kidplayer.app.presentation.games.common.components.CategoryItem
+import com.kidplayer.app.presentation.games.common.components.ImageItem
+import com.kidplayer.app.presentation.games.common.components.KidFriendlyCategorySelector
+import com.kidplayer.app.presentation.games.common.components.KidFriendlyImageSelector
+import com.kidplayer.app.presentation.games.common.components.KidFriendlyStartButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -110,93 +115,57 @@ private fun ImageSelectionScreen(
 ) {
     val context = LocalContext.current
 
-    Column(
-        modifier = modifier.padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        // Category selector
-        Text(
-            text = "Choose a category:",
-            style = MaterialTheme.typography.labelLarge,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.padding(bottom = 16.dp)
-        ) {
-            ColoringCategory.entries.forEach { category ->
-                FilterChip(
-                    selected = category == selectedCategory,
-                    onClick = { onCategorySelect(category) },
-                    label = { Text(category.displayName) },
-                    colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = MaterialTheme.colorScheme.tertiary,
-                        selectedLabelColor = MaterialTheme.colorScheme.onTertiary
-                    )
-                )
-            }
-        }
-
-        // Image selector with thumbnails
-        Text(
-            text = "Choose a picture:",
-            style = MaterialTheme.typography.labelLarge,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.padding(bottom = 24.dp)
-        ) {
-            availableImages.forEach { image ->
-                key(image.name) {
-                    val isSelected = image == selectedImage
-                    val thumbnail = remember(image) {
-                        ColoringImageLoader.loadPreview(context, image)
-                    }
-
-                    Card(
-                        onClick = { onImageSelect(image) },
-                        modifier = Modifier
-                            .size(80.dp)
-                            .then(
-                                if (isSelected) {
-                                    Modifier.border(
-                                        width = 3.dp,
-                                        color = MaterialTheme.colorScheme.primary,
-                                        shape = RoundedCornerShape(12.dp)
-                                    )
-                                } else Modifier
-                            ),
-                        shape = RoundedCornerShape(12.dp),
-                        elevation = CardDefaults.cardElevation(
-                            defaultElevation = if (isSelected) 8.dp else 2.dp
-                        )
-                    ) {
-                        Image(
-                            bitmap = thumbnail,
-                            contentDescription = image.displayName,
-                            modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Crop
-                        )
-                    }
-                }
-            }
-        }
-
-        // Start button
-        Button(
-            onClick = onStartColoring,
-            modifier = Modifier
-                .fillMaxWidth(0.6f)
-                .height(56.dp),
-            shape = RoundedCornerShape(28.dp)
-        ) {
-            Text(
-                text = "Start Coloring",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
+    // Convert categories to CategoryItems
+    val categoryItems = remember {
+        ColoringCategory.entries.map { cat ->
+            CategoryItem(
+                id = cat.name,
+                name = cat.displayName,
+                emoji = cat.emoji,
+                backgroundColor = Color(cat.backgroundColor)
             )
         }
+    }
+
+    // Convert images to ImageItems
+    val imageItems = remember(availableImages) {
+        availableImages.map { img ->
+            ImageItem(
+                id = img.name,
+                name = img.displayName,
+                thumbnail = ColoringImageLoader.loadPreview(context, img)
+            )
+        }
+    }
+
+    Column(
+        modifier = modifier.padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(24.dp)
+    ) {
+        // Kid-friendly category selector
+        KidFriendlyCategorySelector(
+            categories = categoryItems,
+            selectedCategoryId = selectedCategory.name,
+            onCategorySelect = { id ->
+                ColoringCategory.fromId(id)?.let { onCategorySelect(it) }
+            }
+        )
+
+        // Kid-friendly image selector
+        KidFriendlyImageSelector(
+            images = imageItems,
+            selectedImageId = selectedImage.name,
+            onImageSelect = { id ->
+                ColoringImage.fromId(id)?.let { onImageSelect(it) }
+            }
+        )
+
+        // Start button
+        KidFriendlyStartButton(
+            text = "Start Coloring!",
+            onClick = onStartColoring
+        )
     }
 }
 

@@ -138,6 +138,14 @@ fun GameIcon(
             GameIconType.COMPARE -> drawCompareIcon()
             GameIconType.ODDONEOUT -> drawOddOneOutIcon()
             GameIconType.SUDOKU -> drawSudokuIcon()
+            GameIconType.BALLSORT -> drawBallSortIcon()
+            GameIconType.HANGMAN -> drawHangmanIcon()
+            GameIconType.CROSSWORD -> drawCrosswordIcon()
+            GameIconType.COUNTING -> drawCountingIcon()
+            GameIconType.SHAPES -> drawShapesIcon()
+            GameIconType.SPELLING -> drawSpellingIcon()
+            GameIconType.WORDSEARCH -> drawWordSearchIcon()
+            GameIconType.SPOTDIFF -> drawSpotDiffIcon()
         }
     }
 }
@@ -947,4 +955,392 @@ private fun DrawScope.drawSudokuIcon() {
     val midY = startY + gridSize / 2
     drawLine(Color(0xFF333333), Offset(midX, startY), Offset(midX, startY + gridSize), 3.dp.toPx())
     drawLine(Color(0xFF333333), Offset(startX, midY), Offset(startX + gridSize, midY), 3.dp.toPx())
+}
+
+private fun DrawScope.drawBallSortIcon() {
+    val tubeWidth = size.width / 4.5f
+    val tubeHeight = size.height * 0.7f
+    val ballRadius = tubeWidth / 2.5f
+    val tubeSpacing = (size.width - tubeWidth * 3) / 4
+    val startY = size.height * 0.15f
+
+    val ballColors = listOf(
+        listOf(Color(0xFFE53935), Color(0xFF4CAF50), Color(0xFF2196F3)),
+        listOf(Color(0xFF2196F3), Color(0xFFE53935), Color(0xFF4CAF50)),
+        listOf(Color(0xFF4CAF50), Color(0xFF2196F3), Color(0xFFE53935))
+    )
+
+    for (tube in 0 until 3) {
+        val tubeX = tubeSpacing + tube * (tubeWidth + tubeSpacing)
+
+        // Draw tube outline
+        drawRoundRect(
+            color = Color.White.copy(alpha = 0.3f),
+            topLeft = Offset(tubeX, startY),
+            size = Size(tubeWidth, tubeHeight),
+            cornerRadius = CornerRadius(tubeWidth / 2),
+            style = Stroke(width = 2.dp.toPx())
+        )
+
+        // Draw balls in tube
+        for (ball in 0 until 3) {
+            val ballY = startY + tubeHeight - (ball + 1) * (ballRadius * 2) - ballRadius / 2
+            drawCircle(
+                color = ballColors[tube][ball],
+                radius = ballRadius,
+                center = Offset(tubeX + tubeWidth / 2, ballY)
+            )
+        }
+    }
+}
+
+private fun DrawScope.drawHangmanIcon() {
+    val strokeWidth = 3.dp.toPx()
+    val gallowsColor = Color(0xFFD7CCC8)
+    val figureColor = Color.White
+
+    // Gallows base
+    drawLine(gallowsColor, Offset(size.width * 0.15f, size.height * 0.9f), Offset(size.width * 0.85f, size.height * 0.9f), strokeWidth)
+
+    // Gallows pole
+    drawLine(gallowsColor, Offset(size.width * 0.3f, size.height * 0.9f), Offset(size.width * 0.3f, size.height * 0.1f), strokeWidth)
+
+    // Gallows top
+    drawLine(gallowsColor, Offset(size.width * 0.3f, size.height * 0.1f), Offset(size.width * 0.7f, size.height * 0.1f), strokeWidth)
+
+    // Rope
+    drawLine(gallowsColor, Offset(size.width * 0.7f, size.height * 0.1f), Offset(size.width * 0.7f, size.height * 0.2f), strokeWidth * 0.7f)
+
+    // Head
+    val headRadius = size.width * 0.1f
+    val headCenterY = size.height * 0.2f + headRadius
+    drawCircle(figureColor, radius = headRadius, center = Offset(size.width * 0.7f, headCenterY), style = Stroke(width = strokeWidth))
+
+    // Body
+    drawLine(figureColor, Offset(size.width * 0.7f, headCenterY + headRadius), Offset(size.width * 0.7f, size.height * 0.6f), strokeWidth)
+
+    // Arms
+    drawLine(figureColor, Offset(size.width * 0.7f, size.height * 0.4f), Offset(size.width * 0.55f, size.height * 0.5f), strokeWidth)
+    drawLine(figureColor, Offset(size.width * 0.7f, size.height * 0.4f), Offset(size.width * 0.85f, size.height * 0.5f), strokeWidth)
+
+    // Legs
+    drawLine(figureColor, Offset(size.width * 0.7f, size.height * 0.6f), Offset(size.width * 0.55f, size.height * 0.8f), strokeWidth)
+    drawLine(figureColor, Offset(size.width * 0.7f, size.height * 0.6f), Offset(size.width * 0.85f, size.height * 0.8f), strokeWidth)
+}
+
+private fun DrawScope.drawCrosswordIcon() {
+    val gridSize = size.width * 0.85f
+    val cellSize = gridSize / 5
+    val startX = (size.width - gridSize) / 2
+    val startY = (size.height - gridSize) / 2
+
+    // Draw a 5x5 crossword pattern
+    val filled = listOf(
+        listOf(true, true, true, false, false),
+        listOf(false, true, false, false, false),
+        listOf(true, true, true, true, true),
+        listOf(false, true, false, false, true),
+        listOf(false, true, false, false, true)
+    )
+
+    for (row in 0 until 5) {
+        for (col in 0 until 5) {
+            if (filled[row][col]) {
+                val cellX = startX + col * cellSize
+                val cellY = startY + row * cellSize
+
+                // Draw white cell
+                drawRect(
+                    color = Color.White,
+                    topLeft = Offset(cellX, cellY),
+                    size = Size(cellSize - 2.dp.toPx(), cellSize - 2.dp.toPx())
+                )
+
+                // Draw border
+                drawRect(
+                    color = Color(0xFF333333),
+                    topLeft = Offset(cellX, cellY),
+                    size = Size(cellSize - 2.dp.toPx(), cellSize - 2.dp.toPx()),
+                    style = Stroke(width = 1.dp.toPx())
+                )
+            }
+        }
+    }
+
+    // Add some letters
+    val letterPositions = listOf(
+        Triple(0, 0, Color(0xFF4CAF50)),
+        Triple(0, 1, Color(0xFF2196F3)),
+        Triple(2, 0, Color(0xFFE53935)),
+        Triple(2, 2, Color(0xFFFF9800))
+    )
+
+    letterPositions.forEach { (row, col, color) ->
+        val cellX = startX + col * cellSize + cellSize / 2
+        val cellY = startY + row * cellSize + cellSize / 2
+        drawCircle(
+            color = color.copy(alpha = 0.6f),
+            radius = cellSize / 4,
+            center = Offset(cellX, cellY)
+        )
+    }
+}
+
+private fun DrawScope.drawCountingIcon() {
+    val itemRadius = size.width / 10
+
+    // Draw scattered objects to count
+    val positions = listOf(
+        Offset(size.width * 0.2f, size.height * 0.25f),
+        Offset(size.width * 0.5f, size.height * 0.2f),
+        Offset(size.width * 0.8f, size.height * 0.3f),
+        Offset(size.width * 0.3f, size.height * 0.5f),
+        Offset(size.width * 0.7f, size.height * 0.5f)
+    )
+
+    positions.forEach { pos ->
+        // Draw apple-like circle
+        drawCircle(
+            color = Color(0xFFE53935),
+            radius = itemRadius,
+            center = pos
+        )
+        // Stem
+        drawLine(
+            color = Color(0xFF8B4513),
+            start = Offset(pos.x, pos.y - itemRadius),
+            end = Offset(pos.x + itemRadius * 0.3f, pos.y - itemRadius * 1.4f),
+            strokeWidth = 3.dp.toPx()
+        )
+    }
+
+    // Question mark with number
+    drawCircle(
+        color = Color.White,
+        radius = size.width / 5,
+        center = Offset(size.width * 0.5f, size.height * 0.8f)
+    )
+    drawCircle(
+        color = Color(0xFF66BB6A),
+        radius = size.width / 5.5f,
+        center = Offset(size.width * 0.5f, size.height * 0.8f)
+    )
+}
+
+private fun DrawScope.drawShapesIcon() {
+    val shapeSize = size.width / 3.5f
+
+    // Circle
+    drawCircle(
+        color = Color(0xFFE91E63),
+        radius = shapeSize / 2,
+        center = Offset(size.width * 0.25f, size.height * 0.3f)
+    )
+
+    // Square
+    drawRect(
+        color = Color(0xFF2196F3),
+        topLeft = Offset(size.width * 0.55f, size.height * 0.15f),
+        size = Size(shapeSize, shapeSize)
+    )
+
+    // Triangle
+    val trianglePath = Path().apply {
+        moveTo(size.width * 0.25f, size.height * 0.55f)
+        lineTo(size.width * 0.1f, size.height * 0.85f)
+        lineTo(size.width * 0.4f, size.height * 0.85f)
+        close()
+    }
+    drawPath(trianglePath, Color(0xFF4CAF50))
+
+    // Star
+    val starPath = createStarPath(
+        cx = size.width * 0.72f,
+        cy = size.height * 0.7f,
+        outerRadius = shapeSize / 2,
+        innerRadius = shapeSize / 4
+    )
+    drawPath(starPath, Color(0xFFFFB300))
+}
+
+private fun DrawScope.drawSpellingIcon() {
+    val tileSize = size.width / 4.5f
+    val spacing = 4.dp.toPx()
+    val startY = size.height * 0.3f
+
+    // Letter tiles
+    val letters = listOf("C", "A", "T")
+    val colors = listOf(Color(0xFF66BB6A), Color(0xFF42A5F5), Color(0xFFFFB74D))
+
+    letters.forEachIndexed { index, _ ->
+        val x = spacing + index * (tileSize + spacing) + size.width * 0.1f
+
+        // Tile background
+        drawRoundRect(
+            color = colors[index],
+            topLeft = Offset(x, startY),
+            size = Size(tileSize, tileSize),
+            cornerRadius = CornerRadius(6.dp.toPx())
+        )
+
+        // White inner area
+        drawRoundRect(
+            color = Color.White.copy(alpha = 0.3f),
+            topLeft = Offset(x + 4.dp.toPx(), startY + 4.dp.toPx()),
+            size = Size(tileSize - 8.dp.toPx(), tileSize - 8.dp.toPx()),
+            cornerRadius = CornerRadius(4.dp.toPx())
+        )
+    }
+
+    // Cat emoji representation (simple circle with ears)
+    val emojiY = size.height * 0.75f
+    val emojiRadius = size.width / 6
+
+    drawCircle(
+        color = Color(0xFFFFB74D),
+        radius = emojiRadius,
+        center = Offset(size.width / 2, emojiY)
+    )
+
+    // Ears
+    val earPath = Path().apply {
+        moveTo(size.width / 2 - emojiRadius * 0.8f, emojiY - emojiRadius * 0.5f)
+        lineTo(size.width / 2 - emojiRadius * 0.5f, emojiY - emojiRadius * 1.1f)
+        lineTo(size.width / 2 - emojiRadius * 0.2f, emojiY - emojiRadius * 0.5f)
+        close()
+    }
+    drawPath(earPath, Color(0xFFFFB74D))
+
+    val earPath2 = Path().apply {
+        moveTo(size.width / 2 + emojiRadius * 0.8f, emojiY - emojiRadius * 0.5f)
+        lineTo(size.width / 2 + emojiRadius * 0.5f, emojiY - emojiRadius * 1.1f)
+        lineTo(size.width / 2 + emojiRadius * 0.2f, emojiY - emojiRadius * 0.5f)
+        close()
+    }
+    drawPath(earPath2, Color(0xFFFFB74D))
+}
+
+private fun DrawScope.drawWordSearchIcon() {
+    val gridSize = size.width * 0.85f
+    val cellSize = gridSize / 5
+    val startX = (size.width - gridSize) / 2
+    val startY = (size.height - gridSize) / 2
+
+    // Draw grid background
+    drawRoundRect(
+        color = Color(0xFF29B6F6).copy(alpha = 0.3f),
+        topLeft = Offset(startX, startY),
+        size = Size(gridSize, gridSize),
+        cornerRadius = CornerRadius(8.dp.toPx())
+    )
+
+    // Draw letter cells
+    for (row in 0 until 5) {
+        for (col in 0 until 5) {
+            val cellX = startX + col * cellSize
+            val cellY = startY + row * cellSize
+
+            drawRoundRect(
+                color = Color.White.copy(alpha = 0.8f),
+                topLeft = Offset(cellX + 2.dp.toPx(), cellY + 2.dp.toPx()),
+                size = Size(cellSize - 4.dp.toPx(), cellSize - 4.dp.toPx()),
+                cornerRadius = CornerRadius(4.dp.toPx())
+            )
+        }
+    }
+
+    // Highlight a found word (horizontal)
+    drawRoundRect(
+        color = Color(0xFF4CAF50).copy(alpha = 0.5f),
+        topLeft = Offset(startX + cellSize, startY + 2 * cellSize),
+        size = Size(cellSize * 3, cellSize),
+        cornerRadius = CornerRadius(cellSize / 2)
+    )
+
+    // Highlight another word (vertical)
+    drawRoundRect(
+        color = Color(0xFFE91E63).copy(alpha = 0.5f),
+        topLeft = Offset(startX + 3 * cellSize, startY),
+        size = Size(cellSize, cellSize * 3),
+        cornerRadius = CornerRadius(cellSize / 2)
+    )
+}
+
+private fun DrawScope.drawSpotDiffIcon() {
+    val pictureWidth = size.width * 0.4f
+    val pictureHeight = size.height * 0.35f
+    val cornerRadius = 8.dp.toPx()
+
+    // Left picture
+    drawRoundRect(
+        color = Color(0xFFE3F2FD),
+        topLeft = Offset(size.width * 0.05f, size.height * 0.1f),
+        size = Size(pictureWidth, pictureHeight),
+        cornerRadius = CornerRadius(cornerRadius)
+    )
+
+    // Right picture
+    drawRoundRect(
+        color = Color(0xFFE3F2FD),
+        topLeft = Offset(size.width * 0.55f, size.height * 0.1f),
+        size = Size(pictureWidth, pictureHeight),
+        cornerRadius = CornerRadius(cornerRadius)
+    )
+
+    // Content in left picture (sun and tree)
+    drawCircle(
+        color = Color(0xFFFFEB3B),
+        radius = size.width / 12,
+        center = Offset(size.width * 0.15f, size.height * 0.2f)
+    )
+    drawCircle(
+        color = Color(0xFF4CAF50),
+        radius = size.width / 10,
+        center = Offset(size.width * 0.35f, size.height * 0.3f)
+    )
+
+    // Content in right picture (sun and different tree)
+    drawCircle(
+        color = Color(0xFFFFEB3B),
+        radius = size.width / 12,
+        center = Offset(size.width * 0.65f, size.height * 0.2f)
+    )
+    drawCircle(
+        color = Color(0xFFE53935), // Different color - this is a difference!
+        radius = size.width / 10,
+        center = Offset(size.width * 0.85f, size.height * 0.3f)
+    )
+
+    // Magnifying glass with question marks
+    val glassX = size.width * 0.5f
+    val glassY = size.height * 0.7f
+    val glassRadius = size.width / 6
+
+    drawCircle(
+        color = Color.White,
+        radius = glassRadius,
+        center = Offset(glassX, glassY)
+    )
+    drawCircle(
+        color = Color(0xFF8E24AA),
+        radius = glassRadius,
+        center = Offset(glassX, glassY),
+        style = Stroke(width = 4.dp.toPx())
+    )
+
+    // Handle
+    drawLine(
+        color = Color(0xFF8E24AA),
+        start = Offset(glassX + glassRadius * 0.7f, glassY + glassRadius * 0.7f),
+        end = Offset(glassX + glassRadius * 1.3f, glassY + glassRadius * 1.3f),
+        strokeWidth = 6.dp.toPx()
+    )
+
+    // Red circle on difference
+    drawCircle(
+        color = Color(0xFFE53935),
+        radius = size.width / 8,
+        center = Offset(size.width * 0.85f, size.height * 0.3f),
+        style = Stroke(width = 3.dp.toPx())
+    )
 }

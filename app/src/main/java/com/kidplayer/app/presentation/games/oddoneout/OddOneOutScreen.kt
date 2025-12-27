@@ -59,10 +59,10 @@ fun OddOneOutScreen(
             // Instructions
             Text(
                 text = if (uiState.showResult) {
-                    if (uiState.isCorrect) "Correct! Great job! ⭐"
-                    else "Oops! Look for what doesn't belong"
+                    if (uiState.isCorrect) "CORRECT! GREAT JOB!"
+                    else "OOPS! LOOK FOR WHAT DOESN'T BELONG"
                 } else {
-                    "Tap the one that doesn't belong!"
+                    "TAP THE ONE THAT DOESN'T BELONG!"
                 },
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Medium,
@@ -131,7 +131,7 @@ private fun RoundIndicator(
             Text(text = "🔍", fontSize = 28.sp)
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "Round",
+                    text = "ROUND",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSecondaryContainer
                 )
@@ -144,7 +144,7 @@ private fun RoundIndicator(
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "Correct",
+                    text = "CORRECT",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSecondaryContainer
                 )

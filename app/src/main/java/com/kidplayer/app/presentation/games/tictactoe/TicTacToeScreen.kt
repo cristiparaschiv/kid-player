@@ -100,9 +100,9 @@ private fun DifficultySelector(
                 label = {
                     Text(
                         text = when (difficulty) {
-                            Difficulty.EASY -> "Easy"
-                            Difficulty.MEDIUM -> "Medium"
-                            Difficulty.HARD -> "Hard"
+                            Difficulty.EASY -> "EASY"
+                            Difficulty.MEDIUM -> "MEDIUM"
+                            Difficulty.HARD -> "HARD"
                         },
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                     )
@@ -125,11 +125,11 @@ private fun TurnIndicator(
 ) {
     val text = when {
         gameState is GameState.Completed && winner != null -> {
-            if (winner == Player.X) "You Win!" else "AI Wins!"
+            if (winner == Player.X) "YOU WIN!" else "AI WINS!"
         }
-        gameState is GameState.Completed -> "It's a Draw!"
-        currentPlayer == Player.X -> "Your Turn (X)"
-        else -> "AI Thinking..."
+        gameState is GameState.Completed -> "IT'S A DRAW!"
+        currentPlayer == Player.X -> "YOUR TURN (X)"
+        else -> "AI THINKING..."
     }
 
     val color = when {

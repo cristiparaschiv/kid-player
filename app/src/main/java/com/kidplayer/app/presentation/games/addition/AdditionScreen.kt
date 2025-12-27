@@ -101,7 +101,7 @@ private fun RoundIndicator(
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "Question",
+                    text = "QUESTION",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSecondaryContainer
                 )
@@ -114,7 +114,7 @@ private fun RoundIndicator(
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "Correct",
+                    text = "CORRECT",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSecondaryContainer
                 )
@@ -199,7 +199,7 @@ private fun AdditionProblemDisplay(
         // Feedback text
         if (showResult) {
             Text(
-                text = if (isCorrect) "Great job! ⭐" else "Almost! The answer is ${problem.correctAnswer}",
+                text = if (isCorrect) "GREAT JOB!" else "ALMOST! THE ANSWER IS ${problem.correctAnswer}",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 color = if (isCorrect) Color(0xFF4CAF50) else Color(0xFFFF9800)

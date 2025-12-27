@@ -84,5 +84,13 @@ enum class GameIconType {
     NUMBERBONDS, // Number bond diagram
     COMPARE,     // Greater/less than
     ODDONEOUT,   // Magnifying glass
-    SUDOKU       // Grid puzzle
+    SUDOKU,      // Grid puzzle
+    BALLSORT,    // Colored balls in tubes
+    HANGMAN,     // Hangman figure
+    CROSSWORD,   // Crossword grid
+    COUNTING,    // Numbers with objects
+    SHAPES,      // Geometric shapes
+    SPELLING,    // Letter tiles
+    WORDSEARCH,  // Letter grid
+    SPOTDIFF     // Two pictures
 }

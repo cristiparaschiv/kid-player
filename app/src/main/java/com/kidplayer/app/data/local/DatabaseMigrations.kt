@@ -106,4 +106,20 @@ object DatabaseMigrations {
             )
         }
     }
+
+    /**
+     * Migration from version 6 to 7
+     * Adds player_rewards table for star reward system
+     */
+    val MIGRATION_6_7 = object : Migration(6, 7) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("""
+                CREATE TABLE IF NOT EXISTS player_rewards (
+                    id INTEGER PRIMARY KEY NOT NULL,
+                    totalStars INTEGER NOT NULL DEFAULT 0,
+                    lastUpdated INTEGER NOT NULL
+                )
+            """.trimIndent())
+        }
+    }
 }

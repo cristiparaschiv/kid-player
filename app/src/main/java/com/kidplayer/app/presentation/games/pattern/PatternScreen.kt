@@ -68,9 +68,9 @@ fun PatternScreen(
                 // Instruction text
                 Text(
                     text = if (uiState.showResult) {
-                        if (uiState.isCorrect) "Correct! 🎉" else "Try again! 💪"
+                        if (uiState.isCorrect) "CORRECT!" else "TRY AGAIN!"
                     } else {
-                        "What comes next?"
+                        "WHAT COMES NEXT?"
                     },
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
@@ -118,7 +118,7 @@ private fun LevelIndicator(
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "Level",
+                    text = "LEVEL",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
@@ -131,7 +131,7 @@ private fun LevelIndicator(
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "Round",
+                    text = "ROUND",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
