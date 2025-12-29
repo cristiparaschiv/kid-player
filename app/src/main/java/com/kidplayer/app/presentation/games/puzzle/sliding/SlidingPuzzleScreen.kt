@@ -19,10 +19,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kidplayer.app.R
 import com.kidplayer.app.presentation.components.rememberHapticFeedback
 import com.kidplayer.app.presentation.games.common.Difficulty
 import com.kidplayer.app.presentation.games.common.GameScaffold
@@ -49,7 +51,7 @@ fun SlidingPuzzleScreen(
     val haptic = rememberHapticFeedback()
 
     GameScaffold(
-        gameName = "Sliding Puzzle",
+        gameName = stringResource(R.string.game_sliding_name),
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },

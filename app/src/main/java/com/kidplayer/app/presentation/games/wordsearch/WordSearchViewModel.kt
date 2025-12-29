@@ -2,6 +2,7 @@ package com.kidplayer.app.presentation.games.wordsearch
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kidplayer.app.data.local.LanguageManager
 import com.kidplayer.app.domain.reward.GameDifficulty
 import com.kidplayer.app.domain.reward.RewardManager
 import com.kidplayer.app.presentation.games.common.GameState
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WordSearchViewModel @Inject constructor(
-    private val rewardManager: RewardManager
+    private val rewardManager: RewardManager,
+    private val languageManager: LanguageManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(WordSearchUiState())
@@ -32,12 +34,14 @@ class WordSearchViewModel @Inject constructor(
 
     fun startNewGame() {
         gameStartTime = System.currentTimeMillis()
-        val (grid, words) = WordSearchGenerator.generatePuzzle(1)
+        val isRomanian = languageManager.isRomanian()
+        val (grid, words) = WordSearchGenerator.generatePuzzle(1, isRomanian)
 
         _uiState.update {
             WordSearchUiState(
                 level = 1,
                 score = 0,
+                isRomanian = isRomanian,
                 grid = grid,
                 hiddenWords = words,
                 selectedCells = emptyList(),
@@ -157,7 +161,7 @@ class WordSearchViewModel @Inject constructor(
             viewModelScope.launch {
                 kotlinx.coroutines.delay(1000)
                 val nextLevel = currentState.level + 1
-                val (grid, words) = WordSearchGenerator.generatePuzzle(nextLevel)
+                val (grid, words) = WordSearchGenerator.generatePuzzle(nextLevel, currentState.isRomanian)
 
                 _uiState.update {
                     it.copy(
@@ -224,6 +228,7 @@ data class WordSearchUiState(
     val level: Int = 1,
     val score: Int = 0,
     val wordsFound: Int = 0,
+    val isRomanian: Boolean = false,
     val grid: List<List<GridCell>> = emptyList(),
     val hiddenWords: List<HiddenWord> = emptyList(),
     val selectedCells: List<GridCell> = emptyList(),

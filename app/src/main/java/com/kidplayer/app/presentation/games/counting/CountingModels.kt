@@ -3,33 +3,44 @@ package com.kidplayer.app.presentation.games.counting
 import kotlin.random.Random
 
 /**
+ * A counting object with bilingual support
+ */
+data class CountingObject(
+    val emoji: String,
+    val nameEn: String,
+    val nameRo: String
+) {
+    fun getName(isRomanian: Boolean): String = if (isRomanian) nameRo else nameEn
+}
+
+/**
  * Objects that can be counted in the game
  */
 object CountingObjects {
     val items = listOf(
-        "🍎" to "apples",
-        "🍌" to "bananas",
-        "🍊" to "oranges",
-        "🍓" to "strawberries",
-        "🍇" to "grapes",
-        "⭐" to "stars",
-        "❤️" to "hearts",
-        "🎈" to "balloons",
-        "🌸" to "flowers",
-        "🍪" to "cookies",
-        "🐶" to "puppies",
-        "🐱" to "kittens",
-        "🐰" to "bunnies",
-        "🦋" to "butterflies",
-        "🐸" to "frogs",
-        "🐠" to "fish",
-        "🌟" to "stars",
-        "🍬" to "candies",
-        "🎁" to "presents",
-        "🚗" to "cars"
+        CountingObject("🍎", "apples", "mere"),
+        CountingObject("🍌", "bananas", "banane"),
+        CountingObject("🍊", "oranges", "portocale"),
+        CountingObject("🍓", "strawberries", "căpșuni"),
+        CountingObject("🍇", "grapes", "struguri"),
+        CountingObject("⭐", "stars", "stele"),
+        CountingObject("❤️", "hearts", "inimi"),
+        CountingObject("🎈", "balloons", "baloane"),
+        CountingObject("🌸", "flowers", "flori"),
+        CountingObject("🍪", "cookies", "biscuiți"),
+        CountingObject("🐶", "puppies", "cățeluși"),
+        CountingObject("🐱", "kittens", "pisicuțe"),
+        CountingObject("🐰", "bunnies", "iepurași"),
+        CountingObject("🦋", "butterflies", "fluturi"),
+        CountingObject("🐸", "frogs", "broscuțe"),
+        CountingObject("🐠", "fish", "pești"),
+        CountingObject("🌟", "stars", "stele"),
+        CountingObject("🍬", "candies", "bomboane"),
+        CountingObject("🎁", "presents", "cadouri"),
+        CountingObject("🚗", "cars", "mașini")
     )
 
-    fun random(): Pair<String, String> = items.random()
+    fun random(): CountingObject = items.random()
 }
 
 /**
@@ -54,12 +65,15 @@ object CountingConfig {
  */
 data class CountingChallenge(
     val emoji: String,
-    val objectName: String,
+    val objectNameEn: String,
+    val objectNameRo: String,
     val count: Int,
     val options: List<Int>,
     val objectPositions: List<ObjectPosition>
 ) {
     val correctAnswer: Int = count
+
+    fun getObjectName(isRomanian: Boolean): String = if (isRomanian) objectNameRo else objectNameEn
 }
 
 /**
@@ -78,7 +92,7 @@ data class ObjectPosition(
 object CountingGenerator {
 
     fun generateChallenge(level: Int): CountingChallenge {
-        val (emoji, objectName) = CountingObjects.random()
+        val countingObject = CountingObjects.random()
         val range = CountingConfig.getCountRange(level)
         val count = Random.nextInt(range.first, range.last + 1)
 
@@ -89,8 +103,9 @@ object CountingGenerator {
         val options = generateOptions(count)
 
         return CountingChallenge(
-            emoji = emoji,
-            objectName = objectName,
+            emoji = countingObject.emoji,
+            objectNameEn = countingObject.nameEn,
+            objectNameRo = countingObject.nameRo,
             count = count,
             options = options,
             objectPositions = positions

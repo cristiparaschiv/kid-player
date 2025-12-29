@@ -17,11 +17,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kidplayer.app.R
 import com.kidplayer.app.presentation.components.rememberHapticFeedback
 import com.kidplayer.app.presentation.games.common.GameScaffold
 import com.kidplayer.app.presentation.games.common.GameState
@@ -35,7 +37,7 @@ fun SudokuScreen(
     val haptic = rememberHapticFeedback()
 
     GameScaffold(
-        gameName = "Picture Sudoku",
+        gameName = stringResource(R.string.game_sudoku_name),
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },

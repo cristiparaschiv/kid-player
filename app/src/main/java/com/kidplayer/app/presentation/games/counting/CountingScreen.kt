@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -50,7 +51,7 @@ fun CountingScreen(
     }
 
     GameScaffold(
-        gameName = "Counting",
+        gameName = stringResource(R.string.game_counting_name),
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },
@@ -66,7 +67,7 @@ fun CountingScreen(
         ) {
             // Round indicator
             Text(
-                text = "ROUND ${uiState.round}/${CountingConfig.TOTAL_ROUNDS}",
+                text = stringResource(R.string.game_round, uiState.round, CountingConfig.TOTAL_ROUNDS).uppercase(),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -75,8 +76,9 @@ fun CountingScreen(
 
             // Question
             uiState.currentChallenge?.let { challenge ->
+                val questionPrefix = if (uiState.isRomanian) "CÂTE" else "HOW MANY"
                 Text(
-                    text = "HOW MANY ${challenge.objectName.uppercase()}?",
+                    text = "$questionPrefix ${challenge.getObjectName(uiState.isRomanian).uppercase()}?",
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,

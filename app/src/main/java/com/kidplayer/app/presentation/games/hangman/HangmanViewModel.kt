@@ -2,6 +2,7 @@ package com.kidplayer.app.presentation.games.hangman
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kidplayer.app.data.local.LanguageManager
 import com.kidplayer.app.presentation.games.common.GameState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -13,7 +14,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HangmanViewModel @Inject constructor() : ViewModel() {
+class HangmanViewModel @Inject constructor(
+    private val languageManager: LanguageManager
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HangmanUiState())
     val uiState: StateFlow<HangmanUiState> = _uiState.asStateFlow()
@@ -35,21 +38,23 @@ class HangmanViewModel @Inject constructor() : ViewModel() {
         // Use round number directly for progressive difficulty
         // Round 1: 3-letter, Round 2: 3-4 letter, ... Round 8: 7-8 letter
         val level = round
+        val isRomanian = languageManager.isRomanian()
 
         // Get a word we haven't used yet
-        var wordWithHint = HangmanWords.getRandomWord(level)
+        var wordWithHint = HangmanWords.getRandomWord(level, isRomanian)
         var attempts = 0
-        while (usedWords.contains(wordWithHint.word) && attempts < 50) {
-            wordWithHint = HangmanWords.getRandomWord(level)
+        val currentWord = wordWithHint.getWord(isRomanian)
+        while (usedWords.contains(currentWord) && attempts < 50) {
+            wordWithHint = HangmanWords.getRandomWord(level, isRomanian)
             attempts++
         }
-        usedWords.add(wordWithHint.word)
+        usedWords.add(wordWithHint.getWord(isRomanian))
 
         _uiState.update {
             HangmanUiState(
                 round = round,
                 score = currentScore,
-                currentPuzzle = HangmanPuzzle(wordWithHint),
+                currentPuzzle = HangmanPuzzle(wordWithHint, isRomanian),
                 wordsGuessed = it.wordsGuessed,
                 gameState = GameState.Playing(score = currentScore)
             )

@@ -2,6 +2,8 @@ package com.kidplayer.app.presentation.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kidplayer.app.data.local.AppLanguage
+import com.kidplayer.app.data.local.LanguageManager
 import com.kidplayer.app.domain.model.ScreenTimeConfig
 import com.kidplayer.app.domain.repository.JellyfinRepository
 import com.kidplayer.app.domain.usecase.GetAutoplaySettingUseCase
@@ -31,7 +33,8 @@ class SettingsViewModel @Inject constructor(
     private val getParentalControlsUseCase: GetParentalControlsUseCase,
     private val updateScreenTimeConfigUseCase: UpdateScreenTimeConfigUseCase,
     private val logoutUseCase: LogoutUseCase,
-    private val jellyfinRepository: JellyfinRepository
+    private val jellyfinRepository: JellyfinRepository,
+    private val languageManager: LanguageManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SettingsUiState())
@@ -42,6 +45,35 @@ class SettingsViewModel @Inject constructor(
 
     init {
         loadSettings()
+        observeLanguage()
+    }
+
+    /**
+     * Observe language changes
+     */
+    private fun observeLanguage() {
+        viewModelScope.launch {
+            languageManager.currentLanguage.collect { language ->
+                _uiState.update { it.copy(currentLanguage = language) }
+            }
+        }
+    }
+
+    /**
+     * Change app language
+     */
+    fun setLanguage(language: AppLanguage) {
+        viewModelScope.launch {
+            try {
+                Timber.d("Changing language to: $language")
+                languageManager.setLanguage(language)
+            } catch (e: Exception) {
+                Timber.e(e, "Error changing language")
+                _uiState.update {
+                    it.copy(error = "Failed to change language: ${e.message}")
+                }
+            }
+        }
     }
 
     /**
@@ -213,6 +245,7 @@ data class SettingsUiState(
     val serverUrl: String = "",
     val username: String = "",
     val shouldNavigateToSetup: Boolean = false,
+    val currentLanguage: AppLanguage = AppLanguage.ENGLISH,
     val error: String? = null
 ) {
     fun hasError(): Boolean = error != null

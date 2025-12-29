@@ -16,14 +16,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kidplayer.app.R
 import com.kidplayer.app.presentation.components.rememberHapticFeedback
 import com.kidplayer.app.presentation.games.common.GameScaffold
-import com.kidplayer.app.presentation.games.common.GameState
 
 @Composable
 fun AdditionScreen(
@@ -32,9 +34,11 @@ fun AdditionScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val haptic = rememberHapticFeedback()
+    val configuration = LocalConfiguration.current
+    val isCompactHeight = configuration.screenHeightDp < 480
 
     GameScaffold(
-        gameName = "Addition Adventure",
+        gameName = stringResource(R.string.game_addition_name),
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },
@@ -42,41 +46,214 @@ fun AdditionScreen(
         onResumeClick = { viewModel.resumeGame() },
         showScore = true
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceEvenly
-        ) {
-            // Round indicator
-            RoundIndicator(
-                round = uiState.round,
-                totalRounds = AdditionConfig.TOTAL_ROUNDS,
-                correctCount = uiState.correctCount
-            )
-
-            // Problem display
-            uiState.currentProblem?.let { problem ->
-                AdditionProblemDisplay(
+        uiState.currentProblem?.let { problem ->
+            if (isCompactHeight) {
+                // Compact horizontal layout for landscape phones
+                CompactAdditionLayout(
+                    round = uiState.round,
+                    totalRounds = AdditionConfig.TOTAL_ROUNDS,
+                    correctCount = uiState.correctCount,
                     problem = problem,
                     showResult = uiState.showResult,
-                    isCorrect = uiState.isCorrect
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // Answer options
-                AnswerOptions(
-                    options = problem.options,
-                    correctAnswer = problem.correctAnswer,
+                    isCorrect = uiState.isCorrect,
                     selectedAnswer = uiState.selectedAnswer,
-                    showResult = uiState.showResult,
                     onAnswerClick = { answer ->
                         haptic.performMedium()
                         viewModel.selectAnswer(answer)
                     }
                 )
+            } else {
+                // Standard vertical layout
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    RoundIndicator(
+                        round = uiState.round,
+                        totalRounds = AdditionConfig.TOTAL_ROUNDS,
+                        correctCount = uiState.correctCount
+                    )
+
+                    AdditionProblemDisplay(
+                        problem = problem,
+                        showResult = uiState.showResult,
+                        isCorrect = uiState.isCorrect
+                    )
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    AnswerOptions(
+                        options = problem.options,
+                        correctAnswer = problem.correctAnswer,
+                        selectedAnswer = uiState.selectedAnswer,
+                        showResult = uiState.showResult,
+                        onAnswerClick = { answer ->
+                            haptic.performMedium()
+                            viewModel.selectAnswer(answer)
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun CompactAdditionLayout(
+    round: Int,
+    totalRounds: Int,
+    correctCount: Int,
+    problem: AdditionProblem,
+    showResult: Boolean,
+    isCorrect: Boolean,
+    selectedAnswer: Int?,
+    onAnswerClick: (Int) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // Left side: Problem display (compact)
+        Column(
+            modifier = Modifier.weight(1f),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            CompactRoundIndicator(round = round, totalRounds = totalRounds, correctCount = correctCount)
+            Spacer(modifier = Modifier.height(8.dp))
+            CompactProblemDisplay(problem = problem, showResult = showResult, isCorrect = isCorrect)
+        }
+
+        // Right side: Answer options (2x2 grid)
+        Column(
+            modifier = Modifier.weight(1f),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            if (showResult) {
+                Text(
+                    text = if (isCorrect) "GREAT!" else "TRY AGAIN!",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = if (isCorrect) Color(0xFF4CAF50) else Color(0xFFFF9800)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+            AnswerOptionsCompact(
+                options = problem.options,
+                correctAnswer = problem.correctAnswer,
+                selectedAnswer = selectedAnswer,
+                showResult = showResult,
+                onAnswerClick = onAnswerClick
+            )
+        }
+    }
+}
+
+@Composable
+private fun CompactRoundIndicator(round: Int, totalRounds: Int, correctCount: Int) {
+    Card(
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Text(text = "$round/$totalRounds", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
+            Text(text = "✓$correctCount", style = MaterialTheme.typography.labelLarge, color = Color(0xFF4CAF50))
+        }
+    }
+}
+
+@Composable
+private fun CompactProblemDisplay(problem: AdditionProblem, showResult: Boolean, isCorrect: Boolean) {
+    Card(
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            // Compact emoji display
+            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                repeat(problem.num1.coerceAtMost(5)) { Text(text = problem.emoji, fontSize = 24.sp) }
+            }
+            Text(text = "+", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color(0xFF2196F3))
+            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                repeat(problem.num2.coerceAtMost(5)) { Text(text = problem.emoji, fontSize = 24.sp) }
+            }
+            Divider(modifier = Modifier.width(120.dp), thickness = 2.dp, color = Color(0xFF333333))
+            if (showResult) {
+                Text(
+                    text = "${problem.correctAnswer}",
+                    fontSize = 28.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = if (isCorrect) Color(0xFF4CAF50) else Color(0xFFFF9800)
+                )
+            } else {
+                Text(text = "= ?", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color(0xFF9C27B0))
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AnswerOptionsCompact(
+    options: List<Int>,
+    correctAnswer: Int,
+    selectedAnswer: Int?,
+    showResult: Boolean,
+    onAnswerClick: (Int) -> Unit
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        options.chunked(2).forEach { rowOptions ->
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                rowOptions.forEach { option ->
+                    val isSelected = option == selectedAnswer
+                    val isCorrect = option == correctAnswer
+                    val scale by animateFloatAsState(
+                        targetValue = when {
+                            showResult && isCorrect -> 1.1f
+                            showResult && isSelected && !isCorrect -> 0.9f
+                            else -> 1f
+                        },
+                        animationSpec = spring(dampingRatio = 0.6f),
+                        label = "optionScale"
+                    )
+                    val backgroundColor = when {
+                        showResult && isCorrect -> Color(0xFF4CAF50)
+                        showResult && isSelected && !isCorrect -> Color(0xFFE53935)
+                        isSelected -> MaterialTheme.colorScheme.primary
+                        else -> MaterialTheme.colorScheme.primaryContainer
+                    }
+                    Card(
+                        onClick = { if (!showResult) onAnswerClick(option) },
+                        modifier = Modifier.size(56.dp).scale(scale),
+                        shape = CircleShape,
+                        colors = CardDefaults.cardColors(containerColor = backgroundColor),
+                        elevation = CardDefaults.cardElevation(defaultElevation = if (isSelected) 6.dp else 3.dp)
+                    ) {
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            Text(
+                                text = "$option",
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = if (isSelected || (showResult && isCorrect)) Color.White else MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        }
+                    }
+                }
             }
         }
     }

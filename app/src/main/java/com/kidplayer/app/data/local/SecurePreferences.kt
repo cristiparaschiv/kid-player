@@ -263,6 +263,32 @@ class SecurePreferences @Inject constructor(
         encryptedPrefs.getString(KEY_ACCESS_SCHEDULE_END, null)
     }
 
+    // ===== Language Settings =====
+
+    /**
+     * Save app language preference
+     * @param language Language code ("en" for English, "ro" for Romanian)
+     */
+    suspend fun saveAppLanguage(language: String) = withContext(Dispatchers.IO) {
+        encryptedPrefs.edit().putString(KEY_APP_LANGUAGE, language).apply()
+    }
+
+    /**
+     * Get app language preference
+     * Returns "en" (English) by default if not set
+     */
+    suspend fun getAppLanguage(): String = withContext(Dispatchers.IO) {
+        encryptedPrefs.getString(KEY_APP_LANGUAGE, "en") ?: "en"
+    }
+
+    /**
+     * Get app language synchronously (for initial app setup)
+     * Returns "en" (English) by default if not set
+     */
+    fun getAppLanguageSync(): String {
+        return encryptedPrefs.getString(KEY_APP_LANGUAGE, "en") ?: "en"
+    }
+
     companion object {
         private const val PREFS_NAME = "kidplayer_secure_prefs"
         private const val KEY_SERVER_URL = "server_url"
@@ -284,5 +310,8 @@ class SecurePreferences @Inject constructor(
         private const val KEY_ACCESS_SCHEDULE_ENABLED = "access_schedule_enabled"
         private const val KEY_ACCESS_SCHEDULE_START = "access_schedule_start"
         private const val KEY_ACCESS_SCHEDULE_END = "access_schedule_end"
+
+        // Language settings keys
+        private const val KEY_APP_LANGUAGE = "app_language"
     }
 }

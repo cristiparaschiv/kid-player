@@ -4,72 +4,78 @@ import kotlin.random.Random
 
 /**
  * A word for spelling with its image representation
+ * Bilingual support for English and Romanian
  */
 data class SpellingWord(
-    val word: String,
+    val wordEn: String,
+    val wordRo: String,
     val emoji: String,
-    val hint: String
-)
+    val hintEn: String,
+    val hintRo: String
+) {
+    fun getWord(isRomanian: Boolean): String = if (isRomanian) wordRo else wordEn
+    fun getHint(isRomanian: Boolean): String = if (isRomanian) hintRo else hintEn
+}
 
 /**
- * Word lists by difficulty
+ * Word lists by difficulty - Bilingual
  */
 object SpellingWords {
-    // 3-letter words (Level 1)
+    // 3-letter words (Level 1) - Easy
     val easyWords = listOf(
-        SpellingWord("CAT", "🐱", "A furry pet that says meow"),
-        SpellingWord("DOG", "🐶", "A pet that barks"),
-        SpellingWord("SUN", "☀️", "Shines in the sky"),
-        SpellingWord("BEE", "🐝", "Makes honey"),
-        SpellingWord("HAT", "🎩", "You wear it on your head"),
-        SpellingWord("BUS", "🚌", "A big vehicle for many people"),
-        SpellingWord("CAR", "🚗", "You drive it"),
-        SpellingWord("CUP", "🍵", "You drink from it"),
-        SpellingWord("EGG", "🥚", "Comes from a chicken"),
-        SpellingWord("PIG", "🐷", "Says oink"),
-        SpellingWord("BED", "🛏️", "You sleep on it"),
-        SpellingWord("BOX", "📦", "You put things inside"),
-        SpellingWord("COW", "🐄", "Gives us milk"),
-        SpellingWord("FAN", "🌀", "Keeps you cool"),
-        SpellingWord("FOX", "🦊", "Orange and clever")
+        SpellingWord("CAT", "PIS", "🐱", "A furry pet that says meow", "O pisică zice miau"),
+        SpellingWord("DOG", "CÂN", "🐶", "A pet that barks", "Un câine latră"),
+        SpellingWord("SUN", "SOA", "☀️", "Shines in the sky", "Strălucește pe cer"),
+        SpellingWord("BEE", "ALB", "🐝", "Makes honey", "Face miere"),
+        SpellingWord("HAT", "PĂL", "🎩", "You wear it on your head", "O porți pe cap"),
+        SpellingWord("BUS", "BUS", "🚌", "A big vehicle for many people", "Un vehicul mare"),
+        SpellingWord("CAR", "CAR", "🚗", "You drive it", "Îl conduci"),
+        SpellingWord("CUP", "CAN", "🍵", "You drink from it", "Bei din ea"),
+        SpellingWord("EGG", "OUĂ", "🥚", "Comes from a chicken", "Vine de la găină"),
+        SpellingWord("PIG", "POR", "🐷", "Says oink", "Face groh"),
+        SpellingWord("BED", "PAT", "🛏️", "You sleep on it", "Dormi în el"),
+        SpellingWord("BOX", "CUT", "📦", "You put things inside", "Pui lucruri în ea"),
+        SpellingWord("COW", "VAC", "🐄", "Gives us milk", "Ne dă lapte"),
+        SpellingWord("FAN", "VÂN", "🌀", "Keeps you cool", "Te răcorește"),
+        SpellingWord("FOX", "VUL", "🦊", "Orange and clever", "Portocalie și isteață")
     )
 
-    // 4-letter words (Level 2)
+    // 4-letter words (Level 2) - Medium
     val mediumWords = listOf(
-        SpellingWord("FISH", "🐟", "Lives in water"),
-        SpellingWord("BIRD", "🐦", "Has wings and flies"),
-        SpellingWord("FROG", "🐸", "Says ribbit"),
-        SpellingWord("STAR", "⭐", "Twinkles at night"),
-        SpellingWord("MOON", "🌙", "Shines at night"),
-        SpellingWord("TREE", "🌳", "Has leaves and branches"),
-        SpellingWord("CAKE", "🎂", "A birthday treat"),
-        SpellingWord("DUCK", "🦆", "Says quack"),
-        SpellingWord("BEAR", "🐻", "A big furry animal"),
-        SpellingWord("LION", "🦁", "King of the jungle"),
-        SpellingWord("BOOK", "📚", "You read it"),
-        SpellingWord("BALL", "⚽", "You can kick or throw it"),
-        SpellingWord("RAIN", "🌧️", "Falls from clouds"),
-        SpellingWord("BOAT", "⛵", "Floats on water"),
-        SpellingWord("DOOR", "🚪", "You open and close it")
+        SpellingWord("FISH", "PEȘTE", "🐟", "Lives in water", "Trăiește în apă"),
+        SpellingWord("BIRD", "PASĂR", "🐦", "Has wings and flies", "Are aripi și zboară"),
+        SpellingWord("FROG", "BROSC", "🐸", "Says ribbit", "Face oac"),
+        SpellingWord("STAR", "STEA", "⭐", "Twinkles at night", "Sclipește noaptea"),
+        SpellingWord("MOON", "LUNĂ", "🌙", "Shines at night", "Strălucește noaptea"),
+        SpellingWord("TREE", "COPA", "🌳", "Has leaves and branches", "Are frunze și ramuri"),
+        SpellingWord("CAKE", "TORT", "🎂", "A birthday treat", "Un tort de ziua ta"),
+        SpellingWord("DUCK", "RAȚĂ", "🦆", "Says quack", "Face mac"),
+        SpellingWord("BEAR", "URS", "🐻", "A big furry animal", "Un animal mare și pufos"),
+        SpellingWord("LION", "LEU", "🦁", "King of the jungle", "Regele junglei"),
+        SpellingWord("BOOK", "CART", "📚", "You read it", "O citești"),
+        SpellingWord("BALL", "MING", "⚽", "You can kick or throw it", "O poți lovi sau arunca"),
+        SpellingWord("RAIN", "PLOA", "🌧️", "Falls from clouds", "Cade din nori"),
+        SpellingWord("BOAT", "BARC", "⛵", "Floats on water", "Plutește pe apă"),
+        SpellingWord("DOOR", "UȘĂ", "🚪", "You open and close it", "O deschizi și închizi")
     )
 
-    // 5-6 letter words (Level 3)
+    // 5-6 letter words (Level 3) - Hard
     val hardWords = listOf(
-        SpellingWord("APPLE", "🍎", "A red fruit"),
-        SpellingWord("HORSE", "🐴", "You can ride it"),
-        SpellingWord("HOUSE", "🏠", "Where you live"),
-        SpellingWord("HAPPY", "😊", "A good feeling"),
-        SpellingWord("WATER", "💧", "You drink it"),
-        SpellingWord("CLOUD", "☁️", "Floats in the sky"),
-        SpellingWord("MOUSE", "🐭", "A small animal"),
-        SpellingWord("SNAKE", "🐍", "Has no legs"),
-        SpellingWord("PIZZA", "🍕", "A yummy food"),
-        SpellingWord("TIGER", "🐯", "Has stripes"),
-        SpellingWord("CANDY", "🍬", "Sweet treat"),
-        SpellingWord("PLANE", "✈️", "Flies in the sky"),
-        SpellingWord("TRAIN", "🚂", "Goes on tracks"),
-        SpellingWord("QUEEN", "👑", "Wears a crown"),
-        SpellingWord("ROBOT", "🤖", "A machine friend")
+        SpellingWord("APPLE", "MĂR", "🍎", "A red fruit", "Un fruct roșu"),
+        SpellingWord("HORSE", "CAL", "🐴", "You can ride it", "Poți să-l călărești"),
+        SpellingWord("HOUSE", "CASĂ", "🏠", "Where you live", "Unde locuiești"),
+        SpellingWord("HAPPY", "FERIC", "😊", "A good feeling", "O senzație bună"),
+        SpellingWord("WATER", "APĂ", "💧", "You drink it", "O bei"),
+        SpellingWord("CLOUD", "NOR", "☁️", "Floats in the sky", "Plutește pe cer"),
+        SpellingWord("MOUSE", "ȘOARE", "🐭", "A small animal", "Un animal mic"),
+        SpellingWord("SNAKE", "ȘARP", "🐍", "Has no legs", "Nu are picioare"),
+        SpellingWord("PIZZA", "PIZZA", "🍕", "A yummy food", "O mâncare gustoasă"),
+        SpellingWord("TIGER", "TIGRU", "🐯", "Has stripes", "Are dungi"),
+        SpellingWord("CANDY", "BOMBO", "🍬", "Sweet treat", "Dulce"),
+        SpellingWord("PLANE", "AVION", "✈️", "Flies in the sky", "Zboară pe cer"),
+        SpellingWord("TRAIN", "TREN", "🚂", "Goes on tracks", "Merge pe șine"),
+        SpellingWord("QUEEN", "REGIN", "👑", "Wears a crown", "Poartă o coroană"),
+        SpellingWord("ROBOT", "ROBOT", "🤖", "A machine friend", "Un prieten mașină")
     )
 
     fun getWordsForLevel(level: Int): List<SpellingWord> = when (level) {
@@ -114,8 +120,13 @@ object SpellingGenerator {
         }.shuffled()
     }
 
-    fun addDistractorLetters(word: String, count: Int = 2): List<LetterTile> {
-        val alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    fun addDistractorLetters(word: String, count: Int = 2, isRomanian: Boolean = false): List<LetterTile> {
+        // Romanian alphabet includes: Ă, Â, Î, Ș, Ț
+        val alphabet = if (isRomanian) {
+            "AĂÂBCDEFGHIÎJKLMNOPQRSȘTȚUVWXYZ"
+        } else {
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        }
         val wordChars = word.toSet()
         val distractors = alphabet.filter { it !in wordChars }.toList().shuffled().take(count)
 

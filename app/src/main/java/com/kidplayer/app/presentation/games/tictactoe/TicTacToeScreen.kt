@@ -10,9 +10,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kidplayer.app.R
 import com.kidplayer.app.presentation.games.common.Difficulty
 import com.kidplayer.app.presentation.games.common.GameScaffold
 import com.kidplayer.app.presentation.games.common.GameState
@@ -30,7 +32,7 @@ fun TicTacToeScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     GameScaffold(
-        gameName = "Tic-Tac-Toe",
+        gameName = stringResource(R.string.game_tictactoe_name),
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },

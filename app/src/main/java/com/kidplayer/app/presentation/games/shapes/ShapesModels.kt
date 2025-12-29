@@ -7,37 +7,43 @@ import kotlin.random.Random
  * Available shapes in the game
  */
 enum class Shape(
-    val displayName: String,
+    val displayNameEn: String,
+    val displayNameRo: String,
     val sides: Int,
     val emoji: String // Fallback for display
 ) {
-    CIRCLE("Circle", 0, "⭕"),
-    SQUARE("Square", 4, "⬛"),
-    TRIANGLE("Triangle", 3, "🔺"),
-    RECTANGLE("Rectangle", 4, "📏"),
-    STAR("Star", 5, "⭐"),
-    HEART("Heart", 0, "❤️"),
-    DIAMOND("Diamond", 4, "💎"),
-    OVAL("Oval", 0, "🔵"),
-    PENTAGON("Pentagon", 5, "⬠"),
-    HEXAGON("Hexagon", 6, "⬡")
+    CIRCLE("Circle", "Cerc", 0, "⭕"),
+    SQUARE("Square", "Pătrat", 4, "⬛"),
+    TRIANGLE("Triangle", "Triunghi", 3, "🔺"),
+    RECTANGLE("Rectangle", "Dreptunghi", 4, "📏"),
+    STAR("Star", "Stea", 5, "⭐"),
+    HEART("Heart", "Inimă", 0, "❤️"),
+    DIAMOND("Diamond", "Romb", 4, "💎"),
+    OVAL("Oval", "Oval", 0, "🔵"),
+    PENTAGON("Pentagon", "Pentagon", 5, "⬠"),
+    HEXAGON("Hexagon", "Hexagon", 6, "⬡");
+
+    fun getDisplayName(isRomanian: Boolean): String = if (isRomanian) displayNameRo else displayNameEn
 }
 
 /**
  * Available colors for shapes
  */
 enum class ShapeColor(
-    val displayName: String,
+    val displayNameEn: String,
+    val displayNameRo: String,
     val color: Color
 ) {
-    RED("Red", Color(0xFFE53935)),
-    BLUE("Blue", Color(0xFF2196F3)),
-    GREEN("Green", Color(0xFF4CAF50)),
-    YELLOW("Yellow", Color(0xFFFFEB3B)),
-    ORANGE("Orange", Color(0xFFFF9800)),
-    PURPLE("Purple", Color(0xFF9C27B0)),
-    PINK("Pink", Color(0xFFE91E63)),
-    CYAN("Cyan", Color(0xFF00BCD4))
+    RED("Red", "Roșu", Color(0xFFE53935)),
+    BLUE("Blue", "Albastru", Color(0xFF2196F3)),
+    GREEN("Green", "Verde", Color(0xFF4CAF50)),
+    YELLOW("Yellow", "Galben", Color(0xFFFFEB3B)),
+    ORANGE("Orange", "Portocaliu", Color(0xFFFF9800)),
+    PURPLE("Purple", "Mov", Color(0xFF9C27B0)),
+    PINK("Pink", "Roz", Color(0xFFE91E63)),
+    CYAN("Cyan", "Turcoaz", Color(0xFF00BCD4));
+
+    fun getDisplayName(isRomanian: Boolean): String = if (isRomanian) displayNameRo else displayNameEn
 }
 
 /**
@@ -75,17 +81,24 @@ object ShapesConfig {
 }
 
 /**
- * A shape challenge
+ * A shape challenge with bilingual support
  */
 data class ShapeChallenge(
     val type: ChallengeType,
     val targetShape: Shape,
     val targetColor: ShapeColor,
-    val question: String,
-    val options: List<String>,
-    val correctAnswer: String,
+    val questionEn: String,
+    val questionRo: String,
+    val optionsEn: List<String>,
+    val optionsRo: List<String>,
+    val correctAnswerEn: String,
+    val correctAnswerRo: String,
     val displayShapes: List<DisplayShape> // For FIND_SHAPE type, multiple shapes shown
-)
+) {
+    fun getQuestion(isRomanian: Boolean): String = if (isRomanian) questionRo else questionEn
+    fun getOptions(isRomanian: Boolean): List<String> = if (isRomanian) optionsRo else optionsEn
+    fun getCorrectAnswer(isRomanian: Boolean): String = if (isRomanian) correctAnswerRo else correctAnswerEn
+}
 
 /**
  * A shape to display on screen
@@ -128,9 +141,12 @@ object ShapesGenerator {
             type = ChallengeType.IDENTIFY_SHAPE,
             targetShape = targetShape,
             targetColor = targetColor,
-            question = "What shape is this?",
-            options = options.map { it.displayName },
-            correctAnswer = targetShape.displayName,
+            questionEn = "What shape is this?",
+            questionRo = "Ce formă este aceasta?",
+            optionsEn = options.map { it.displayNameEn },
+            optionsRo = options.map { it.displayNameRo },
+            correctAnswerEn = targetShape.displayNameEn,
+            correctAnswerRo = targetShape.displayNameRo,
             displayShapes = listOf(DisplayShape(targetShape, targetColor, true))
         )
     }
@@ -155,9 +171,12 @@ object ShapesGenerator {
             type = ChallengeType.FIND_SHAPE,
             targetShape = targetShape,
             targetColor = displayShapes.first { it.isTarget }.color,
-            question = "Tap the ${targetShape.displayName}!",
-            options = allShapes.map { it.displayName },
-            correctAnswer = targetShape.displayName,
+            questionEn = "Tap the ${targetShape.displayNameEn}!",
+            questionRo = "Atinge ${targetShape.displayNameRo.lowercase()}!",
+            optionsEn = allShapes.map { it.displayNameEn },
+            optionsRo = allShapes.map { it.displayNameRo },
+            correctAnswerEn = targetShape.displayNameEn,
+            correctAnswerRo = targetShape.displayNameRo,
             displayShapes = displayShapes
         )
     }
@@ -172,9 +191,12 @@ object ShapesGenerator {
             type = ChallengeType.IDENTIFY_COLOR,
             targetShape = targetShape,
             targetColor = targetColor,
-            question = "What color is this ${targetShape.displayName.lowercase()}?",
-            options = options.map { it.displayName },
-            correctAnswer = targetColor.displayName,
+            questionEn = "What color is this ${targetShape.displayNameEn.lowercase()}?",
+            questionRo = "Ce culoare are acest ${targetShape.displayNameRo.lowercase()}?",
+            optionsEn = options.map { it.displayNameEn },
+            optionsRo = options.map { it.displayNameRo },
+            correctAnswerEn = targetColor.displayNameEn,
+            correctAnswerRo = targetColor.displayNameRo,
             displayShapes = listOf(DisplayShape(targetShape, targetColor, true))
         )
     }
@@ -189,14 +211,18 @@ object ShapesGenerator {
         val shape = if (shapesWithSides.isNotEmpty()) shapesWithSides.random() else Shape.TRIANGLE
 
         val options = generateSidesOptions(shape.sides)
+        val optionStrings = options.map { it.toString() }
 
         return ShapeChallenge(
             type = ChallengeType.COUNT_SIDES,
             targetShape = shape,
             targetColor = targetColor,
-            question = "How many sides does this ${shape.displayName.lowercase()} have?",
-            options = options.map { it.toString() },
-            correctAnswer = shape.sides.toString(),
+            questionEn = "How many sides does this ${shape.displayNameEn.lowercase()} have?",
+            questionRo = "Câte laturi are acest ${shape.displayNameRo.lowercase()}?",
+            optionsEn = optionStrings,
+            optionsRo = optionStrings, // Numbers are the same in both languages
+            correctAnswerEn = shape.sides.toString(),
+            correctAnswerRo = shape.sides.toString(),
             displayShapes = listOf(DisplayShape(shape, targetColor, true))
         )
     }

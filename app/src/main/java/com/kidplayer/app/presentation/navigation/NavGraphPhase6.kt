@@ -153,6 +153,12 @@ fun KidPlayerNavGraphPhase6(
                     navController.navigate(Screen.Home.route) {
                         popUpTo(Screen.Setup.route) { inclusive = true }
                     }
+                },
+                onOfflineMode = {
+                    // Navigate directly to games in offline mode
+                    navController.navigate(Screen.Games.route) {
+                        popUpTo(Screen.Setup.route) { inclusive = true }
+                    }
                 }
             )
         }

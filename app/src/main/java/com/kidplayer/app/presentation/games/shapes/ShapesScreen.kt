@@ -18,10 +18,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kidplayer.app.R
 import com.kidplayer.app.presentation.components.rememberHapticFeedback
 import com.kidplayer.app.presentation.games.common.GameScaffold
 import com.kidplayer.app.presentation.util.bouncyClickable
@@ -38,7 +40,7 @@ fun ShapesScreen(
     val haptic = rememberHapticFeedback()
 
     GameScaffold(
-        gameName = "Shapes Quiz",
+        gameName = stringResource(R.string.game_shapes_name),
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },
@@ -54,7 +56,7 @@ fun ShapesScreen(
         ) {
             // Round indicator
             Text(
-                text = "ROUND ${uiState.round}/${ShapesConfig.TOTAL_ROUNDS}",
+                text = stringResource(R.string.game_round, uiState.round, ShapesConfig.TOTAL_ROUNDS).uppercase(),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -64,7 +66,7 @@ fun ShapesScreen(
             uiState.currentChallenge?.let { challenge ->
                 // Question
                 Text(
-                    text = challenge.question.uppercase(),
+                    text = challenge.getQuestion(uiState.isRomanian).uppercase(),
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -104,9 +106,9 @@ fun ShapesScreen(
                 // Answer options (not for FIND_SHAPE type)
                 if (challenge.type != ChallengeType.FIND_SHAPE) {
                     AnswerOptions(
-                        options = challenge.options,
+                        options = challenge.getOptions(uiState.isRomanian),
                         selectedAnswer = uiState.selectedAnswer,
-                        correctAnswer = if (uiState.showResult) challenge.correctAnswer else null,
+                        correctAnswer = if (uiState.showResult) challenge.getCorrectAnswer(uiState.isRomanian) else null,
                         showResult = uiState.showResult,
                         onAnswerSelect = { answer ->
                             haptic.performMedium()

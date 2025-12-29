@@ -2,6 +2,7 @@ package com.kidplayer.app.presentation.games.crossword
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kidplayer.app.data.local.LanguageManager
 import com.kidplayer.app.presentation.games.common.GameState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -13,7 +14,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CrosswordViewModel @Inject constructor() : ViewModel() {
+class CrosswordViewModel @Inject constructor(
+    private val languageManager: LanguageManager
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CrosswordUiState())
     val uiState: StateFlow<CrosswordUiState> = _uiState.asStateFlow()
@@ -31,7 +34,8 @@ class CrosswordViewModel @Inject constructor() : ViewModel() {
 
     private fun startPuzzle(puzzleNumber: Int, currentScore: Int) {
         // Use random puzzle selection based on puzzle number (progressive difficulty)
-        val puzzle = CrosswordPuzzles.getRandomPuzzle(puzzleNumber)
+        val isRomanian = languageManager.isRomanian()
+        val puzzle = CrosswordPuzzles.getRandomPuzzle(puzzleNumber, isRomanian)
 
         _uiState.update {
             CrosswordUiState(
@@ -145,8 +149,9 @@ class CrosswordViewModel @Inject constructor() : ViewModel() {
         viewModelScope.launch {
             delay(2000)
 
+            val isRomanian = languageManager.isRomanian()
             val nextPuzzleNumber = currentState.puzzleNumber + 1
-            if (nextPuzzleNumber > CrosswordConfig.TOTAL_PUZZLES) {
+            if (nextPuzzleNumber > CrosswordConfig.getTotalPuzzles(isRomanian)) {
                 handleGameComplete()
             } else {
                 startPuzzle(nextPuzzleNumber, newScore)
@@ -157,9 +162,11 @@ class CrosswordViewModel @Inject constructor() : ViewModel() {
     private fun handleGameComplete() {
         val currentState = _uiState.value
         val timeElapsed = System.currentTimeMillis() - gameStartTime
+        val isRomanian = languageManager.isRomanian()
 
-        val maxScore = CrosswordConfig.TOTAL_PUZZLES * CrosswordConfig.POINTS_PUZZLE_COMPLETE +
-                CrosswordPuzzles.puzzles.sumOf { it.words.sumOf { w -> w.word.length } } * CrosswordConfig.POINTS_PER_LETTER
+        val puzzleList = if (isRomanian) CrosswordPuzzles.romanianPuzzles else CrosswordPuzzles.englishPuzzles
+        val maxScore = CrosswordConfig.getTotalPuzzles(isRomanian) * CrosswordConfig.POINTS_PUZZLE_COMPLETE +
+                puzzleList.sumOf { it.words.sumOf { w -> w.word.length } } * CrosswordConfig.POINTS_PER_LETTER
 
         val percentage = currentState.score.toFloat() / maxScore
         val stars = when {

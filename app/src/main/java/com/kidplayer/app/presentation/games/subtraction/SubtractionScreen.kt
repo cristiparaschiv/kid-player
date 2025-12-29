@@ -19,15 +19,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kidplayer.app.R
 import com.kidplayer.app.presentation.components.rememberHapticFeedback
 import com.kidplayer.app.presentation.games.common.GameScaffold
-import com.kidplayer.app.presentation.games.common.GameState
 import kotlinx.coroutines.delay
 
 @Composable
@@ -37,6 +39,8 @@ fun SubtractionScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val haptic = rememberHapticFeedback()
+    val configuration = LocalConfiguration.current
+    val isCompactHeight = configuration.screenHeightDp < 480
 
     // Auto-show crossed out animation after a delay
     LaunchedEffect(uiState.currentProblem) {
@@ -47,7 +51,7 @@ fun SubtractionScreen(
     }
 
     GameScaffold(
-        gameName = "Subtraction Safari",
+        gameName = stringResource(R.string.game_subtraction_name),
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },
@@ -55,43 +59,259 @@ fun SubtractionScreen(
         onResumeClick = { viewModel.resumeGame() },
         showScore = true
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceEvenly
-        ) {
-            // Round indicator
-            RoundIndicator(
-                round = uiState.round,
-                totalRounds = SubtractionConfig.TOTAL_ROUNDS,
-                correctCount = uiState.correctCount
-            )
-
-            // Problem display
-            uiState.currentProblem?.let { problem ->
-                SubtractionProblemDisplay(
+        uiState.currentProblem?.let { problem ->
+            if (isCompactHeight) {
+                // Compact horizontal layout for landscape phones
+                CompactSubtractionLayout(
+                    round = uiState.round,
+                    totalRounds = SubtractionConfig.TOTAL_ROUNDS,
+                    correctCount = uiState.correctCount,
                     problem = problem,
                     showCrossedOut = uiState.showCrossedOut,
                     showResult = uiState.showResult,
-                    isCorrect = uiState.isCorrect
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // Answer options
-                AnswerOptions(
-                    options = problem.options,
-                    correctAnswer = problem.correctAnswer,
+                    isCorrect = uiState.isCorrect,
                     selectedAnswer = uiState.selectedAnswer,
-                    showResult = uiState.showResult,
-                    enabled = uiState.showCrossedOut,
                     onAnswerClick = { answer ->
                         haptic.performMedium()
                         viewModel.selectAnswer(answer)
                     }
                 )
+            } else {
+                // Standard vertical layout
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    RoundIndicator(
+                        round = uiState.round,
+                        totalRounds = SubtractionConfig.TOTAL_ROUNDS,
+                        correctCount = uiState.correctCount
+                    )
+
+                    SubtractionProblemDisplay(
+                        problem = problem,
+                        showCrossedOut = uiState.showCrossedOut,
+                        showResult = uiState.showResult,
+                        isCorrect = uiState.isCorrect
+                    )
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    AnswerOptions(
+                        options = problem.options,
+                        correctAnswer = problem.correctAnswer,
+                        selectedAnswer = uiState.selectedAnswer,
+                        showResult = uiState.showResult,
+                        enabled = uiState.showCrossedOut,
+                        onAnswerClick = { answer ->
+                            haptic.performMedium()
+                            viewModel.selectAnswer(answer)
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun CompactSubtractionLayout(
+    round: Int,
+    totalRounds: Int,
+    correctCount: Int,
+    problem: SubtractionProblem,
+    showCrossedOut: Boolean,
+    showResult: Boolean,
+    isCorrect: Boolean,
+    selectedAnswer: Int?,
+    onAnswerClick: (Int) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // Left side: Problem display
+        Column(
+            modifier = Modifier.weight(1f),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            CompactRoundIndicator(round, totalRounds, correctCount)
+            Spacer(modifier = Modifier.height(8.dp))
+            CompactProblemDisplay(problem, showCrossedOut, showResult, isCorrect)
+        }
+
+        // Right side: Answer options
+        Column(
+            modifier = Modifier.weight(1f),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            AnimatedVisibility(visible = showCrossedOut && !showResult) {
+                Text(
+                    text = "HOW MANY LEFT?",
+                    style = MaterialTheme.typography.titleSmall,
+                    color = Color(0xFF795548),
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+            }
+            if (showResult) {
+                Text(
+                    text = if (isCorrect) "EXCELLENT!" else "TRY AGAIN!",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = if (isCorrect) Color(0xFF4CAF50) else Color(0xFFFF9800)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+            AnswerOptionsCompact(
+                options = problem.options,
+                correctAnswer = problem.correctAnswer,
+                selectedAnswer = selectedAnswer,
+                showResult = showResult,
+                enabled = showCrossedOut,
+                onAnswerClick = onAnswerClick
+            )
+        }
+    }
+}
+
+@Composable
+private fun CompactRoundIndicator(round: Int, totalRounds: Int, correctCount: Int) {
+    Card(
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF3E0))
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = "🦁", fontSize = 20.sp)
+            Text(text = "$round/$totalRounds", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold, color = Color(0xFF795548))
+            Text(text = "✓$correctCount", style = MaterialTheme.typography.labelLarge, color = Color(0xFF4CAF50))
+        }
+    }
+}
+
+@Composable
+private fun CompactProblemDisplay(
+    problem: SubtractionProblem,
+    showCrossedOut: Boolean,
+    showResult: Boolean,
+    isCorrect: Boolean
+) {
+    Card(
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF8E1)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Text(
+                text = "${problem.startCount} - ${problem.takeAway} = ?",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF5D4037)
+            )
+            // Compact animal display
+            SafariAnimalsCompact(
+                totalCount = problem.startCount,
+                takeAwayCount = problem.takeAway,
+                emoji = problem.emoji,
+                showCrossedOut = showCrossedOut
+            )
+            if (showResult) {
+                Text(
+                    text = "${problem.correctAnswer} LEFT!",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = if (isCorrect) Color(0xFF4CAF50) else Color(0xFFFF9800)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun SafariAnimalsCompact(
+    totalCount: Int,
+    takeAwayCount: Int,
+    emoji: String,
+    showCrossedOut: Boolean
+) {
+    val remainingCount = totalCount - takeAwayCount
+    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+        repeat(totalCount.coerceAtMost(8)) { index ->
+            val isCrossedOut = showCrossedOut && index >= remainingCount
+            val alpha by animateFloatAsState(
+                targetValue = if (isCrossedOut) 0.3f else 1f,
+                animationSpec = tween(500),
+                label = "animalAlpha"
+            )
+            Box(contentAlignment = Alignment.Center) {
+                Text(text = emoji, fontSize = 24.sp, modifier = Modifier.alpha(alpha))
+                if (isCrossedOut) {
+                    Text(text = "❌", fontSize = 16.sp)
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AnswerOptionsCompact(
+    options: List<Int>,
+    correctAnswer: Int,
+    selectedAnswer: Int?,
+    showResult: Boolean,
+    enabled: Boolean,
+    onAnswerClick: (Int) -> Unit
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        options.chunked(2).forEach { rowOptions ->
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                rowOptions.forEach { option ->
+                    val isSelected = option == selectedAnswer
+                    val isCorrect = option == correctAnswer
+                    val scale by animateFloatAsState(
+                        targetValue = when {
+                            showResult && isCorrect -> 1.1f
+                            showResult && isSelected && !isCorrect -> 0.9f
+                            else -> 1f
+                        },
+                        animationSpec = spring(dampingRatio = 0.6f),
+                        label = "optionScale"
+                    )
+                    val backgroundColor = when {
+                        showResult && isCorrect -> Color(0xFF4CAF50)
+                        showResult && isSelected && !isCorrect -> Color(0xFFE53935)
+                        isSelected -> Color(0xFF8D6E63)
+                        !enabled -> Color(0xFFD7CCC8)
+                        else -> Color(0xFFBCAAA4)
+                    }
+                    Card(
+                        onClick = { if (!showResult && enabled) onAnswerClick(option) },
+                        modifier = Modifier.size(56.dp).scale(scale),
+                        shape = CircleShape,
+                        colors = CardDefaults.cardColors(containerColor = backgroundColor),
+                        elevation = CardDefaults.cardElevation(defaultElevation = if (isSelected) 6.dp else 3.dp)
+                    ) {
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            Text(text = "$option", fontSize = 22.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                        }
+                    }
+                }
             }
         }
     }

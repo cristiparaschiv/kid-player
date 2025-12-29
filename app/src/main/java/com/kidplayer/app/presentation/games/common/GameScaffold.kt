@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color // Still needed for overlays
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -206,7 +207,7 @@ private fun GameHeader(
             ) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Back to games",
+                    contentDescription = stringResource(R.string.game_back_to_games_desc),
                     tint = MaterialTheme.colorScheme.onPrimaryContainer,
                     modifier = Modifier.size(28.dp)
                 )
@@ -224,7 +225,7 @@ private fun GameHeader(
                 )
                 if (showScore) {
                     Text(
-                        text = "SCORE: $score",
+                        text = stringResource(R.string.game_score_label, score),
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.primary
                     )
@@ -244,7 +245,7 @@ private fun GameHeader(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Refresh,
-                        contentDescription = "Restart game",
+                        contentDescription = stringResource(R.string.game_restart_desc),
                         tint = MaterialTheme.colorScheme.onSecondaryContainer,
                         modifier = Modifier.size(28.dp)
                     )
@@ -258,7 +259,7 @@ private fun GameHeader(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Pause,
-                        contentDescription = "Pause game",
+                        contentDescription = stringResource(R.string.game_pause_desc),
                         tint = MaterialTheme.colorScheme.onTertiaryContainer,
                         modifier = Modifier.size(28.dp)
                     )
@@ -295,7 +296,7 @@ private fun PauseOverlay(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    text = "GAME PAUSED",
+                    text = stringResource(R.string.game_paused),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold
                 )
@@ -310,7 +311,7 @@ private fun PauseOverlay(
                     shape = RoundedCornerShape(Dimensions.buttonCornerRadius)
                 ) {
                     Text(
-                        text = "RESUME",
+                        text = stringResource(R.string.game_resume),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -324,7 +325,7 @@ private fun PauseOverlay(
                     shape = RoundedCornerShape(Dimensions.buttonCornerRadius)
                 ) {
                     Text(
-                        text = "RESTART",
+                        text = stringResource(R.string.game_restart),
                         style = MaterialTheme.typography.titleMedium
                     )
                 }
@@ -334,7 +335,7 @@ private fun PauseOverlay(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = "EXIT GAME",
+                        text = stringResource(R.string.game_exit),
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.error
                     )
@@ -374,7 +375,7 @@ private fun CompletionOverlay(
             ) {
                 // Title
                 Text(
-                    text = if (won) "GREAT JOB!" else "GOOD TRY!",
+                    text = stringResource(if (won) R.string.game_great_job else R.string.game_good_try),
                     style = MaterialTheme.typography.headlineLarge,
                     fontWeight = FontWeight.Bold,
                     color = if (won) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
@@ -394,7 +395,7 @@ private fun CompletionOverlay(
 
                 // Score
                 Text(
-                    text = "SCORE: $score",
+                    text = stringResource(R.string.game_score_label, score),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Medium
                 )
@@ -409,7 +410,7 @@ private fun CompletionOverlay(
                     shape = RoundedCornerShape(Dimensions.buttonCornerRadius)
                 ) {
                     Text(
-                        text = "PLAY AGAIN",
+                        text = stringResource(R.string.game_play_again),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -423,7 +424,7 @@ private fun CompletionOverlay(
                     shape = RoundedCornerShape(Dimensions.buttonCornerRadius)
                 ) {
                     Text(
-                        text = "BACK TO GAMES",
+                        text = stringResource(R.string.game_back_to_games),
                         style = MaterialTheme.typography.titleMedium
                     )
                 }

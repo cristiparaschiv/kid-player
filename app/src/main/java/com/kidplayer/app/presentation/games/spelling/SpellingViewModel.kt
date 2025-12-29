@@ -2,6 +2,7 @@ package com.kidplayer.app.presentation.games.spelling
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kidplayer.app.data.local.LanguageManager
 import com.kidplayer.app.domain.reward.GameDifficulty
 import com.kidplayer.app.domain.reward.RewardManager
 import com.kidplayer.app.presentation.games.common.GameState
@@ -16,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SpellingViewModel @Inject constructor(
-    private val rewardManager: RewardManager
+    private val rewardManager: RewardManager,
+    private val languageManager: LanguageManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SpellingUiState())
@@ -33,15 +35,18 @@ class SpellingViewModel @Inject constructor(
 
     fun startNewGame() {
         gameStartTime = System.currentTimeMillis()
+        val isRomanian = languageManager.isRomanian()
         val firstWord = SpellingWords.getRandomWord(1)
+        val word = firstWord.getWord(isRomanian)
         _uiState.update {
             SpellingUiState(
                 round = 1,
                 score = 0,
                 level = 1,
                 currentWord = firstWord,
-                letterTiles = SpellingGenerator.scrambleLetters(firstWord.word),
-                placedLetters = List(firstWord.word.length) { null },
+                isRomanian = isRomanian,
+                letterTiles = SpellingGenerator.scrambleLetters(word),
+                placedLetters = List(word.length) { null },
                 gameState = GameState.Playing(score = 0)
             )
         }
@@ -109,7 +114,7 @@ class SpellingViewModel @Inject constructor(
         if (currentState.placedLetters.any { it == null }) return
 
         val spelledWord = currentState.placedLetters.mapNotNull { it?.letter }.joinToString("")
-        val correctWord = currentState.currentWord?.word ?: return
+        val correctWord = currentState.currentWord?.getWord(currentState.isRomanian) ?: return
         val isCorrect = spelledWord == correctWord
 
         val newScore = if (isCorrect) {
@@ -144,12 +149,13 @@ class SpellingViewModel @Inject constructor(
 
     private fun resetCurrentWord() {
         val currentState = _uiState.value
-        val word = currentState.currentWord ?: return
+        val spellingWord = currentState.currentWord ?: return
+        val word = spellingWord.getWord(currentState.isRomanian)
 
         _uiState.update {
             it.copy(
-                letterTiles = SpellingGenerator.scrambleLetters(word.word),
-                placedLetters = List(word.word.length) { null },
+                letterTiles = SpellingGenerator.scrambleLetters(word),
+                placedLetters = List(word.length) { null },
                 wordComplete = false,
                 isCorrect = false
             )
@@ -159,21 +165,23 @@ class SpellingViewModel @Inject constructor(
     private fun nextWord() {
         val currentState = _uiState.value
         val nextRound = currentState.round + 1
+        val isRomanian = currentState.isRomanian
 
         if (nextRound > SpellingConfig.TOTAL_ROUNDS) {
             handleGameComplete()
         } else {
             // Increase level every 3 rounds
             val newLevel = (nextRound - 1) / 3 + 1
-            val nextWord = SpellingWords.getRandomWord(minOf(newLevel, 3))
+            val nextSpellingWord = SpellingWords.getRandomWord(minOf(newLevel, 3))
+            val word = nextSpellingWord.getWord(isRomanian)
 
             _uiState.update {
                 it.copy(
                     round = nextRound,
                     level = minOf(newLevel, 3),
-                    currentWord = nextWord,
-                    letterTiles = SpellingGenerator.scrambleLetters(nextWord.word),
-                    placedLetters = List(nextWord.word.length) { null },
+                    currentWord = nextSpellingWord,
+                    letterTiles = SpellingGenerator.scrambleLetters(word),
+                    placedLetters = List(word.length) { null },
                     wordComplete = false,
                     isCorrect = false
                 )
@@ -232,6 +240,7 @@ data class SpellingUiState(
     val level: Int = 1,
     val correctCount: Int = 0,
     val currentWord: SpellingWord? = null,
+    val isRomanian: Boolean = false,
     val letterTiles: List<LetterTile> = emptyList(),
     val placedLetters: List<LetterTile?> = emptyList(),
     val wordComplete: Boolean = false,

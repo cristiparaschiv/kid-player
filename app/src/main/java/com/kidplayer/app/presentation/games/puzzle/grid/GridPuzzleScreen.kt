@@ -20,9 +20,11 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kidplayer.app.R
 import com.kidplayer.app.presentation.components.rememberHapticFeedback
 import com.kidplayer.app.presentation.games.common.Difficulty
 import com.kidplayer.app.presentation.games.common.GameScaffold
@@ -49,7 +51,7 @@ fun GridPuzzleScreen(
     val haptic = rememberHapticFeedback()
 
     GameScaffold(
-        gameName = "Picture Puzzle",
+        gameName = stringResource(R.string.game_gridpuzzle_name),
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },

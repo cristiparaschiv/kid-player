@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
@@ -24,6 +25,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.kidplayer.app.R
 import com.kidplayer.app.presentation.components.rememberHapticFeedback
 
 /**
@@ -61,6 +63,8 @@ fun BottomNavigationBar(navController: NavHostController) {
     ) {
         bottomNavItems.forEach { item ->
             val selected = currentDestination?.hierarchy?.any { it.route == item.route } == true
+            val label = stringResource(item.labelResId)
+            val selectedDescription = stringResource(R.string.nav_selected, label)
 
             NavigationBarItem(
                 icon = {
@@ -71,7 +75,7 @@ fun BottomNavigationBar(navController: NavHostController) {
                 },
                 label = {
                     Text(
-                        text = item.label,
+                        text = label,
                         style = MaterialTheme.typography.labelMedium
                     )
                 },
@@ -98,9 +102,9 @@ fun BottomNavigationBar(navController: NavHostController) {
                 ),
                 modifier = Modifier.semantics {
                     contentDescription = if (selected) {
-                        "${item.label}, selected"
+                        selectedDescription
                     } else {
-                        item.label
+                        label
                     }
                 }
             )
@@ -113,7 +117,7 @@ fun BottomNavigationBar(navController: NavHostController) {
  */
 private data class BottomNavItem(
     val route: String,
-    val label: String,
+    val labelResId: Int,
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector
 )
@@ -121,31 +125,31 @@ private data class BottomNavItem(
 private val bottomNavItems = listOf(
     BottomNavItem(
         route = Screen.Home.route,
-        label = "Home",
+        labelResId = R.string.nav_home,
         selectedIcon = Icons.Filled.Home,
         unselectedIcon = Icons.Outlined.Home
     ),
     BottomNavItem(
         route = Screen.Games.route,
-        label = "Games",
+        labelResId = R.string.nav_games,
         selectedIcon = Icons.Filled.SportsEsports,
         unselectedIcon = Icons.Outlined.SportsEsports
     ),
     BottomNavItem(
         route = Screen.Downloaded.route,
-        label = "Downloads",
+        labelResId = R.string.nav_downloads,
         selectedIcon = Icons.Filled.CloudDownload,
         unselectedIcon = Icons.Outlined.CloudDownload
     ),
     BottomNavItem(
         route = Screen.Search.route,
-        label = "Search",
+        labelResId = R.string.nav_search,
         selectedIcon = Icons.Filled.Search,
         unselectedIcon = Icons.Outlined.Search
     ),
     BottomNavItem(
         route = Screen.Favorites.route,
-        label = "Favorites",
+        labelResId = R.string.nav_favorites,
         selectedIcon = Icons.Filled.Favorite,
         unselectedIcon = Icons.Outlined.FavoriteBorder
     )

@@ -78,20 +78,19 @@ data class CrosswordPuzzle(
 
 /**
  * Pre-made crossword puzzles for kids
- * Each puzzle has words that properly intersect (share the same letter at crossing points)
- * Includes 3-letter, 4-letter, and 5-letter words with progressive difficulty
+ * Supports both English and Romanian languages
  */
 object CrosswordPuzzles {
 
-    // Each puzzle is carefully designed so intersecting words share the same letter
-    // Puzzles are grouped by difficulty (word length)
+    data class PuzzleDefinition(
+        val gridSize: Int,
+        val words: List<CrosswordWord>
+    )
 
-    // === EASY PUZZLES (3-letter words) ===
-    val easyPuzzles = listOf(
+    // === ENGLISH PUZZLES ===
+
+    val englishEasyPuzzles = listOf(
         // Puzzle: Animals
-        // C A T . .
-        // O P . . .
-        // W E . . .
         PuzzleDefinition(
             gridSize = 5,
             words = listOf(
@@ -101,9 +100,6 @@ object CrosswordPuzzles {
             )
         ),
         // Puzzle: Nature
-        // S U N . .
-        // I . U . .
-        // T . T . .
         PuzzleDefinition(
             gridSize = 5,
             words = listOf(
@@ -113,9 +109,6 @@ object CrosswordPuzzles {
             )
         ),
         // Puzzle: Pets
-        // D O G . .
-        // I . O . .
-        // P . T . .
         PuzzleDefinition(
             gridSize = 5,
             words = listOf(
@@ -125,9 +118,6 @@ object CrosswordPuzzles {
             )
         ),
         // Puzzle: Insects
-        // B E E . .
-        // U A . . .
-        // S T . . .
         PuzzleDefinition(
             gridSize = 5,
             words = listOf(
@@ -137,9 +127,6 @@ object CrosswordPuzzles {
             )
         ),
         // Puzzle: Colors
-        // R E D . .
-        // U . A . .
-        // N . D . .
         PuzzleDefinition(
             gridSize = 5,
             words = listOf(
@@ -149,9 +136,6 @@ object CrosswordPuzzles {
             )
         ),
         // Puzzle: Farm
-        // P I G . .
-        // O . U . .
-        // T . M . .
         PuzzleDefinition(
             gridSize = 5,
             words = listOf(
@@ -161,9 +145,6 @@ object CrosswordPuzzles {
             )
         ),
         // Puzzle: Clothes
-        // H A T . .
-        // O . A . .
-        // P . P . .
         PuzzleDefinition(
             gridSize = 5,
             words = listOf(
@@ -173,9 +154,6 @@ object CrosswordPuzzles {
             )
         ),
         // Puzzle: Mixed
-        // B A T . .
-        // I . E . .
-        // G . N . .
         PuzzleDefinition(
             gridSize = 5,
             words = listOf(
@@ -183,40 +161,11 @@ object CrosswordPuzzles {
                 CrosswordWord("BIG", "🐘", 0, 0, false),
                 CrosswordWord("TEN", "🔟", 0, 2, false)
             )
-        ),
-        // Puzzle: Sea
-        // F I N . .
-        // O . O . .
-        // X . T . .
-        PuzzleDefinition(
-            gridSize = 5,
-            words = listOf(
-                CrosswordWord("FIN", "🦈", 0, 0, true),
-                CrosswordWord("FOX", "🦊", 0, 0, false),
-                CrosswordWord("NOT", "❌", 0, 2, false)
-            )
-        ),
-        // Puzzle: Sky
-        // O W L . .
-        // N . E . .
-        // E . G . .
-        PuzzleDefinition(
-            gridSize = 5,
-            words = listOf(
-                CrosswordWord("OWL", "🦉", 0, 0, true),
-                CrosswordWord("ONE", "1️⃣", 0, 0, false),
-                CrosswordWord("LEG", "🦵", 0, 2, false)
-            )
         )
     )
 
-    // === MEDIUM PUZZLES (4-letter words) ===
-    val mediumPuzzles = listOf(
+    val englishMediumPuzzles = listOf(
         // Puzzle: Animals
-        // F I S H . .
-        // R . U . . .
-        // O . N . . .
-        // G . . . . .
         PuzzleDefinition(
             gridSize = 6,
             words = listOf(
@@ -226,10 +175,6 @@ object CrosswordPuzzles {
             )
         ),
         // Puzzle: Nature
-        // M O O N . .
-        // I . . U . .
-        // L . . T . .
-        // K . . . . .
         PuzzleDefinition(
             gridSize = 6,
             words = listOf(
@@ -239,10 +184,6 @@ object CrosswordPuzzles {
             )
         ),
         // Puzzle: Creatures
-        // B E A R . .
-        // U . P . . .
-        // S . E . . .
-        // . . . . . .
         PuzzleDefinition(
             gridSize = 6,
             words = listOf(
@@ -252,10 +193,6 @@ object CrosswordPuzzles {
             )
         ),
         // Puzzle: Sky
-        // S T A R . .
-        // I . P . . .
-        // T . E . . .
-        // . . . . . .
         PuzzleDefinition(
             gridSize = 6,
             words = listOf(
@@ -265,10 +202,6 @@ object CrosswordPuzzles {
             )
         ),
         // Puzzle: Food
-        // C A K E . .
-        // O . I . . .
-        // W . T . . .
-        // . . E . . .
         PuzzleDefinition(
             gridSize = 6,
             words = listOf(
@@ -277,37 +210,7 @@ object CrosswordPuzzles {
                 CrosswordWord("KITE", "🪁", 0, 2, false)
             )
         ),
-        // Puzzle: Transport
-        // B O A T . .
-        // U . D . . .
-        // S . D . . .
-        // . . . . . .
-        PuzzleDefinition(
-            gridSize = 6,
-            words = listOf(
-                CrosswordWord("BOAT", "⛵", 0, 0, true),
-                CrosswordWord("BUS", "🚌", 0, 0, false),
-                CrosswordWord("ADD", "➕", 0, 2, false)
-            )
-        ),
-        // Puzzle: Forest
-        // T R E E . .
-        // E . A . . .
-        // N . T . . .
-        // . . . . . .
-        PuzzleDefinition(
-            gridSize = 6,
-            words = listOf(
-                CrosswordWord("TREE", "🌳", 0, 0, true),
-                CrosswordWord("TEN", "🔟", 0, 0, false),
-                CrosswordWord("EAT", "🍽️", 0, 2, false)
-            )
-        ),
         // Puzzle: Birds
-        // D U C K . .
-        // O . A . . .
-        // G . T . . .
-        // . . . . . .
         PuzzleDefinition(
             gridSize = 6,
             words = listOf(
@@ -316,24 +219,7 @@ object CrosswordPuzzles {
                 CrosswordWord("CAT", "🐱", 0, 2, false)
             )
         ),
-        // Puzzle: Farm
-        // G O A T . .
-        // U . P . . .
-        // M . E . . .
-        // . . . . . .
-        PuzzleDefinition(
-            gridSize = 6,
-            words = listOf(
-                CrosswordWord("GOAT", "🐐", 0, 0, true),
-                CrosswordWord("GUM", "🫧", 0, 0, false),
-                CrosswordWord("APE", "🐵", 0, 2, false)
-            )
-        ),
         // Puzzle: Animals
-        // L I O N . .
-        // E . C . . .
-        // G . E . . .
-        // . . . . . .
         PuzzleDefinition(
             gridSize = 6,
             words = listOf(
@@ -344,13 +230,8 @@ object CrosswordPuzzles {
         )
     )
 
-    // === HARD PUZZLES (5-letter words) ===
-    val hardPuzzles = listOf(
+    val englishHardPuzzles = listOf(
         // Puzzle: Animals
-        // H O R S E . .
-        // O . U . A . .
-        // P . N . T . .
-        // . . . . . . .
         PuzzleDefinition(
             gridSize = 7,
             words = listOf(
@@ -361,10 +242,6 @@ object CrosswordPuzzles {
             )
         ),
         // Puzzle: Food
-        // A P P L E . .
-        // P . A . A . .
-        // E . N . K . .
-        // . . . . E . .
         PuzzleDefinition(
             gridSize = 7,
             words = listOf(
@@ -375,10 +252,6 @@ object CrosswordPuzzles {
             )
         ),
         // Puzzle: Zoo
-        // P A N D A . .
-        // I . U . D . .
-        // G . T . D . .
-        // . . . . . . .
         PuzzleDefinition(
             gridSize = 7,
             words = listOf(
@@ -389,10 +262,6 @@ object CrosswordPuzzles {
             )
         ),
         // Puzzle: Ocean
-        // W H A L E . .
-        // I . D . A . .
-        // N . D . T . .
-        // . . . . . . .
         PuzzleDefinition(
             gridSize = 7,
             words = listOf(
@@ -403,10 +272,6 @@ object CrosswordPuzzles {
             )
         ),
         // Puzzle: Safari
-        // Z E B R A . .
-        // O . E . N . .
-        // O . D . T . .
-        // . . . . . . .
         PuzzleDefinition(
             gridSize = 7,
             words = listOf(
@@ -416,67 +281,17 @@ object CrosswordPuzzles {
                 CrosswordWord("ANT", "🐜", 0, 4, false)
             )
         ),
-        // Puzzle: Ocean
-        // S H A R K . .
-        // I . A . I . .
-        // T . T . T . .
-        // . . . . E . .
-        PuzzleDefinition(
-            gridSize = 7,
-            words = listOf(
-                CrosswordWord("SHARK", "🦈", 0, 0, true),
-                CrosswordWord("SIT", "🪑", 0, 0, false),
-                CrosswordWord("HAT", "🎩", 0, 2, false),
-                CrosswordWord("KITE", "🪁", 0, 4, false)
-            )
-        ),
         // Puzzle: Jungle
-        // T I G E R . .
-        // E . R . A . .
-        // N . L . T . .
-        // . . . . . . .
         PuzzleDefinition(
             gridSize = 7,
             words = listOf(
                 CrosswordWord("TIGER", "🐯", 0, 0, true),
                 CrosswordWord("TEN", "🔟", 0, 0, false),
-                CrosswordWord("GIRL", "👧", 0, 2, false),
+                CrosswordWord("GUM", "🫧", 0, 2, false),
                 CrosswordWord("EAT", "🍽️", 0, 4, false)
             )
         ),
-        // Puzzle: Sky
-        // C L O U D . .
-        // A . W . I . .
-        // T . L . P . .
-        // . . . . . . .
-        PuzzleDefinition(
-            gridSize = 7,
-            words = listOf(
-                CrosswordWord("CLOUD", "☁️", 0, 0, true),
-                CrosswordWord("CAT", "🐱", 0, 0, false),
-                CrosswordWord("OWL", "🦉", 0, 2, false),
-                CrosswordWord("DIP", "🏊", 0, 4, false)
-            )
-        ),
-        // Puzzle: Nature
-        // G R A S S . .
-        // U . I . U . .
-        // M . N . N . .
-        // . . . . . . .
-        PuzzleDefinition(
-            gridSize = 7,
-            words = listOf(
-                CrosswordWord("GRASS", "🌿", 0, 0, true),
-                CrosswordWord("GUM", "🫧", 0, 0, false),
-                CrosswordWord("RAIN", "🌧️", 0, 2, false),
-                CrosswordWord("SUN", "☀️", 0, 4, false)
-            )
-        ),
         // Puzzle: Farm
-        // S H E E P . .
-        // I . A . A . .
-        // T . T . N . .
-        // . . . . . . .
         PuzzleDefinition(
             gridSize = 7,
             words = listOf(
@@ -488,13 +303,252 @@ object CrosswordPuzzles {
         )
     )
 
-    // Combined list for backwards compatibility
-    val puzzles = easyPuzzles + mediumPuzzles + hardPuzzles
+    // === ROMANIAN PUZZLES ===
+    // Carefully designed with Romanian words that properly intersect
 
-    data class PuzzleDefinition(
-        val gridSize: Int,
-        val words: List<CrosswordWord>
+    val romanianEasyPuzzles = listOf(
+        // Puzzle: Animale (Animals)
+        // U R S . .
+        // N . O . .
+        // . . C . .
+        PuzzleDefinition(
+            gridSize = 5,
+            words = listOf(
+                CrosswordWord("URS", "🐻", 0, 0, true),     // Bear
+                CrosswordWord("UN", "1️⃣", 0, 0, false),     // One
+                CrosswordWord("SOC", "🌳", 0, 2, false)     // Elder tree
+            )
+        ),
+        // Puzzle: Mâncare (Food)
+        // O U . . .
+        // R . . . .
+        // Z . . . .
+        PuzzleDefinition(
+            gridSize = 5,
+            words = listOf(
+                CrosswordWord("OU", "🥚", 0, 0, true),      // Egg
+                CrosswordWord("ORZ", "🌾", 0, 0, false)     // Barley
+            )
+        ),
+        // Puzzle: Natură (Nature)
+        // C E R . .
+        // A . Â . .
+        // S . U . .
+        PuzzleDefinition(
+            gridSize = 5,
+            words = listOf(
+                CrosswordWord("CER", "🌤️", 0, 0, true),    // Sky
+                CrosswordWord("CAS", "🏠", 0, 0, false),    // House (informal)
+                CrosswordWord("RÂU", "🌊", 0, 2, false)     // River
+            )
+        ),
+        // Puzzle: Animale mici
+        // P U I . .
+        // A . A . .
+        // S . R . .
+        PuzzleDefinition(
+            gridSize = 5,
+            words = listOf(
+                CrosswordWord("PUI", "🐔", 0, 0, true),     // Chicken
+                CrosswordWord("PAS", "👣", 0, 0, false),    // Step
+                CrosswordWord("IAR", "🔄", 0, 2, false)     // Again
+            )
+        ),
+        // Puzzle: Corpul
+        // N A S . .
+        // O . O . .
+        // U . C . .
+        PuzzleDefinition(
+            gridSize = 5,
+            words = listOf(
+                CrosswordWord("NAS", "👃", 0, 0, true),     // Nose
+                CrosswordWord("NOU", "✨", 0, 0, false),    // New
+                CrosswordWord("SOC", "🌳", 0, 2, false)     // Elder
+            )
+        ),
+        // Puzzle: Obiecte
+        // C O Ș . .
+        // A . A . .
+        // S . C . .
+        PuzzleDefinition(
+            gridSize = 5,
+            words = listOf(
+                CrosswordWord("COȘ", "🧺", 0, 0, true),    // Basket
+                CrosswordWord("CAS", "🏠", 0, 0, false),   // House
+                CrosswordWord("ȘAC", "♟️", 0, 2, false)    // Chess
+            )
+        ),
+        // Puzzle: Natură 2
+        // N O R . .
+        // U . O . .
+        // C . C . .
+        PuzzleDefinition(
+            gridSize = 5,
+            words = listOf(
+                CrosswordWord("NOR", "☁️", 0, 0, true),    // Cloud
+                CrosswordWord("NUC", "🌰", 0, 0, false),   // Walnut
+                CrosswordWord("ROC", "🪨", 0, 2, false)    // Rock
+            )
+        ),
+        // Puzzle: Fructe
+        // M Ă R . .
+        // A . O . .
+        // I . S . .
+        PuzzleDefinition(
+            gridSize = 5,
+            words = listOf(
+                CrosswordWord("MĂR", "🍎", 0, 0, true),    // Apple
+                CrosswordWord("MAI", "🌸", 0, 0, false),   // May
+                CrosswordWord("ROS", "🔴", 0, 2, false)    // Red (verb)
+            )
+        )
     )
+
+    val romanianMediumPuzzles = listOf(
+        // Puzzle: Animale
+        // L E U . . .
+        // A . R . . .
+        // C . S . . .
+        PuzzleDefinition(
+            gridSize = 6,
+            words = listOf(
+                CrosswordWord("LEU", "🦁", 0, 0, true),     // Lion
+                CrosswordWord("LAC", "🏞️", 0, 0, false),   // Lake
+                CrosswordWord("URS", "🐻", 0, 2, false)    // Bear
+            )
+        ),
+        // Puzzle: Natură
+        // S T E A . .
+        // O . R . . .
+        // C . E . . .
+        PuzzleDefinition(
+            gridSize = 6,
+            words = listOf(
+                CrosswordWord("STEA", "⭐", 0, 0, true),   // Star
+                CrosswordWord("SOC", "🌳", 0, 0, false),   // Elder
+                CrosswordWord("ERE", "⏰", 0, 2, false)    // Eras (hours)
+            )
+        ),
+        // Puzzle: Mâncare
+        // T O R T . .
+        // O . A . . .
+        // C . I . . .
+        PuzzleDefinition(
+            gridSize = 6,
+            words = listOf(
+                CrosswordWord("TORT", "🎂", 0, 0, true),   // Cake
+                CrosswordWord("TOC", "👠", 0, 0, false),   // Heel
+                CrosswordWord("RAI", "😇", 0, 2, false)    // Heaven
+            )
+        ),
+        // Puzzle: Animale 2
+        // R A Ț Ă . .
+        // A . O . . .
+        // C . C . . .
+        PuzzleDefinition(
+            gridSize = 6,
+            words = listOf(
+                CrosswordWord("RAȚĂ", "🦆", 0, 0, true),   // Duck
+                CrosswordWord("RAC", "🦀", 0, 0, false),   // Crab
+                CrosswordWord("ȚOC", "🧵", 0, 2, false)    // Spindle
+            )
+        ),
+        // Puzzle: Obiecte
+        // C A S Ă . .
+        // E . O . . .
+        // R . C . . .
+        PuzzleDefinition(
+            gridSize = 6,
+            words = listOf(
+                CrosswordWord("CASĂ", "🏠", 0, 0, true),   // House
+                CrosswordWord("CER", "🌤️", 0, 0, false),  // Sky
+                CrosswordWord("SOC", "🌳", 0, 2, false)   // Elder
+            )
+        ),
+        // Puzzle: Natură 2
+        // L U N Ă . .
+        // A . O . . .
+        // C . R . . .
+        PuzzleDefinition(
+            gridSize = 6,
+            words = listOf(
+                CrosswordWord("LUNĂ", "🌙", 0, 0, true),   // Moon
+                CrosswordWord("LAC", "🏞️", 0, 0, false),  // Lake
+                CrosswordWord("NOR", "☁️", 0, 2, false)   // Cloud
+            )
+        )
+    )
+
+    val romanianHardPuzzles = listOf(
+        // Puzzle: Animale mari
+        // E L E F A N T
+        // . A . . . . .
+        // . C . . . . .
+        PuzzleDefinition(
+            gridSize = 8,
+            words = listOf(
+                CrosswordWord("ELEFANT", "🐘", 0, 0, true),   // Elephant
+                CrosswordWord("LAC", "🏞️", 0, 1, false)       // Lake
+            )
+        ),
+        // Puzzle: Fructe
+        // B A N A N Ă .
+        // U . . . . . .
+        // N . . . . . .
+        PuzzleDefinition(
+            gridSize = 8,
+            words = listOf(
+                CrosswordWord("BANANĂ", "🍌", 0, 0, true),   // Banana
+                CrosswordWord("BUN", "👍", 0, 0, false)      // Good
+            )
+        ),
+        // Puzzle: Natură mare
+        // C O P A C . . .
+        // O . I . . . . .
+        // S . A . . . . .
+        PuzzleDefinition(
+            gridSize = 8,
+            words = listOf(
+                CrosswordWord("COPAC", "🌳", 0, 0, true),    // Tree
+                CrosswordWord("COS", "🧺", 0, 0, false),     // Basket
+                CrosswordWord("PIA", "🔵", 0, 2, false)      // Marble (stone)
+            )
+        ),
+        // Puzzle: Animale de curte
+        // C A P R Ă . . .
+        // A . A . . . . .
+        // S . S . . . . .
+        PuzzleDefinition(
+            gridSize = 8,
+            words = listOf(
+                CrosswordWord("CAPRĂ", "🐐", 0, 0, true),    // Goat
+                CrosswordWord("CAS", "🏠", 0, 0, false),     // House
+                CrosswordWord("PAS", "👣", 0, 2, false)      // Step
+            )
+        ),
+        // Puzzle: Legume
+        // M O R C O V . .
+        // A . O . . . . .
+        // I . C . . . . .
+        PuzzleDefinition(
+            gridSize = 8,
+            words = listOf(
+                CrosswordWord("MORCOV", "🥕", 0, 0, true),   // Carrot
+                CrosswordWord("MAI", "🌸", 0, 0, false),     // May
+                CrosswordWord("ROC", "🪨", 0, 2, false)      // Rock
+            )
+        )
+    )
+
+    // Combined lists for each language
+    val englishPuzzles = englishEasyPuzzles + englishMediumPuzzles + englishHardPuzzles
+    val romanianPuzzles = romanianEasyPuzzles + romanianMediumPuzzles + romanianHardPuzzles
+
+    // Default puzzles (backwards compatibility)
+    val easyPuzzles = englishEasyPuzzles
+    val mediumPuzzles = englishMediumPuzzles
+    val hardPuzzles = englishHardPuzzles
+    val puzzles = englishPuzzles
 
     fun buildPuzzle(definition: PuzzleDefinition): CrosswordPuzzle {
         // Create empty grid
@@ -524,34 +578,44 @@ object CrosswordPuzzles {
         )
     }
 
-    fun getPuzzle(index: Int): CrosswordPuzzle {
-        val definition = puzzles[index % puzzles.size]
+    fun getPuzzle(index: Int, isRomanian: Boolean = false): CrosswordPuzzle {
+        val puzzleList = if (isRomanian) romanianPuzzles else englishPuzzles
+        val definition = puzzleList[index % puzzleList.size]
         return buildPuzzle(definition)
     }
 
     /**
-     * Get a random puzzle based on difficulty level
+     * Get a random puzzle based on difficulty level and language
      */
-    fun getRandomPuzzle(level: Int): CrosswordPuzzle {
+    fun getRandomPuzzle(level: Int, isRomanian: Boolean = false): CrosswordPuzzle {
+        val (easyList, mediumList, hardList) = if (isRomanian) {
+            Triple(romanianEasyPuzzles, romanianMediumPuzzles, romanianHardPuzzles)
+        } else {
+            Triple(englishEasyPuzzles, englishMediumPuzzles, englishHardPuzzles)
+        }
+
         val puzzleList = when {
-            level <= 3 -> easyPuzzles   // Levels 1-3: Easy (3-letter words)
-            level <= 6 -> mediumPuzzles // Levels 4-6: Medium (4-letter words)
-            else -> hardPuzzles         // Levels 7+: Hard (5-letter words)
+            level <= 3 -> easyList   // Levels 1-3: Easy (3-letter words)
+            level <= 6 -> mediumList // Levels 4-6: Medium (4-letter words)
+            else -> hardList         // Levels 7+: Hard (5-letter words)
         }
         val definition = puzzleList.random()
         return buildPuzzle(definition)
     }
 
     /**
-     * Get total count of puzzles available
+     * Get total count of puzzles available for a language
      */
-    fun getTotalPuzzleCount(): Int = puzzles.size
+    fun getTotalPuzzleCount(isRomanian: Boolean = false): Int {
+        return if (isRomanian) romanianPuzzles.size else englishPuzzles.size
+    }
 }
 
 /**
  * Game configuration
  */
 object CrosswordConfig {
+    fun getTotalPuzzles(isRomanian: Boolean = false): Int = CrosswordPuzzles.getTotalPuzzleCount(isRomanian)
     val TOTAL_PUZZLES: Int get() = CrosswordPuzzles.getTotalPuzzleCount()
     const val POINTS_PER_LETTER = 25
     const val POINTS_PUZZLE_COMPLETE = 100

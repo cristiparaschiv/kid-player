@@ -2,6 +2,7 @@ package com.kidplayer.app.presentation.games.counting
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kidplayer.app.data.local.LanguageManager
 import com.kidplayer.app.domain.reward.GameDifficulty
 import com.kidplayer.app.domain.reward.RewardManager
 import com.kidplayer.app.presentation.games.common.GameState
@@ -16,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CountingViewModel @Inject constructor(
-    private val rewardManager: RewardManager
+    private val rewardManager: RewardManager,
+    private val languageManager: LanguageManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CountingUiState())
@@ -33,11 +35,13 @@ class CountingViewModel @Inject constructor(
 
     fun startNewGame() {
         gameStartTime = System.currentTimeMillis()
+        val isRomanian = languageManager.isRomanian()
         _uiState.update {
             CountingUiState(
                 round = 1,
                 score = 0,
                 level = 1,
+                isRomanian = isRomanian,
                 currentChallenge = CountingGenerator.generateChallenge(1),
                 gameState = GameState.Playing(score = 0)
             )
@@ -151,6 +155,7 @@ data class CountingUiState(
     val score: Int = 0,
     val level: Int = 1,
     val correctCount: Int = 0,
+    val isRomanian: Boolean = false,
     val currentChallenge: CountingChallenge? = null,
     val selectedAnswer: Int? = null,
     val showResult: Boolean = false,

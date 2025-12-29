@@ -26,7 +26,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kidplayer.app.R
 import com.kidplayer.app.presentation.components.rememberHapticFeedback
 import com.kidplayer.app.presentation.games.common.GameScaffold
 import com.kidplayer.app.presentation.games.common.GameState
@@ -40,7 +42,7 @@ fun DotsScreen(
     val haptic = rememberHapticFeedback()
 
     GameScaffold(
-        gameName = "Connect Dots",
+        gameName = stringResource(R.string.game_dots_name),
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },

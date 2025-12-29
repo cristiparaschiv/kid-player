@@ -32,7 +32,7 @@ enum class Direction {
  */
 object MazeCharacters {
     val players = listOf("🐰", "🐱", "🐶", "🐸", "🐻")
-    val goals = listOf("🥕", "🐟", "🦴", "🪰", "🍯")
+    val goals = listOf("🥕", "🐟", "🦴", "🍎", "🍯")
 
     fun getPlayerForLevel(level: Int): String = players[(level - 1) % players.size]
     fun getGoalForLevel(level: Int): String = goals[(level - 1) % goals.size]
@@ -88,7 +88,7 @@ class Maze(val size: Int) {
             val unvisitedNeighbors = getUnvisitedNeighbors(current)
 
             if (unvisitedNeighbors.isEmpty()) {
-                stack.removeLast()
+                stack.removeAt(stack.lastIndex)
             } else {
                 val next = unvisitedNeighbors.random()
                 removeWallBetween(current, next)

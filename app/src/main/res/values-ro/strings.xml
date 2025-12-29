@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kid Player</string>
+
+    <!-- Navigation -->
+    <string name="nav_browse">Răsfoiește</string>
+    <string name="nav_player">Redare</string>
+    <string name="nav_settings">Setări</string>
+    <string name="nav_games">Jocuri</string>
+    <string name="nav_home">Acasă</string>
+    <string name="nav_downloads">Descărcări</string>
+    <string name="nav_search">Căutare</string>
+    <string name="nav_favorites">Favorite</string>
+    <string name="nav_selected">%s, selectat</string>
+
+    <!-- Error States -->
+    <string name="error_try_again">Încearcă din nou</string>
+    <string name="error_try_again_button">Buton încearcă din nou</string>
+    <string name="error_network_title">Nu ne putem conecta</string>
+    <string name="error_network_message">Avem probleme de conectare. Verifică internetul și încearcă din nou!</string>
+    <string name="error_offline_title">Ești deconectat</string>
+    <string name="error_offline_message">Conectează-te la internet pentru a viziona mai multe videoclipuri. Videoclipurile descărcate sunt încă disponibile!</string>
+    <string name="error_no_content_title">Niciun videoclip găsit</string>
+    <string name="error_no_content_message">Nu sunt videoclipuri disponibile acum. Încearcă mai târziu!</string>
+    <string name="error_server_title">Problemă cu serverul</string>
+    <string name="error_server_message">Serverul video nu răspunde. Te rugăm să încerci din nou în câteva momente!</string>
+    <string name="error_generic_title">Oops! Ceva nu a mers bine</string>
+    <string name="error_generic_message">Am întâmpinat o problemă. Nu-ți face griji, să încercăm din nou!</string>
+    <string name="error_description">Eroare: %1$s. %2$s</string>
+
+    <!-- Empty State -->
+    <string name="empty_no_videos">Niciun videoclip încă</string>
+    <string name="empty_videos_appear">Videoclipurile vor apărea aici când sunt adăugate</string>
+
+    <!-- Loading States -->
+    <string name="loading_videos">Se încarcă videoclipurile…</string>
+    <string name="loading_more_videos">Se încarcă mai multe videoclipuri…</string>
+    <string name="loading_please_wait">Se încarcă mai multe videoclipuri, te rugăm așteaptă</string>
+    <string name="loading">Se încarcă…</string>
+
+    <!-- Offline Banner -->
+    <string name="offline_banner">Ești deconectat - Doar videoclipurile descărcate pot fi redate</string>
+    <string name="offline_mode">Mod Offline</string>
+    <string name="offline_downloaded_videos">%d videoclip descărcat disponibil</string>
+    <string name="offline_downloaded_videos_plural">%d videoclipuri descărcate disponibile</string>
+    <string name="offline_no_downloads">Niciun videoclip descărcat disponibil</string>
+    <string name="network_offline">Deconectat</string>
+    <string name="network_mobile_data">Date mobile</string>
+    <string name="network_connected">Conectat</string>
+
+    <!-- Game Common -->
+    <string name="game_paused">JOC ÎN PAUZĂ</string>
+    <string name="game_resume">CONTINUĂ</string>
+    <string name="game_restart">REPORNEȘTE</string>
+    <string name="game_exit">IEȘI DIN JOC</string>
+    <string name="game_great_job">BRAVO!</string>
+    <string name="game_good_try">BUNĂ ÎNCERCARE!</string>
+    <string name="game_play_again">JOACĂ DIN NOU</string>
+    <string name="game_back_to_games">ÎNAPOI LA JOCURI</string>
+    <string name="game_score_label">SCOR: %d</string>
+    <string name="game_back_to_games_desc">Înapoi la jocuri</string>
+    <string name="game_restart_desc">Repornește jocul</string>
+    <string name="game_pause_desc">Pauză joc</string>
+    <string name="stars">Stele</string>
+
+    <!-- Setup Screen -->
+    <string name="setup_title">Bun venit!</string>
+    <string name="setup_subtitle">Hai să începem</string>
+    <string name="setup_server_url">Adresa serverului</string>
+    <string name="setup_username">Utilizator</string>
+    <string name="setup_password">Parolă</string>
+    <string name="setup_connect">Conectare</string>
+
+    <!-- Browse Screen -->
+    <string name="browse_title">Ce vrei să vezi?</string>
+    <string name="browse_loading">Se încarcă videoclipurile...</string>
+    <string name="browse_error">Ups! Ceva nu a mers bine</string>
+    <string name="browse_empty">Nu sunt videoclipuri disponibile</string>
+
+    <!-- Player Screen -->
+    <string name="player_loading">Se încarcă...</string>
+    <string name="player_error">Nu pot reda acest videoclip</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Setări pentru Părinți</string>
+    <string name="settings_enter_pin">Introdu PIN-ul</string>
+    <string name="settings_server">Setări Server</string>
+    <string name="settings_downloads">Setări Descărcări</string>
+    <string name="settings_about">Despre</string>
+    <string name="settings_autoplay_title">Redare automată</string>
+    <string name="settings_autoplay_description">Redă automat următorul videoclip când se termină cel curent</string>
+    <string name="settings_screen_time_title">Limită de timp</string>
+    <string name="settings_screen_time_description">Limitează timpul de vizionare zilnic</string>
+    <string name="settings_language_title">Limbă</string>
+    <string name="settings_language_description">Schimbă limba aplicației</string>
+    <string name="settings_select_language">Selectează limba</string>
+    <string name="settings_logout">Deconectare</string>
+    <string name="settings_logout_description">Deconectează-te de la server</string>
+    <string name="settings_connected_to">Conectat la</string>
+    <string name="settings_logged_in_as">Conectat ca</string>
+    <string name="settings_not_configured">Neconfigurat</string>
+    <string name="settings_minutes">minute</string>
+    <string name="settings_daily_limit">Limită zilnică</string>
+    <string name="settings_parent_settings">Setări pentru Părinți</string>
+    <string name="settings_configure_playback">Configurează setările de redare și control parental</string>
+    <string name="settings_playback">Redare</string>
+    <string name="settings_parental_controls">Control Parental</string>
+    <string name="settings_coming_soon">În curând</string>
+    <string name="settings_coming_soon_desc">Protecție PIN, setări server, gestionare descărcări și alte funcții vor fi disponibile în actualizări viitoare.</string>
+    <string name="settings_dismiss">Închide</string>
+    <string name="settings_unknown_error">Eroare necunoscută</string>
+    <string name="settings_adjust_limit">Ajustează timpul maxim de vizionare pe zi</string>
+    <string name="settings_lock">Blochează Setările</string>
+
+    <!-- PIN Dialog -->
+    <string name="pin_set_title">Setează PIN Parental</string>
+    <string name="pin_verify_title">Introdu PIN Parental</string>
+    <string name="pin_change_title">Schimbă PIN-ul</string>
+    <string name="pin_setup_subtitle">Creează un PIN de 4 cifre pentru a proteja setările</string>
+    <string name="pin_verify_subtitle">Introdu PIN-ul de 4 cifre pentru a accesa setările</string>
+    <string name="pin_change_subtitle">Introdu un PIN nou de 4 cifre</string>
+    <string name="pin_confirm">Confirmă PIN-ul</string>
+    <string name="pin_reenter">Reintroduceți PIN-ul</string>
+    <string name="pin_backspace">Șterge</string>
+
+    <!-- Screen Time Settings -->
+    <string name="screen_time_limits">Limite Timp Ecran</string>
+    <string name="screen_time_enable">Activează Limita de Timp</string>
+    <string name="screen_time_limit_daily">Limitează timpul zilnic pe ecran</string>
+    <string name="screen_time_daily_limit">Limită Zilnică</string>
+    <string name="screen_time_tap_to_change">Apasă pentru a schimba</string>
+    <string name="screen_time_limit_minutes">%d min</string>
+    <string name="screen_time_used_today">Folosit Azi</string>
+    <string name="screen_time_remaining_short">Rămas</string>
+
+    <!-- Access Schedule -->
+    <string name="access_schedule">Program de Acces</string>
+    <string name="access_schedule_enable">Activează Programul</string>
+    <string name="access_schedule_set_hours">Setează orele permise</string>
+    <string name="access_schedule_allowed_hours">Ore Permise</string>
+    <string name="access_schedule_time_range">%1$s - %2$s</string>
+
+    <!-- PIN Management -->
+    <string name="pin_management">Gestionare PIN</string>
+    <string name="pin_change">Schimbă PIN-ul</string>
+    <string name="pin_update_parent">Actualizează PIN-ul parental</string>
+
+    <!-- Server Settings New -->
+    <string name="server_url">Adresa Serverului</string>
+    <string name="server_username">Utilizator</string>
+    <string name="settings_logout_confirm_title">Confirmare Deconectare</string>
+    <string name="settings_logout_confirm_message">Sigur doriți să vă deconectați? Va trebui să introduceți din nou credențialele serverului la următoarea pornire.</string>
+    <string name="settings_sign_out_return">Deconectează-te și revino la ecranul de configurare</string>
+
+    <!-- About Section -->
+    <string name="about_version">Versiunea 1.0.0 (Faza 5)</string>
+    <string name="about_description">Un player video prietenos pentru copii cu control parental</string>
+
+    <!-- Locked Settings -->
+    <string name="settings_locked">Setări Blocate</string>
+    <string name="settings_enter_pin_access">Introdu PIN-ul pentru a accesa setările</string>
+
+    <!-- Language Section -->
+    <string name="settings_language_limba">Limbă / Language</string>
+    <string name="settings_app_language">Limba Aplicației</string>
+    <string name="settings_select_language_ro">Selectați limba / Select Language</string>
+
+    <!-- Time Limit Picker -->
+    <string name="time_limit_format">%1$d minute (%2$do %3$dm)</string>
+
+    <!-- Autoplay -->
+    <string name="autoplay_up_next">Următorul</string>
+    <string name="autoplay_playing_in">Redare în %d secundă</string>
+    <string name="autoplay_playing_in_plural">Redare în %d secunde</string>
+    <string name="autoplay_play_now">Redă acum</string>
+    <string name="autoplay_cancel">Anulează</string>
+
+    <!-- Common -->
+    <string name="ok">OK</string>
+    <string name="cancel">Anulează</string>
+    <string name="retry">Încearcă din nou</string>
+    <string name="back">Înapoi</string>
+    <string name="close">Închide</string>
+    <string name="save">Salvează</string>
+    <string name="done">Gata</string>
+    <string name="next">Următorul</string>
+    <string name="yes">Da</string>
+    <string name="no">Nu</string>
+
+    <!-- Games Hub -->
+    <string name="games_title">Jocuri</string>
+    <string name="games_subtitle">Alege un joc!</string>
+
+    <!-- Game Common (older section - most strings moved to new section above) -->
+    <string name="game_score">SCOR: %d</string>
+    <string name="game_level">Nivel %d</string>
+    <string name="game_round">Runda %1$d din %2$d</string>
+    <string name="game_complete">Terminat!</string>
+    <string name="game_correct">Corect!</string>
+    <string name="game_wrong">Mai încearcă!</string>
+    <string name="game_hint">Indiciu</string>
+    <string name="game_new_game">Joc Nou</string>
+
+    <!-- Game Names -->
+    <string name="game_memory_name">Potriviri</string>
+    <string name="game_memory_desc">Găsește perechile</string>
+    <string name="game_tictactoe_name">X și 0</string>
+    <string name="game_tictactoe_desc">Bate calculatorul</string>
+    <string name="game_puzzle_name">Puzzle Forme</string>
+    <string name="game_puzzle_desc">Potrivește formele</string>
+    <string name="game_sliding_name">Puzzle Glisant</string>
+    <string name="game_sliding_desc">Mută piesele</string>
+    <string name="game_gridpuzzle_name">Puzzle Imagine</string>
+    <string name="game_gridpuzzle_desc">Schimbă piesele</string>
+    <string name="game_match3_name">Potrivește 3</string>
+    <string name="game_match3_desc">Schimbă și potrivește</string>
+    <string name="game_coloring_name">Carte de Colorat</string>
+    <string name="game_coloring_desc">Colorează imagini</string>
+    <string name="game_pattern_name">Tipare</string>
+    <string name="game_pattern_desc">Completează tiparul</string>
+    <string name="game_colormix_name">Amestecă Culori</string>
+    <string name="game_colormix_desc">Amestecă culorile</string>
+    <string name="game_lettermatch_name">Potrivește Litere</string>
+    <string name="game_lettermatch_desc">Litere și imagini</string>
+    <string name="game_maze_name">Labirint</string>
+    <string name="game_maze_desc">Găsește ieșirea</string>
+    <string name="game_dots_name">Unește Puncte</string>
+    <string name="game_dots_desc">Unește punctele</string>
+    <string name="game_addition_name">Adunări Vesele</string>
+    <string name="game_addition_desc">Învață să aduni</string>
+    <string name="game_subtraction_name">Scăderi Safari</string>
+    <string name="game_subtraction_desc">Învață să scazi</string>
+    <string name="game_numberbonds_name">Prieteni Numerici</string>
+    <string name="game_numberbonds_desc">Numere care se potrivesc</string>
+    <string name="game_compare_name">Mai Mare sau Mai Mic</string>
+    <string name="game_compare_desc">Compară numerele</string>
+    <string name="game_oddoneout_name">Găsește Diferența</string>
+    <string name="game_oddoneout_desc">Ce este diferit?</string>
+    <string name="game_sudoku_name">Sudoku cu Imagini</string>
+    <string name="game_sudoku_desc">Completează grila</string>
+    <string name="game_ballsort_name">Sortează Bile</string>
+    <string name="game_ballsort_desc">Sortează după culoare</string>
+    <string name="game_hangman_name">Spânzurătoarea</string>
+    <string name="game_hangman_desc">Ghicește cuvântul</string>
+    <string name="game_crossword_name">Integramă</string>
+    <string name="game_crossword_desc">Rezolvă integrama</string>
+    <string name="game_counting_name">Numărătoare</string>
+    <string name="game_counting_desc">Numără obiectele</string>
+    <string name="game_shapes_name">Forme</string>
+    <string name="game_shapes_desc">Învață formele</string>
+    <string name="game_spelling_name">Ortografie</string>
+    <string name="game_spelling_desc">Scrie cuvântul</string>
+    <string name="game_wordsearch_name">Căutare Cuvinte</string>
+    <string name="game_wordsearch_desc">Găsește cuvintele</string>
+    <string name="game_spotdiff_name">Găsește Diferențele</string>
+    <string name="game_spotdiff_desc">Găsește diferențele</string>
+
+    <!-- Specific Game Instructions -->
+    <string name="hangman_guess_letter">Ghicește o literă!</string>
+    <string name="hangman_category">Categorie: %s</string>
+    <string name="hangman_you_won">Ai ghicit!</string>
+    <string name="hangman_you_lost">Cuvântul era: %s</string>
+    <string name="hangman_guesses_left">%d încercări rămase</string>
+
+    <string name="crossword_tap_hint">Apasă pe un indiciu</string>
+    <string name="crossword_across">Orizontal</string>
+    <string name="crossword_down">Vertical</string>
+    <string name="crossword_filled">%1$d din %2$d completat</string>
+
+    <string name="spelling_spell_word">Scrie cuvântul!</string>
+    <string name="spelling_drag_letters">Trage literele</string>
+
+    <string name="wordsearch_find_words">Găsește cuvintele:</string>
+    <string name="wordsearch_words_found">%1$d din %2$d găsite</string>
+    <string name="wordsearch_clear_selection">Șterge selecția</string>
+
+    <string name="counting_how_many">Câte sunt?</string>
+    <string name="counting_count_objects">Numără %s</string>
+
+    <string name="shapes_find_shape">Găsește %s</string>
+    <string name="shapes_what_shape">Ce formă este?</string>
+
+    <string name="memory_find_pairs">Găsește perechile!</string>
+    <string name="memory_pairs_found">%1$d din %2$d perechi</string>
+    <string name="memory_moves">Mutări: %d</string>
+
+    <string name="tictactoe_your_turn">E rândul tău!</string>
+    <string name="tictactoe_computer_turn">Rândul calculatorului...</string>
+    <string name="tictactoe_you_win">Ai câștigat!</string>
+    <string name="tictactoe_you_lose">A câștigat calculatorul!</string>
+    <string name="tictactoe_draw">Remiză!</string>
+
+    <string name="maze_find_exit">Găsește ieșirea!</string>
+    <string name="maze_use_arrows">Folosește săgețile</string>
+    <string name="maze_escaped">Ai scăpat!</string>
+
+    <string name="pattern_whats_next">Ce urmează?</string>
+    <string name="pattern_complete">Completează tiparul</string>
+
+    <string name="colormix_mix_colors">Amestecă culorile!</string>
+    <string name="colormix_make_color">Fă culoarea %s</string>
+
+    <string name="addition_solve">Calculează: %1$d + %2$d = ?</string>
+    <string name="subtraction_solve">Calculează: %1$d - %2$d = ?</string>
+
+    <string name="compare_which_bigger">Care este mai mare?</string>
+    <string name="compare_which_smaller">Care este mai mic?</string>
+
+    <string name="numberbonds_find_pair">Găsește perechea care face %d</string>
+
+    <string name="oddoneout_find_different">Găsește ce este diferit!</string>
+
+    <string name="dots_connect">Unește punctele în ordine</string>
+    <string name="dots_number">%d</string>
+
+    <string name="coloring_pick_color">Alege o culoare</string>
+    <string name="coloring_tap_to_color">Apasă pentru a colora</string>
+
+    <string name="ballsort_sort_balls">Sortează bilele după culoare!</string>
+    <string name="ballsort_moves">Mutări: %d</string>
+
+    <string name="sudoku_fill_grid">Completează grila!</string>
+    <string name="sudoku_each_row">Fiecare rând are nevoie de toate formele</string>
+
+    <string name="spotdiff_find_differences">Găsește %d diferențe!</string>
+    <string name="spotdiff_found">Găsite: %1$d din %2$d</string>
+
+    <!-- Categories -->
+    <string name="category_animals">Animale</string>
+    <string name="category_food">Mâncare</string>
+    <string name="category_nature">Natură</string>
+    <string name="category_things">Obiecte</string>
+    <string name="category_body">Corpul</string>
+    <string name="category_places">Locuri</string>
+    <string name="category_activities">Activități</string>
+    <string name="category_colors">Culori</string>
+
+    <!-- Shapes -->
+    <string name="shape_circle">Cerc</string>
+    <string name="shape_square">Pătrat</string>
+    <string name="shape_triangle">Triunghi</string>
+    <string name="shape_rectangle">Dreptunghi</string>
+    <string name="shape_star">Stea</string>
+    <string name="shape_heart">Inimă</string>
+    <string name="shape_diamond">Romb</string>
+    <string name="shape_oval">Oval</string>
+
+    <!-- Colors -->
+    <string name="color_red">Roșu</string>
+    <string name="color_blue">Albastru</string>
+    <string name="color_green">Verde</string>
+    <string name="color_yellow">Galben</string>
+    <string name="color_orange">Portocaliu</string>
+    <string name="color_purple">Mov</string>
+    <string name="color_pink">Roz</string>
+    <string name="color_brown">Maro</string>
+    <string name="color_black">Negru</string>
+    <string name="color_white">Alb</string>
+    <string name="color_gray">Gri</string>
+
+    <!-- Screen Time -->
+    <string name="screen_time_remaining">Timp rămas: %d minute</string>
+    <string name="screen_time_up">Timpul tău s-a terminat pentru azi!</string>
+    <string name="screen_time_warning">Mai ai doar %d minute!</string>
+
+    <!-- Stars/Rewards -->
+    <string name="stars_earned">Ai câștigat %d stele!</string>
+    <string name="total_stars">Total: %d stele</string>
+</resources>

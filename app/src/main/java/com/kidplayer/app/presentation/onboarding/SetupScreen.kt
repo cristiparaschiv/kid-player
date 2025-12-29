@@ -31,6 +31,7 @@ import com.kidplayer.app.presentation.theme.KidPlayerTheme
 @Composable
 fun SetupScreen(
     onSetupComplete: () -> Unit = {},
+    onOfflineMode: () -> Unit = {},
     viewModel: SetupViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -43,6 +44,14 @@ fun SetupScreen(
         }
     }
 
+    // Navigate to games in offline mode
+    LaunchedEffect(uiState.isOfflineMode) {
+        if (uiState.isOfflineMode) {
+            onOfflineMode()
+            viewModel.resetOfflineModeState()
+        }
+    }
+
     SetupScreenContent(
         uiState = uiState,
         onServerUrlChanged = viewModel::onServerUrlChanged,
@@ -50,6 +59,7 @@ fun SetupScreen(
         onPasswordChanged = viewModel::onPasswordChanged,
         onTestConnection = viewModel::testConnection,
         onConnect = viewModel::authenticate,
+        onOfflineMode = viewModel::enableOfflineMode,
         onDismissError = viewModel::clearErrorMessage,
         onDismissSuccess = viewModel::clearSuccessMessage
     )
@@ -63,6 +73,7 @@ private fun SetupScreenContent(
     onPasswordChanged: (String) -> Unit,
     onTestConnection: () -> Unit,
     onConnect: () -> Unit,
+    onOfflineMode: () -> Unit,
     onDismissError: () -> Unit,
     onDismissSuccess: () -> Unit
 ) {
@@ -261,6 +272,52 @@ private fun SetupScreenContent(
                 )
             }
 
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Divider with text
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                HorizontalDivider(modifier = Modifier.weight(1f))
+                Text(
+                    text = "  OR  ",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                HorizontalDivider(modifier = Modifier.weight(1f))
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Offline Mode Button
+            OutlinedButton(
+                onClick = onOfflineMode,
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = MaterialTheme.colorScheme.secondary
+                )
+            ) {
+                Icon(
+                    Icons.Default.SportsEsports,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Play Games Only",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+
+            Text(
+                text = "Skip server setup and play educational games offline",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+
             // Error Message
             uiState.errorMessage?.let { error ->
                 Spacer(modifier = Modifier.height(24.dp))
@@ -369,6 +426,7 @@ private fun SetupScreenPreview() {
             onPasswordChanged = {},
             onTestConnection = {},
             onConnect = {},
+            onOfflineMode = {},
             onDismissError = {},
             onDismissSuccess = {}
         )
@@ -395,6 +453,7 @@ private fun SetupScreenLoadingPreview() {
             onPasswordChanged = {},
             onTestConnection = {},
             onConnect = {},
+            onOfflineMode = {},
             onDismissError = {},
             onDismissSuccess = {}
         )
@@ -421,6 +480,7 @@ private fun SetupScreenErrorPreview() {
             onPasswordChanged = {},
             onTestConnection = {},
             onConnect = {},
+            onOfflineMode = {},
             onDismissError = {},
             onDismissSuccess = {}
         )

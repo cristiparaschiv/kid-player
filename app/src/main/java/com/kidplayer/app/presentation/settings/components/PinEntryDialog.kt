@@ -12,12 +12,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.kidplayer.app.R
 import com.kidplayer.app.presentation.theme.KidPlayerTheme
 
 /**
@@ -114,8 +116,9 @@ fun PinEntryDialog(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Title
+                val confirmPinText = stringResource(R.string.pin_confirm)
                 Text(
-                    text = if (isSetupMode && isConfirmPhase) "Confirm PIN" else title,
+                    text = if (isSetupMode && isConfirmPhase) confirmPinText else title,
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
@@ -154,7 +157,7 @@ fun PinEntryDialog(
                     Spacer(modifier = Modifier.height(16.dp))
                 } else if (isSetupMode && isConfirmPhase) {
                     Text(
-                        text = "Re-enter your PIN",
+                        text = stringResource(R.string.pin_reenter),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center
@@ -184,7 +187,7 @@ fun PinEntryDialog(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = "Cancel",
+                        text = stringResource(R.string.cancel),
                         style = MaterialTheme.typography.titleMedium
                     )
                 }
@@ -266,7 +269,7 @@ private fun PinPad(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Backspace,
-                                contentDescription = "Backspace",
+                                contentDescription = stringResource(R.string.pin_backspace),
                                 modifier = Modifier.size(24.dp)
                             )
                         }

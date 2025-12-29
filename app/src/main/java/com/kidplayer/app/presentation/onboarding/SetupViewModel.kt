@@ -142,6 +142,22 @@ class SetupViewModel @Inject constructor(
     fun resetAuthenticationState() {
         _uiState.update { it.copy(isAuthenticated = false) }
     }
+
+    /**
+     * Enable offline mode
+     * Allows users to access games without a Jellyfin server
+     */
+    fun enableOfflineMode() {
+        _uiState.update { it.copy(isOfflineMode = true) }
+    }
+
+    /**
+     * Reset offline mode state
+     * Used after successful navigation to clear the flag
+     */
+    fun resetOfflineModeState() {
+        _uiState.update { it.copy(isOfflineMode = false) }
+    }
 }
 
 /**
@@ -154,6 +170,7 @@ data class SetupUiState(
     val isLoading: Boolean = false,
     val connectionSuccess: Boolean = false,
     val isAuthenticated: Boolean = false,
+    val isOfflineMode: Boolean = false,
     val errorMessage: String? = null,
     val successMessage: String? = null
 ) {

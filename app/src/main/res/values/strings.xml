@@ -6,6 +6,62 @@
     <string name="nav_browse">Browse</string>
     <string name="nav_player">Now Playing</string>
     <string name="nav_settings">Settings</string>
+    <string name="nav_games">Games</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_downloads">Downloads</string>
+    <string name="nav_search">Search</string>
+    <string name="nav_favorites">Favorites</string>
+    <string name="nav_selected">%s, selected</string>
+
+    <!-- Error States -->
+    <string name="error_try_again">Try Again</string>
+    <string name="error_try_again_button">Try again button</string>
+    <string name="error_network_title">Can\'t Connect</string>
+    <string name="error_network_message">We\'re having trouble connecting. Check your internet and try again!</string>
+    <string name="error_offline_title">You\'re Offline</string>
+    <string name="error_offline_message">Connect to the internet to watch more videos. Downloaded videos are still available!</string>
+    <string name="error_no_content_title">No Videos Found</string>
+    <string name="error_no_content_message">There are no videos available right now. Try again later!</string>
+    <string name="error_server_title">Server Problem</string>
+    <string name="error_server_message">The video server isn\'t responding. Please try again in a few moments!</string>
+    <string name="error_generic_title">Oops! Something Went Wrong</string>
+    <string name="error_generic_message">We ran into a problem. Don\'t worry, let\'s try again!</string>
+    <string name="error_description">Error: %1$s. %2$s</string>
+
+    <!-- Empty State -->
+    <string name="empty_no_videos">No Videos Yet</string>
+    <string name="empty_videos_appear">Videos will appear here when they\'re added</string>
+
+    <!-- Loading States -->
+    <string name="loading_videos">Loading videos…</string>
+    <string name="loading_more_videos">Loading more videos…</string>
+    <string name="loading_please_wait">Loading more videos, please wait</string>
+    <string name="loading">Loading…</string>
+
+    <!-- Offline Banner -->
+    <string name="offline_banner">You\'re offline - Only downloaded videos can play</string>
+    <string name="offline_mode">Offline Mode</string>
+    <string name="offline_downloaded_videos">%d downloaded video available</string>
+    <string name="offline_downloaded_videos_plural">%d downloaded videos available</string>
+    <string name="offline_no_downloads">No downloaded videos available</string>
+    <string name="network_offline">Offline</string>
+    <string name="network_mobile_data">Mobile Data</string>
+    <string name="network_connected">Connected</string>
+
+    <!-- Game Common -->
+    <string name="game_paused">GAME PAUSED</string>
+    <string name="game_resume">RESUME</string>
+    <string name="game_restart">RESTART</string>
+    <string name="game_exit">EXIT GAME</string>
+    <string name="game_great_job">GREAT JOB!</string>
+    <string name="game_good_try">GOOD TRY!</string>
+    <string name="game_play_again">PLAY AGAIN</string>
+    <string name="game_back_to_games">BACK TO GAMES</string>
+    <string name="game_score_label">SCORE: %d</string>
+    <string name="game_back_to_games_desc">Back to games</string>
+    <string name="game_restart_desc">Restart game</string>
+    <string name="game_pause_desc">Pause game</string>
+    <string name="stars">Stars</string>
 
     <!-- Setup Screen -->
     <string name="setup_title">Welcome!</string>
@@ -35,6 +91,82 @@
     <string name="settings_autoplay_description">Automatically play next video when current video ends</string>
     <string name="settings_screen_time_title">Screen Time Limit</string>
     <string name="settings_screen_time_description">Limit daily viewing time</string>
+    <string name="settings_language_title">Language</string>
+    <string name="settings_language_description">Change app language</string>
+    <string name="settings_select_language">Select Language</string>
+    <string name="settings_logout">Logout</string>
+    <string name="settings_logout_description">Disconnect from server</string>
+    <string name="settings_connected_to">Connected to</string>
+    <string name="settings_logged_in_as">Logged in as</string>
+    <string name="settings_not_configured">Not configured</string>
+    <string name="settings_minutes">minutes</string>
+    <string name="settings_daily_limit">Daily limit</string>
+    <string name="settings_parent_settings">Parent Settings</string>
+    <string name="settings_configure_playback">Configure playback and parental control settings</string>
+    <string name="settings_playback">Playback</string>
+    <string name="settings_parental_controls">Parental Controls</string>
+    <string name="settings_coming_soon">Coming Soon</string>
+    <string name="settings_coming_soon_desc">PIN protection, server settings, download management, and more features coming in future updates.</string>
+    <string name="settings_dismiss">Dismiss</string>
+    <string name="settings_unknown_error">Unknown error</string>
+    <string name="settings_adjust_limit">Adjust the maximum viewing time per day</string>
+    <string name="settings_lock">Lock Settings</string>
+
+    <!-- PIN Dialog -->
+    <string name="pin_set_title">Set Parent PIN</string>
+    <string name="pin_verify_title">Enter Parent PIN</string>
+    <string name="pin_change_title">Change PIN</string>
+    <string name="pin_setup_subtitle">Create a 4-digit PIN to protect settings</string>
+    <string name="pin_verify_subtitle">Enter your 4-digit PIN to access settings</string>
+    <string name="pin_change_subtitle">Enter a new 4-digit PIN</string>
+    <string name="pin_confirm">Confirm PIN</string>
+    <string name="pin_reenter">Re-enter your PIN</string>
+    <string name="pin_backspace">Backspace</string>
+
+    <!-- Screen Time Settings -->
+    <string name="screen_time_limits">Screen Time Limits</string>
+    <string name="screen_time_enable">Enable Time Limit</string>
+    <string name="screen_time_limit_daily">Limit daily screen time</string>
+    <string name="screen_time_daily_limit">Daily Time Limit</string>
+    <string name="screen_time_tap_to_change">Tap to change</string>
+    <string name="screen_time_limit_minutes">%d min</string>
+    <string name="screen_time_used_today">Used Today</string>
+    <string name="screen_time_remaining_short">Remaining</string>
+
+    <!-- Access Schedule -->
+    <string name="access_schedule">Access Schedule</string>
+    <string name="access_schedule_enable">Enable Schedule</string>
+    <string name="access_schedule_set_hours">Set allowed hours</string>
+    <string name="access_schedule_allowed_hours">Allowed Hours</string>
+    <string name="access_schedule_time_range">%1$s - %2$s</string>
+
+    <!-- PIN Management -->
+    <string name="pin_management">PIN Management</string>
+    <string name="pin_change">Change PIN</string>
+    <string name="pin_update_parent">Update your parent PIN</string>
+
+    <!-- Server Settings New -->
+    <string name="server_url">Server URL</string>
+    <string name="server_username">Username</string>
+    <string name="settings_logout_confirm_title">Logout Confirmation</string>
+    <string name="settings_logout_confirm_message">Are you sure you want to logout? You will need to enter server credentials again on next launch.</string>
+    <string name="settings_sign_out_return">Sign out and return to setup screen</string>
+
+    <!-- About Section -->
+    <string name="about_version">Version 1.0.0 (Phase 5)</string>
+    <string name="about_description">A kid-friendly video player with parental controls</string>
+
+    <!-- Locked Settings -->
+    <string name="settings_locked">Settings Locked</string>
+    <string name="settings_enter_pin_access">Enter PIN to access settings</string>
+
+    <!-- Language Section -->
+    <string name="settings_language_limba">Language / Limbă</string>
+    <string name="settings_app_language">App Language</string>
+    <string name="settings_select_language_ro">Select Language / Selectați limba</string>
+
+    <!-- Time Limit Picker -->
+    <string name="time_limit_format">%1$d minutes (%2$dh %3$dm)</string>
 
     <!-- Autoplay -->
     <string name="autoplay_up_next">Up Next</string>
@@ -47,5 +179,191 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="retry">Try Again</string>
-    <string name="loading">Loading...</string>
+    <string name="back">Back</string>
+    <string name="close">Close</string>
+    <string name="save">Save</string>
+    <string name="done">Done</string>
+    <string name="next">Next</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <!-- Games Hub -->
+    <string name="games_title">Games</string>
+    <string name="games_subtitle">Pick a game to play!</string>
+
+    <!-- Game Common (older section - some strings moved above) -->
+    <string name="game_score">SCORE: %d</string>
+    <string name="game_level">Level %d</string>
+    <string name="game_round">Round %1$d of %2$d</string>
+    <string name="game_complete">Complete!</string>
+    <string name="game_correct">Correct!</string>
+    <string name="game_wrong">Try again!</string>
+    <string name="game_hint">Hint</string>
+    <string name="game_new_game">New Game</string>
+
+    <!-- Game Names -->
+    <string name="game_memory_name">Memory Match</string>
+    <string name="game_memory_desc">Find matching pairs</string>
+    <string name="game_tictactoe_name">Tic-Tac-Toe</string>
+    <string name="game_tictactoe_desc">Beat the computer</string>
+    <string name="game_puzzle_name">Shape Puzzle</string>
+    <string name="game_puzzle_desc">Match the shapes</string>
+    <string name="game_sliding_name">Sliding Puzzle</string>
+    <string name="game_sliding_desc">Slide tiles to solve</string>
+    <string name="game_gridpuzzle_name">Picture Puzzle</string>
+    <string name="game_gridpuzzle_desc">Swap pieces to complete</string>
+    <string name="game_match3_name">Match 3</string>
+    <string name="game_match3_desc">Swap and match tiles</string>
+    <string name="game_coloring_name">Coloring Book</string>
+    <string name="game_coloring_desc">Color fun pictures</string>
+    <string name="game_pattern_name">Pattern</string>
+    <string name="game_pattern_desc">Complete the pattern</string>
+    <string name="game_colormix_name">Color Mix</string>
+    <string name="game_colormix_desc">Mix colors together</string>
+    <string name="game_lettermatch_name">Letter Match</string>
+    <string name="game_lettermatch_desc">Match letters and pictures</string>
+    <string name="game_maze_name">Maze Runner</string>
+    <string name="game_maze_desc">Find your way out</string>
+    <string name="game_dots_name">Connect Dots</string>
+    <string name="game_dots_desc">Connect the dots</string>
+    <string name="game_addition_name">Addition Adventure</string>
+    <string name="game_addition_desc">Learn to add numbers</string>
+    <string name="game_subtraction_name">Subtraction Safari</string>
+    <string name="game_subtraction_desc">Learn to subtract</string>
+    <string name="game_numberbonds_name">Number Bonds</string>
+    <string name="game_numberbonds_desc">Numbers that go together</string>
+    <string name="game_compare_name">Greater or Less</string>
+    <string name="game_compare_desc">Compare numbers</string>
+    <string name="game_oddoneout_name">Odd One Out</string>
+    <string name="game_oddoneout_desc">Find what\'s different</string>
+    <string name="game_sudoku_name">Picture Sudoku</string>
+    <string name="game_sudoku_desc">Fill the puzzle grid</string>
+    <string name="game_ballsort_name">Ball Sort</string>
+    <string name="game_ballsort_desc">Sort the colored balls</string>
+    <string name="game_hangman_name">Hangman</string>
+    <string name="game_hangman_desc">Guess the word</string>
+    <string name="game_crossword_name">Crossword</string>
+    <string name="game_crossword_desc">Solve the crossword</string>
+    <string name="game_counting_name">Counting</string>
+    <string name="game_counting_desc">Count the objects</string>
+    <string name="game_shapes_name">Shapes Quiz</string>
+    <string name="game_shapes_desc">Learn your shapes</string>
+    <string name="game_spelling_name">Spelling Bee</string>
+    <string name="game_spelling_desc">Spell the word</string>
+    <string name="game_wordsearch_name">Word Search</string>
+    <string name="game_wordsearch_desc">Find hidden words</string>
+    <string name="game_spotdiff_name">Spot Difference</string>
+    <string name="game_spotdiff_desc">Find the differences</string>
+
+    <!-- Specific Game Instructions -->
+    <string name="hangman_guess_letter">Guess a letter!</string>
+    <string name="hangman_category">Category: %s</string>
+    <string name="hangman_you_won">You got it!</string>
+    <string name="hangman_you_lost">The word was: %s</string>
+    <string name="hangman_guesses_left">%d guesses left</string>
+
+    <string name="crossword_tap_hint">Tap a hint to see the clue</string>
+    <string name="crossword_across">Across</string>
+    <string name="crossword_down">Down</string>
+    <string name="crossword_filled">%1$d of %2$d filled</string>
+
+    <string name="spelling_spell_word">Spell the word!</string>
+    <string name="spelling_drag_letters">Drag letters to spell</string>
+
+    <string name="wordsearch_find_words">Find these words:</string>
+    <string name="wordsearch_words_found">%1$d of %2$d found</string>
+    <string name="wordsearch_clear_selection">Clear Selection</string>
+
+    <string name="counting_how_many">How many?</string>
+    <string name="counting_count_objects">Count the %s</string>
+
+    <string name="shapes_find_shape">Find the %s</string>
+    <string name="shapes_what_shape">What shape is this?</string>
+
+    <string name="memory_find_pairs">Find all the pairs!</string>
+    <string name="memory_pairs_found">%1$d of %2$d pairs</string>
+    <string name="memory_moves">Moves: %d</string>
+
+    <string name="tictactoe_your_turn">Your turn!</string>
+    <string name="tictactoe_computer_turn">Computer\'s turn...</string>
+    <string name="tictactoe_you_win">You Win!</string>
+    <string name="tictactoe_you_lose">Computer Wins!</string>
+    <string name="tictactoe_draw">It\'s a Draw!</string>
+
+    <string name="maze_find_exit">Find the exit!</string>
+    <string name="maze_use_arrows">Use arrows to move</string>
+    <string name="maze_escaped">You escaped!</string>
+
+    <string name="pattern_whats_next">What comes next?</string>
+    <string name="pattern_complete">Complete the pattern</string>
+
+    <string name="colormix_mix_colors">Mix the colors!</string>
+    <string name="colormix_make_color">Make %s</string>
+
+    <string name="addition_solve">Solve: %1$d + %2$d = ?</string>
+    <string name="subtraction_solve">Solve: %1$d - %2$d = ?</string>
+
+    <string name="compare_which_bigger">Which is bigger?</string>
+    <string name="compare_which_smaller">Which is smaller?</string>
+
+    <string name="numberbonds_find_pair">Find the pair that makes %d</string>
+
+    <string name="oddoneout_find_different">Find the different one!</string>
+
+    <string name="dots_connect">Connect the dots in order</string>
+    <string name="dots_number">%d</string>
+
+    <string name="coloring_pick_color">Pick a color</string>
+    <string name="coloring_tap_to_color">Tap to color</string>
+
+    <string name="ballsort_sort_balls">Sort the balls by color!</string>
+    <string name="ballsort_moves">Moves: %d</string>
+
+    <string name="sudoku_fill_grid">Fill the grid!</string>
+    <string name="sudoku_each_row">Each row needs all shapes</string>
+
+    <string name="spotdiff_find_differences">Find %d differences!</string>
+    <string name="spotdiff_found">Found: %1$d of %2$d</string>
+
+    <!-- Categories -->
+    <string name="category_animals">Animals</string>
+    <string name="category_food">Food</string>
+    <string name="category_nature">Nature</string>
+    <string name="category_things">Things</string>
+    <string name="category_body">Body</string>
+    <string name="category_places">Places</string>
+    <string name="category_activities">Activities</string>
+    <string name="category_colors">Colors</string>
+
+    <!-- Shapes -->
+    <string name="shape_circle">Circle</string>
+    <string name="shape_square">Square</string>
+    <string name="shape_triangle">Triangle</string>
+    <string name="shape_rectangle">Rectangle</string>
+    <string name="shape_star">Star</string>
+    <string name="shape_heart">Heart</string>
+    <string name="shape_diamond">Diamond</string>
+    <string name="shape_oval">Oval</string>
+
+    <!-- Colors -->
+    <string name="color_red">Red</string>
+    <string name="color_blue">Blue</string>
+    <string name="color_green">Green</string>
+    <string name="color_yellow">Yellow</string>
+    <string name="color_orange">Orange</string>
+    <string name="color_purple">Purple</string>
+    <string name="color_pink">Pink</string>
+    <string name="color_brown">Brown</string>
+    <string name="color_black">Black</string>
+    <string name="color_white">White</string>
+    <string name="color_gray">Gray</string>
+
+    <!-- Screen Time -->
+    <string name="screen_time_remaining">Time remaining: %d minutes</string>
+    <string name="screen_time_up">Time\'s up for today!</string>
+    <string name="screen_time_warning">Only %d minutes left!</string>
+
+    <!-- Stars/Rewards -->
+    <string name="stars_earned">You earned %d stars!</string>
+    <string name="total_stars">Total: %d stars</string>
 </resources>

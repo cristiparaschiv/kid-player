@@ -27,11 +27,13 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kidplayer.app.R
 import com.kidplayer.app.presentation.components.rememberHapticFeedback
 import com.kidplayer.app.presentation.games.common.GameScaffold
 import com.kidplayer.app.presentation.games.common.GameState
@@ -46,7 +48,7 @@ fun MazeScreen(
     val haptic = rememberHapticFeedback()
 
     GameScaffold(
-        gameName = "Maze Runner",
+        gameName = stringResource(R.string.game_maze_name),
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },
@@ -54,66 +56,155 @@ fun MazeScreen(
         onResumeClick = { viewModel.resumeGame() },
         showScore = true
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+        BoxWithConstraints(
+            modifier = Modifier.fillMaxSize()
         ) {
-            // Level info
-            LevelInfo(
-                level = uiState.level,
-                moves = uiState.moves,
-                playerEmoji = uiState.playerEmoji,
-                goalEmoji = uiState.goalEmoji
-            )
+            val isLandscape = maxWidth > maxHeight
+            val isCompact = maxHeight < 500.dp
 
-            Spacer(modifier = Modifier.height(8.dp))
+            if (isLandscape) {
+                // Landscape layout - controls on left, maze in center
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // Left side: Level info + Direction controls (stacked)
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        LevelInfo(
+                            level = uiState.level,
+                            moves = uiState.moves,
+                            playerEmoji = uiState.playerEmoji,
+                            goalEmoji = uiState.goalEmoji,
+                            isCompact = true
+                        )
 
-            // Maze display
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .aspectRatio(1f),
-                contentAlignment = Alignment.Center
-            ) {
-                uiState.maze?.let { maze ->
-                    MazeDisplay(
-                        maze = maze,
-                        playerPosition = uiState.playerPosition,
+                        DirectionControls(
+                            onMove = { direction ->
+                                haptic.performLight()
+                                viewModel.move(direction)
+                            },
+                            enabled = uiState.gameState is GameState.Playing && !uiState.levelComplete,
+                            isCompact = false
+                        )
+                    }
+
+                    // Center: Maze display - square aspect ratio
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .padding(vertical = 4.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        // Force square aspect ratio based on height
+                        Box(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .aspectRatio(1f),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            uiState.maze?.let { maze ->
+                                MazeDisplay(
+                                    maze = maze,
+                                    playerPosition = uiState.playerPosition,
+                                    playerEmoji = uiState.playerEmoji,
+                                    goalEmoji = uiState.goalEmoji,
+                                    onSwipe = { direction ->
+                                        haptic.performLight()
+                                        viewModel.move(direction)
+                                    }
+                                )
+                            }
+
+                            // Level complete overlay
+                            androidx.compose.animation.AnimatedVisibility(
+                                visible = uiState.levelComplete,
+                                enter = scaleIn() + fadeIn(),
+                                exit = fadeOut()
+                            ) {
+                                LevelCompleteOverlay(
+                                    level = uiState.level,
+                                    playerEmoji = uiState.playerEmoji,
+                                    goalEmoji = uiState.goalEmoji,
+                                    isCompact = true
+                                )
+                            }
+                        }
+                    }
+                }
+            } else {
+                // Portrait layout
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // Level info
+                    LevelInfo(
+                        level = uiState.level,
+                        moves = uiState.moves,
                         playerEmoji = uiState.playerEmoji,
                         goalEmoji = uiState.goalEmoji,
-                        onSwipe = { direction ->
+                        isCompact = isCompact
+                    )
+
+                    Spacer(modifier = Modifier.height(if (isCompact) 4.dp else 8.dp))
+
+                    // Maze display
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .aspectRatio(1f),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        uiState.maze?.let { maze ->
+                            MazeDisplay(
+                                maze = maze,
+                                playerPosition = uiState.playerPosition,
+                                playerEmoji = uiState.playerEmoji,
+                                goalEmoji = uiState.goalEmoji,
+                                onSwipe = { direction ->
+                                    haptic.performLight()
+                                    viewModel.move(direction)
+                                }
+                            )
+                        }
+
+                        // Level complete overlay
+                        androidx.compose.animation.AnimatedVisibility(
+                            visible = uiState.levelComplete,
+                            enter = scaleIn() + fadeIn(),
+                            exit = fadeOut()
+                        ) {
+                            LevelCompleteOverlay(
+                                level = uiState.level,
+                                playerEmoji = uiState.playerEmoji,
+                                goalEmoji = uiState.goalEmoji,
+                                isCompact = isCompact
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(if (isCompact) 4.dp else 8.dp))
+
+                    // Direction buttons
+                    DirectionControls(
+                        onMove = { direction ->
                             haptic.performLight()
                             viewModel.move(direction)
-                        }
-                    )
-                }
-
-                // Level complete overlay
-                androidx.compose.animation.AnimatedVisibility(
-                    visible = uiState.levelComplete,
-                    enter = scaleIn() + fadeIn(),
-                    exit = fadeOut()
-                ) {
-                    LevelCompleteOverlay(
-                        level = uiState.level,
-                        playerEmoji = uiState.playerEmoji,
-                        goalEmoji = uiState.goalEmoji
+                        },
+                        enabled = uiState.gameState is GameState.Playing && !uiState.levelComplete,
+                        isCompact = isCompact
                     )
                 }
             }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Direction buttons
-            DirectionControls(
-                onMove = { direction ->
-                    haptic.performLight()
-                    viewModel.move(direction)
-                },
-                enabled = uiState.gameState is GameState.Playing && !uiState.levelComplete
-            )
         }
     }
 }
@@ -123,27 +214,31 @@ private fun LevelInfo(
     level: Int,
     moves: Int,
     playerEmoji: String,
-    goalEmoji: String
+    goalEmoji: String,
+    isCompact: Boolean = false
 ) {
     Card(
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(if (isCompact) 8.dp else 12.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer
         )
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp),
-            horizontalArrangement = Arrangement.spacedBy(24.dp),
+            modifier = Modifier.padding(
+                horizontal = if (isCompact) 12.dp else 20.dp,
+                vertical = if (isCompact) 6.dp else 10.dp
+            ),
+            horizontalArrangement = Arrangement.spacedBy(if (isCompact) 16.dp else 24.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     text = "LEVEL",
-                    style = MaterialTheme.typography.labelSmall
+                    style = if (isCompact) MaterialTheme.typography.labelSmall else MaterialTheme.typography.labelSmall
                 )
                 Text(
                     text = "$level",
-                    style = MaterialTheme.typography.titleLarge,
+                    style = if (isCompact) MaterialTheme.typography.titleMedium else MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -154,7 +249,7 @@ private fun LevelInfo(
                 )
                 Text(
                     text = "$moves",
-                    style = MaterialTheme.typography.titleLarge,
+                    style = if (isCompact) MaterialTheme.typography.titleMedium else MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -162,9 +257,9 @@ private fun LevelInfo(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Text(text = playerEmoji, fontSize = 24.sp)
-                Text(text = "→", fontSize = 16.sp)
-                Text(text = goalEmoji, fontSize = 24.sp)
+                Text(text = playerEmoji, fontSize = if (isCompact) 20.sp else 24.sp)
+                Text(text = "→", fontSize = if (isCompact) 14.sp else 16.sp)
+                Text(text = goalEmoji, fontSize = if (isCompact) 20.sp else 24.sp)
             }
         }
     }
@@ -306,34 +401,46 @@ private fun MazeDisplay(
 @Composable
 private fun DirectionControls(
     onMove: (Direction) -> Unit,
-    enabled: Boolean
+    enabled: Boolean,
+    isCompact: Boolean = false
 ) {
+    val buttonSize = if (isCompact) 48.dp else 56.dp
+    val iconSize = if (isCompact) 28.dp else 32.dp
+    val spacing = if (isCompact) 2.dp else 4.dp
+    val horizontalGap = if (isCompact) 32.dp else 48.dp
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        verticalArrangement = Arrangement.spacedBy(spacing)
     ) {
         // Up button
         DirectionButton(
             icon = Icons.Default.KeyboardArrowUp,
             onClick = { onMove(Direction.UP) },
-            enabled = enabled
+            enabled = enabled,
+            buttonSize = buttonSize,
+            iconSize = iconSize
         )
 
         Row(
-            horizontalArrangement = Arrangement.spacedBy(48.dp)
+            horizontalArrangement = Arrangement.spacedBy(horizontalGap)
         ) {
             // Left button
             DirectionButton(
                 icon = Icons.Default.KeyboardArrowLeft,
                 onClick = { onMove(Direction.LEFT) },
-                enabled = enabled
+                enabled = enabled,
+                buttonSize = buttonSize,
+                iconSize = iconSize
             )
 
             // Right button
             DirectionButton(
                 icon = Icons.Default.KeyboardArrowRight,
                 onClick = { onMove(Direction.RIGHT) },
-                enabled = enabled
+                enabled = enabled,
+                buttonSize = buttonSize,
+                iconSize = iconSize
             )
         }
 
@@ -341,7 +448,9 @@ private fun DirectionControls(
         DirectionButton(
             icon = Icons.Default.KeyboardArrowDown,
             onClick = { onMove(Direction.DOWN) },
-            enabled = enabled
+            enabled = enabled,
+            buttonSize = buttonSize,
+            iconSize = iconSize
         )
     }
 }
@@ -350,13 +459,15 @@ private fun DirectionControls(
 private fun DirectionButton(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     onClick: () -> Unit,
-    enabled: Boolean
+    enabled: Boolean,
+    buttonSize: androidx.compose.ui.unit.Dp = 56.dp,
+    iconSize: androidx.compose.ui.unit.Dp = 32.dp
 ) {
     IconButton(
         onClick = onClick,
         enabled = enabled,
         modifier = Modifier
-            .size(56.dp)
+            .size(buttonSize)
             .clip(CircleShape)
             .background(
                 if (enabled) MaterialTheme.colorScheme.primaryContainer
@@ -366,7 +477,7 @@ private fun DirectionButton(
         Icon(
             imageVector = icon,
             contentDescription = null,
-            modifier = Modifier.size(32.dp),
+            modifier = Modifier.size(iconSize),
             tint = if (enabled) MaterialTheme.colorScheme.onPrimaryContainer
             else MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -377,28 +488,29 @@ private fun DirectionButton(
 private fun LevelCompleteOverlay(
     level: Int,
     playerEmoji: String,
-    goalEmoji: String
+    goalEmoji: String,
+    isCompact: Boolean = false
 ) {
     Card(
-        modifier = Modifier.padding(32.dp),
-        shape = RoundedCornerShape(24.dp),
+        modifier = Modifier.padding(if (isCompact) 16.dp else 32.dp),
+        shape = RoundedCornerShape(if (isCompact) 16.dp else 24.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFF4CAF50)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 12.dp)
     ) {
         Column(
-            modifier = Modifier.padding(32.dp),
+            modifier = Modifier.padding(if (isCompact) 16.dp else 32.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = "$playerEmoji found $goalEmoji!",
-                fontSize = 32.sp
+                fontSize = if (isCompact) 24.sp else 32.sp
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(if (isCompact) 4.dp else 8.dp))
             Text(
                 text = "LEVEL $level COMPLETE!",
-                style = MaterialTheme.typography.headlineSmall,
+                style = if (isCompact) MaterialTheme.typography.titleMedium else MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
             )

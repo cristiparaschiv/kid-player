@@ -14,9 +14,11 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.util.UnstableApi
 import androidx.navigation.compose.rememberNavController
+import com.kidplayer.app.data.local.LanguageManager
 import com.kidplayer.app.data.local.ScreenTimeManager
 import com.kidplayer.app.data.network.NetworkMonitor
 import com.kidplayer.app.presentation.games.GameMusicManager
+import com.kidplayer.app.presentation.localization.LocalizedApp
 import com.kidplayer.app.presentation.navigation.KidPlayerNavGraphPhase6
 import com.kidplayer.app.presentation.navigation.MainScaffold
 import com.kidplayer.app.presentation.navigation.Screen
@@ -46,6 +48,9 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var gameMusicManager: GameMusicManager
 
+    @Inject
+    lateinit var languageManager: LanguageManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -64,27 +69,30 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-            KidPlayerTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    val navController = rememberNavController()
-                    val navBackStackEntry by navController.currentBackStackEntryAsState()
-                    val currentRoute = navBackStackEntry?.destination?.route
+            // Wrap with LocalizedApp for runtime language switching
+            LocalizedApp(languageManager = languageManager) {
+                KidPlayerTheme {
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        val navController = rememberNavController()
+                        val navBackStackEntry by navController.currentBackStackEntryAsState()
+                        val currentRoute = navBackStackEntry?.destination?.route
 
-                    // Phase 6: Use MainScaffold with bottom navigation
-                    // Persistent Login: Start with Splash screen for auto-login
-                    MainScaffold(
-                        navController = navController,
-                        showBottomNav = shouldShowBottomNav(currentRoute)
-                    ) { modifier ->
-                        KidPlayerNavGraphPhase6(
+                        // Phase 6: Use MainScaffold with bottom navigation
+                        // Persistent Login: Start with Splash screen for auto-login
+                        MainScaffold(
                             navController = navController,
-                            modifier = modifier,
-                            startDestination = Screen.Splash.route,
-                            musicManager = gameMusicManager
-                        )
+                            showBottomNav = shouldShowBottomNav(currentRoute)
+                        ) { modifier ->
+                            KidPlayerNavGraphPhase6(
+                                navController = navController,
+                                modifier = modifier,
+                                startDestination = Screen.Splash.route,
+                                musicManager = gameMusicManager
+                            )
+                        }
                     }
                 }
             }

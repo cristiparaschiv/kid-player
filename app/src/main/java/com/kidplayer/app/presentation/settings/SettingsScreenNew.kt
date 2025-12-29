@@ -10,10 +10,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kidplayer.app.R
+import com.kidplayer.app.data.local.AppLanguage
 import com.kidplayer.app.domain.model.AccessSchedule
 import com.kidplayer.app.domain.model.ParentalControls
 import com.kidplayer.app.domain.model.ScreenTimeConfig
@@ -57,12 +60,19 @@ fun SettingsScreenNew(
         }
     }
 
+    val pinSetTitle = stringResource(R.string.pin_set_title)
+    val pinVerifyTitle = stringResource(R.string.pin_verify_title)
+    val pinChangeTitle = stringResource(R.string.pin_change_title)
+    val pinSetupSubtitle = stringResource(R.string.pin_setup_subtitle)
+    val pinVerifySubtitle = stringResource(R.string.pin_verify_subtitle)
+    val pinChangeSubtitle = stringResource(R.string.pin_change_subtitle)
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Parent Settings",
+                        text = stringResource(R.string.settings_parent_settings),
                         style = MaterialTheme.typography.headlineMedium
                     )
                 },
@@ -70,7 +80,7 @@ fun SettingsScreenNew(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.back),
                             modifier = Modifier.size(32.dp)
                         )
                     }
@@ -80,7 +90,7 @@ fun SettingsScreenNew(
                         IconButton(onClick = { viewModel.logout() }) {
                             Icon(
                                 imageVector = Icons.Default.Lock,
-                                contentDescription = "Lock Settings"
+                                contentDescription = stringResource(R.string.settings_lock)
                             )
                         }
                     }
@@ -114,6 +124,8 @@ fun SettingsScreenNew(
                     },
                     serverUrl = settingsUiState.serverUrl,
                     username = settingsUiState.username,
+                    currentLanguage = settingsUiState.currentLanguage,
+                    onLanguageChanged = settingsViewModel::setLanguage,
                     onLogoutClick = settingsViewModel::logout
                 )
             } else {
@@ -125,14 +137,14 @@ fun SettingsScreenNew(
             PinEntryDialog(
                 isVisible = uiState.pinDialogState.isVisible,
                 title = when (uiState.pinDialogState.mode) {
-                    PinDialogMode.SETUP -> "Set Parent PIN"
-                    PinDialogMode.VERIFY -> "Enter Parent PIN"
-                    PinDialogMode.CHANGE -> "Change PIN"
+                    PinDialogMode.SETUP -> pinSetTitle
+                    PinDialogMode.VERIFY -> pinVerifyTitle
+                    PinDialogMode.CHANGE -> pinChangeTitle
                 },
                 subtitle = when (uiState.pinDialogState.mode) {
-                    PinDialogMode.SETUP -> "Create a 4-digit PIN to protect settings"
-                    PinDialogMode.VERIFY -> "Enter your 4-digit PIN to access settings"
-                    PinDialogMode.CHANGE -> "Enter a new 4-digit PIN"
+                    PinDialogMode.SETUP -> pinSetupSubtitle
+                    PinDialogMode.VERIFY -> pinVerifySubtitle
+                    PinDialogMode.CHANGE -> pinChangeSubtitle
                 },
                 isSetupMode = uiState.pinDialogState.mode != PinDialogMode.VERIFY,
                 onPinEntered = viewModel::onPinEntered,
@@ -158,6 +170,8 @@ private fun SettingsContent(
     onChangePinClick: () -> Unit,
     serverUrl: String = "",
     username: String = "",
+    currentLanguage: AppLanguage = AppLanguage.ENGLISH,
+    onLanguageChanged: (AppLanguage) -> Unit = {},
     onLogoutClick: () -> Unit = {}
 ) {
     Column(
@@ -167,6 +181,14 @@ private fun SettingsContent(
             .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
+        // Language Section (first for easy access)
+        LanguageSection(
+            currentLanguage = currentLanguage,
+            onLanguageChanged = onLanguageChanged
+        )
+
+        HorizontalDivider()
+
         // Screen Time Section
         ScreenTimeSection(
             config = parentalControls.screenTimeConfig,
@@ -174,7 +196,7 @@ private fun SettingsContent(
             onLimitChanged = onDailyTimeLimitChanged
         )
 
-        Divider()
+        HorizontalDivider()
 
         // Access Schedule Section
         AccessScheduleSection(
@@ -182,14 +204,14 @@ private fun SettingsContent(
             onScheduleChanged = onAccessScheduleChanged
         )
 
-        Divider()
+        HorizontalDivider()
 
         // PIN Management Section
         PinManagementSection(
             onChangePinClick = onChangePinClick
         )
 
-        Divider()
+        HorizontalDivider()
 
         // Server Settings Section
         ServerSettingsSection(
@@ -198,7 +220,7 @@ private fun SettingsContent(
             onLogoutClick = onLogoutClick
         )
 
-        Divider()
+        HorizontalDivider()
 
         // About Section
         AboutSection()
@@ -216,7 +238,7 @@ private fun ScreenTimeSection(
 
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Text(
-            text = "Screen Time Limits",
+            text = stringResource(R.string.screen_time_limits),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary
@@ -241,12 +263,12 @@ private fun ScreenTimeSection(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Enable Time Limit",
+                        text = stringResource(R.string.screen_time_enable),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        text = "Limit daily screen time",
+                        text = stringResource(R.string.screen_time_limit_daily),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -278,18 +300,18 @@ private fun ScreenTimeSection(
                 ) {
                     Column {
                         Text(
-                            text = "Daily Time Limit",
+                            text = stringResource(R.string.screen_time_daily_limit),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold
                         )
                         Text(
-                            text = "Tap to change",
+                            text = stringResource(R.string.screen_time_tap_to_change),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                     Text(
-                        text = "${config.dailyLimitMinutes} min",
+                        text = stringResource(R.string.screen_time_limit_minutes, config.dailyLimitMinutes),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
@@ -313,11 +335,11 @@ private fun ScreenTimeSection(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
-                            text = "Used Today",
+                            text = stringResource(R.string.screen_time_used_today),
                             style = MaterialTheme.typography.titleMedium
                         )
                         Text(
-                            text = "${config.usedTodayMinutes} min",
+                            text = stringResource(R.string.screen_time_limit_minutes, config.usedTodayMinutes),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
@@ -328,11 +350,11 @@ private fun ScreenTimeSection(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
-                            text = "Remaining",
+                            text = stringResource(R.string.screen_time_remaining_short),
                             style = MaterialTheme.typography.titleMedium
                         )
                         Text(
-                            text = "${config.remainingMinutes} min",
+                            text = stringResource(R.string.screen_time_limit_minutes, config.remainingMinutes),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = if (config.remainingMinutes < 10) {
@@ -371,7 +393,7 @@ private fun AccessScheduleSection(
 
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Text(
-            text = "Access Schedule",
+            text = stringResource(R.string.access_schedule),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary
@@ -407,12 +429,12 @@ private fun AccessScheduleSection(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Enable Schedule",
+                        text = stringResource(R.string.access_schedule_enable),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        text = "Set allowed hours",
+                        text = stringResource(R.string.access_schedule_set_hours),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -455,12 +477,12 @@ private fun AccessScheduleSection(
                 ) {
                     Column {
                         Text(
-                            text = "Allowed Hours",
+                            text = stringResource(R.string.access_schedule_allowed_hours),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold
                         )
                         Text(
-                            text = "Tap to change",
+                            text = stringResource(R.string.screen_time_tap_to_change),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -484,7 +506,7 @@ private fun PinManagementSection(
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Text(
-            text = "PIN Management",
+            text = stringResource(R.string.pin_management),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary
@@ -505,12 +527,12 @@ private fun PinManagementSection(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Change PIN",
+                        text = stringResource(R.string.pin_change),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        text = "Update your parent PIN",
+                        text = stringResource(R.string.pin_update_parent),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -524,11 +546,146 @@ private fun PinManagementSection(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun LanguageSection(
+    currentLanguage: AppLanguage,
+    onLanguageChanged: (AppLanguage) -> Unit
+) {
+    var showLanguagePicker by remember { mutableStateOf(false) }
+
+    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        Text(
+            text = stringResource(R.string.settings_language_limba),
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        Card(
+            onClick = { showLanguagePicker = true },
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
+            )
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Language,
+                        contentDescription = null,
+                        modifier = Modifier.size(32.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Column {
+                        Text(
+                            text = stringResource(R.string.settings_app_language),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Text(
+                            text = stringResource(R.string.screen_time_tap_to_change),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        text = currentLanguage.nativeName,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Icon(
+                        imageVector = Icons.Default.ChevronRight,
+                        contentDescription = null
+                    )
+                }
+            }
+        }
+    }
+
+    // Language picker dialog
+    if (showLanguagePicker) {
+        AlertDialog(
+            onDismissRequest = { showLanguagePicker = false },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Language,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            },
+            title = {
+                Text(
+                    text = stringResource(R.string.settings_select_language_ro),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Column {
+                    AppLanguage.entries.forEach { language ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    onLanguageChanged(language)
+                                    showLanguagePicker = false
+                                }
+                                .padding(vertical = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = currentLanguage == language,
+                                onClick = {
+                                    onLanguageChanged(language)
+                                    showLanguagePicker = false
+                                }
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Column {
+                                Text(
+                                    text = language.nativeName,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = if (currentLanguage == language) FontWeight.Bold else FontWeight.Normal
+                                )
+                                Text(
+                                    text = language.displayName,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showLanguagePicker = false }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        )
+    }
+}
+
 @Composable
 private fun AboutSection() {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Text(
-            text = "About",
+            text = stringResource(R.string.settings_about),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary
@@ -546,17 +703,17 @@ private fun AboutSection() {
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = "Kid Player",
+                    text = stringResource(R.string.app_name),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "Version 1.0.0 (Phase 5)",
+                    text = stringResource(R.string.about_version),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = "A kid-friendly video player with parental controls",
+                    text = stringResource(R.string.about_description),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -582,12 +739,12 @@ private fun LockedSettingsPlaceholder() {
                 tint = MaterialTheme.colorScheme.primary
             )
             Text(
-                text = "Settings Locked",
+                text = stringResource(R.string.settings_locked),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "Enter PIN to access settings",
+                text = stringResource(R.string.settings_enter_pin_access),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -606,7 +763,7 @@ private fun TimeLimitPickerDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Daily Time Limit") },
+        title = { Text(stringResource(R.string.screen_time_daily_limit)) },
         text = {
             Column {
                 limits.forEach { limit ->
@@ -622,7 +779,7 @@ private fun TimeLimitPickerDialog(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "$limit minutes (${limit / 60}h ${limit % 60}m)",
+                            text = stringResource(R.string.time_limit_format, limit, limit / 60, limit % 60),
                             style = MaterialTheme.typography.bodyLarge
                         )
                     }
@@ -631,12 +788,12 @@ private fun TimeLimitPickerDialog(
         },
         confirmButton = {
             Button(onClick = { onLimitSelected(selectedLimit) }) {
-                Text("Save")
+                Text(stringResource(R.string.save))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(R.string.cancel))
             }
         }
     )
@@ -653,7 +810,7 @@ private fun ServerSettingsSection(
 
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Text(
-            text = "Server Settings",
+            text = stringResource(R.string.settings_server),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary
@@ -680,7 +837,7 @@ private fun ServerSettingsSection(
                 )
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Server URL",
+                        text = stringResource(R.string.server_url),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -714,7 +871,7 @@ private fun ServerSettingsSection(
                 )
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Username",
+                        text = stringResource(R.string.server_username),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -749,13 +906,13 @@ private fun ServerSettingsSection(
                 )
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Logout",
+                        text = stringResource(R.string.settings_logout),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.error
                     )
                     Text(
-                        text = "Sign out and return to setup screen",
+                        text = stringResource(R.string.settings_sign_out_return),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onErrorContainer
                     )
@@ -777,14 +934,14 @@ private fun ServerSettingsSection(
             },
             title = {
                 Text(
-                    text = "Logout Confirmation",
+                    text = stringResource(R.string.settings_logout_confirm_title),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
             },
             text = {
                 Text(
-                    text = "Are you sure you want to logout? You will need to enter server credentials again on next launch.",
+                    text = stringResource(R.string.settings_logout_confirm_message),
                     style = MaterialTheme.typography.bodyLarge
                 )
             },
@@ -798,12 +955,12 @@ private fun ServerSettingsSection(
                         containerColor = MaterialTheme.colorScheme.error
                     )
                 ) {
-                    Text("Logout")
+                    Text(stringResource(R.string.settings_logout))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showLogoutDialog = false }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         )

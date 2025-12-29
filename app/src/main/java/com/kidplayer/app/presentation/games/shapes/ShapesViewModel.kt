@@ -2,6 +2,7 @@ package com.kidplayer.app.presentation.games.shapes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kidplayer.app.data.local.LanguageManager
 import com.kidplayer.app.domain.reward.GameDifficulty
 import com.kidplayer.app.domain.reward.RewardManager
 import com.kidplayer.app.presentation.games.common.GameState
@@ -16,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ShapesViewModel @Inject constructor(
-    private val rewardManager: RewardManager
+    private val rewardManager: RewardManager,
+    private val languageManager: LanguageManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ShapesUiState())
@@ -33,11 +35,13 @@ class ShapesViewModel @Inject constructor(
 
     fun startNewGame() {
         gameStartTime = System.currentTimeMillis()
+        val isRomanian = languageManager.isRomanian()
         _uiState.update {
             ShapesUiState(
                 round = 1,
                 score = 0,
                 level = 1,
+                isRomanian = isRomanian,
                 currentChallenge = ShapesGenerator.generateChallenge(1),
                 gameState = GameState.Playing(score = 0)
             )
@@ -50,7 +54,7 @@ class ShapesViewModel @Inject constructor(
         if (currentState.showResult) return
 
         val challenge = currentState.currentChallenge ?: return
-        val isCorrect = answer == challenge.correctAnswer
+        val isCorrect = answer == challenge.getCorrectAnswer(currentState.isRomanian)
 
         val newScore = if (isCorrect) {
             currentState.score + ShapesConfig.POINTS_CORRECT
@@ -84,7 +88,7 @@ class ShapesViewModel @Inject constructor(
         if (currentState.showResult) return
         if (currentState.currentChallenge?.type != ChallengeType.FIND_SHAPE) return
 
-        selectAnswer(displayShape.shape.displayName)
+        selectAnswer(displayShape.shape.getDisplayName(currentState.isRomanian))
     }
 
     private fun nextChallenge() {
@@ -160,6 +164,7 @@ data class ShapesUiState(
     val score: Int = 0,
     val level: Int = 1,
     val correctCount: Int = 0,
+    val isRomanian: Boolean = false,
     val currentChallenge: ShapeChallenge? = null,
     val selectedAnswer: String? = null,
     val showResult: Boolean = false,

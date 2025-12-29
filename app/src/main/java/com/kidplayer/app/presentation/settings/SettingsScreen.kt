@@ -90,14 +90,14 @@ fun SettingsScreen(
             ) {
                 // Header
                 Text(
-                    text = "Parent Settings",
+                    text = stringResource(R.string.settings_parent_settings),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
 
                 Text(
-                    text = "Configure playback and parental control settings",
+                    text = stringResource(R.string.settings_configure_playback),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -105,12 +105,12 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 // Playback Settings Section
-                SettingsCategory(title = "Playback")
+                SettingsCategory(title = stringResource(R.string.settings_playback))
 
                 SettingsSwitchItem(
                     icon = Icons.Default.PlayArrow,
-                    title = "Autoplay",
-                    description = "Automatically play next video when current video ends",
+                    title = stringResource(R.string.settings_autoplay_title),
+                    description = stringResource(R.string.settings_autoplay_description),
                     checked = uiState.autoplayEnabled,
                     onCheckedChange = { viewModel.toggleAutoplay(it) }
                 )
@@ -118,12 +118,12 @@ fun SettingsScreen(
                 Divider(modifier = Modifier.padding(vertical = 8.dp))
 
                 // Parental Controls Section
-                SettingsCategory(title = "Parental Controls")
+                SettingsCategory(title = stringResource(R.string.settings_parental_controls))
 
                 SettingsSwitchItem(
                     icon = Icons.Default.Schedule,
-                    title = "Screen Time Limit",
-                    description = "Limit daily viewing time",
+                    title = stringResource(R.string.settings_screen_time_title),
+                    description = stringResource(R.string.settings_screen_time_description),
                     checked = uiState.screenTimeEnabled,
                     onCheckedChange = { viewModel.toggleScreenTime(it) }
                 )
@@ -140,12 +140,12 @@ fun SettingsScreen(
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             Text(
-                                text = "Daily limit: ${uiState.screenTimeDailyLimit} minutes",
+                                text = "${stringResource(R.string.settings_daily_limit)}: ${uiState.screenTimeDailyLimit} ${stringResource(R.string.settings_minutes)}",
                                 style = MaterialTheme.typography.bodyLarge,
                                 fontWeight = FontWeight.Medium
                             )
                             Text(
-                                text = "Adjust the maximum viewing time per day",
+                                text = stringResource(R.string.settings_adjust_limit),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -167,13 +167,13 @@ fun SettingsScreen(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Text(
-                            text = "Coming Soon",
+                            text = stringResource(R.string.settings_coming_soon),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                         Text(
-                            text = "PIN protection, server settings, download management, and more features coming in future updates.",
+                            text = stringResource(R.string.settings_coming_soon_desc),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onPrimaryContainer
                         )
@@ -188,11 +188,11 @@ fun SettingsScreen(
                 modifier = Modifier.padding(16.dp),
                 action = {
                     TextButton(onClick = { viewModel.clearError() }) {
-                        Text("Dismiss")
+                        Text(stringResource(R.string.settings_dismiss))
                     }
                 }
             ) {
-                Text(uiState.error ?: "Unknown error")
+                Text(uiState.error ?: stringResource(R.string.settings_unknown_error))
             }
         }
         }

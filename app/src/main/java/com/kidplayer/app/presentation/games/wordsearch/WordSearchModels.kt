@@ -64,26 +64,63 @@ object WordSearchConfig {
 }
 
 /**
- * Word lists by category
+ * Word lists by category - Bilingual support
  */
 object WordSearchWords {
-    val animals = listOf("CAT", "DOG", "PIG", "COW", "FOX", "BEE", "ANT", "OWL", "BAT", "HEN")
-    val colors = listOf("RED", "BLUE", "PINK", "GOLD", "GRAY", "TAN", "LIME")
-    val food = listOf("PIE", "HAM", "JAM", "EGG", "NUT", "PEA", "FIG")
-    val nature = listOf("SUN", "SKY", "SEA", "DEW", "FOG", "MUD", "ICE")
+    // English word lists
+    val animalsEn = listOf("CAT", "DOG", "PIG", "COW", "FOX", "BEE", "ANT", "OWL", "BAT", "HEN")
+    val colorsEn = listOf("RED", "BLUE", "PINK", "GOLD", "GRAY", "TAN", "LIME")
+    val foodEn = listOf("PIE", "HAM", "JAM", "EGG", "NUT", "PEA", "FIG")
+    val natureEn = listOf("SUN", "SKY", "SEA", "DEW", "FOG", "MUD", "ICE")
 
-    val mediumAnimals = listOf("BEAR", "DEER", "FROG", "DUCK", "FISH", "BIRD", "LION", "WOLF")
-    val mediumFood = listOf("CAKE", "RICE", "BEAN", "CORN", "PLUM", "PEAR", "LIME")
-    val mediumNature = listOf("TREE", "LEAF", "RAIN", "WIND", "SNOW", "MOON", "STAR")
+    val mediumAnimalsEn = listOf("BEAR", "DEER", "FROG", "DUCK", "FISH", "BIRD", "LION", "WOLF")
+    val mediumFoodEn = listOf("CAKE", "RICE", "BEAN", "CORN", "PLUM", "PEAR", "LIME")
+    val mediumNatureEn = listOf("TREE", "LEAF", "RAIN", "WIND", "SNOW", "MOON", "STAR")
 
-    val hardAnimals = listOf("HORSE", "SNAKE", "TIGER", "MOUSE", "SHEEP", "ZEBRA")
-    val hardFood = listOf("APPLE", "GRAPE", "LEMON", "BREAD", "PIZZA", "MELON")
-    val hardNature = listOf("CLOUD", "RIVER", "GRASS", "STORM", "BEACH", "STONE")
+    val hardAnimalsEn = listOf("HORSE", "SNAKE", "TIGER", "MOUSE", "SHEEP", "ZEBRA")
+    val hardFoodEn = listOf("APPLE", "GRAPE", "LEMON", "BREAD", "PIZZA", "MELON")
+    val hardNatureEn = listOf("CLOUD", "RIVER", "GRASS", "STORM", "BEACH", "STONE")
 
-    fun getWordsForLevel(level: Int): List<String> = when (level) {
-        1 -> (animals + colors + food + nature).shuffled()
-        2 -> (mediumAnimals + mediumFood + mediumNature).shuffled()
-        else -> (hardAnimals + hardFood + hardNature).shuffled()
+    // Romanian word lists (words with simple letters for the grid)
+    val animalsRo = listOf("URS", "LEU", "LUP", "RAC", "PUI", "CAL", "OAI", "VUL", "SOC", "COT")
+    val colorsRo = listOf("ALB", "GRI", "ROZ", "MOV", "VIS")
+    val foodRo = listOf("MĂR", "NUC", "PIE", "OUA", "PÂI", "GEM", "SUC")
+    val natureRo = listOf("CER", "LAC", "NOR", "SOL", "IAZ", "VÂN", "ZĂP")
+
+    val mediumAnimalsRo = listOf("URSUL", "LUPUL", "CAII", "OILE", "VULPE", "RATÂ", "PEȘTE")
+    val mediumFoodRo = listOf("TORT", "OREZ", "PARĂ", "PRUNĂ", "LAPTE", "CARNE")
+    val mediumNatureRo = listOf("COPAC", "PLOAI", "ZĂPAD", "STEA", "LUNĂ", "FRUN")
+
+    val hardAnimalsRo = listOf("CANGUR", "ELEFAN", "ȘARPE", "TIGRU", "ZEBRĂ", "MAIMUȚ")
+    val hardFoodRo = listOf("BANANĂ", "PORTOC", "CIREAS", "PEPENE", "MORCOV")
+    val hardNatureRo = listOf("CURCUB", "PĂMÂNT", "FLOARE", "FRUNZĂ", "JUNGLĂ")
+
+    // Legacy English-only lists (for backwards compatibility)
+    val animals = animalsEn
+    val colors = colorsEn
+    val food = foodEn
+    val nature = natureEn
+    val mediumAnimals = mediumAnimalsEn
+    val mediumFood = mediumFoodEn
+    val mediumNature = mediumNatureEn
+    val hardAnimals = hardAnimalsEn
+    val hardFood = hardFoodEn
+    val hardNature = hardNatureEn
+
+    fun getWordsForLevel(level: Int, isRomanian: Boolean = false): List<String> {
+        return if (isRomanian) {
+            when (level) {
+                1 -> (animalsRo + colorsRo + foodRo + natureRo).shuffled()
+                2 -> (mediumAnimalsRo + mediumFoodRo + mediumNatureRo).shuffled()
+                else -> (hardAnimalsRo + hardFoodRo + hardNatureRo).shuffled()
+            }
+        } else {
+            when (level) {
+                1 -> (animalsEn + colorsEn + foodEn + natureEn).shuffled()
+                2 -> (mediumAnimalsEn + mediumFoodEn + mediumNatureEn).shuffled()
+                else -> (hardAnimalsEn + hardFoodEn + hardNatureEn).shuffled()
+            }
+        }
     }
 }
 
@@ -92,11 +129,11 @@ object WordSearchWords {
  */
 object WordSearchGenerator {
 
-    fun generatePuzzle(level: Int): Pair<List<List<GridCell>>, List<HiddenWord>> {
+    fun generatePuzzle(level: Int, isRomanian: Boolean = false): Pair<List<List<GridCell>>, List<HiddenWord>> {
         val gridSize = WordSearchConfig.getGridSize(level)
         val wordCount = WordSearchConfig.getWordCount(level)
         val allowedDirections = WordSearchConfig.getAllowedDirections(level)
-        val availableWords = WordSearchWords.getWordsForLevel(level)
+        val availableWords = WordSearchWords.getWordsForLevel(level, isRomanian)
             .filter { it.length <= gridSize }
             .shuffled()
             .take(wordCount * 2) // Take extra in case some don't fit
@@ -130,7 +167,7 @@ object WordSearchGenerator {
         }
 
         // Fill remaining cells with random letters
-        fillEmptyCells(grid, gridSize)
+        fillEmptyCells(grid, gridSize, isRomanian)
 
         // Convert to list of lists
         val gridList = grid.map { row -> row.toList() }
@@ -198,8 +235,13 @@ object WordSearchGenerator {
         }
     }
 
-    private fun fillEmptyCells(grid: Array<Array<GridCell>>, gridSize: Int) {
-        val letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    private fun fillEmptyCells(grid: Array<Array<GridCell>>, gridSize: Int, isRomanian: Boolean = false) {
+        // Use appropriate alphabet based on language
+        val letters = if (isRomanian) {
+            "AĂÂBCDEFGHIÎJKLMNOPRSȘTȚUVWXYZ"
+        } else {
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        }
         for (row in 0 until gridSize) {
             for (col in 0 until gridSize) {
                 if (grid[row][col].letter == ' ') {
