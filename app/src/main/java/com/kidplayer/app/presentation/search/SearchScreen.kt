@@ -28,13 +28,14 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kidplayer.app.R
 import com.kidplayer.app.presentation.browse.components.CompactVideoCard
 import com.kidplayer.app.presentation.components.KidFriendlyBackgroundWrapper
 import com.kidplayer.app.presentation.components.OfflineBanner
-import com.kidplayer.app.R
 
 /**
  * Search screen with search bar and results
@@ -134,7 +135,7 @@ fun SearchTopBar(
             ) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Go back",
+                    contentDescription = stringResource(R.string.search_go_back),
                     modifier = Modifier.size(com.kidplayer.app.ui.theme.Dimensions.iconLarge)
                 )
             }
@@ -147,7 +148,7 @@ fun SearchTopBar(
                     .height(com.kidplayer.app.ui.theme.Dimensions.searchFieldHeight),
                 placeholder = {
                     Text(
-                        text = "Search videos...",
+                        text = stringResource(R.string.search_hint),
                         style = MaterialTheme.typography.titleMedium
                     )
                 },
@@ -166,7 +167,7 @@ fun SearchTopBar(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Clear,
-                                contentDescription = "Clear search",
+                                contentDescription = stringResource(R.string.search_clear),
                                 modifier = Modifier.size(com.kidplayer.app.ui.theme.Dimensions.iconLarge)
                             )
                         }
@@ -202,7 +203,7 @@ fun SearchHistory(
     ) {
         item {
             Text(
-                text = "Recent Searches",
+                text = stringResource(R.string.search_recent),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(vertical = 8.dp)
@@ -249,7 +250,11 @@ fun SearchResults(
     ) {
         // Results count header
         Text(
-            text = "${results.size} result${if (results.size != 1) "s" else ""}",
+            text = if (results.size == 1) {
+                stringResource(R.string.search_result_count, results.size)
+            } else {
+                stringResource(R.string.search_result_count_plural, results.size)
+            },
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
@@ -293,7 +298,7 @@ fun LoadingState() {
                 strokeWidth = 6.dp
             )
             Text(
-                text = "Searching...",
+                text = stringResource(R.string.search_searching),
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onBackground
             )
@@ -315,13 +320,13 @@ fun EmptySearchState(query: String) {
             modifier = Modifier.padding(32.dp)
         ) {
             Text(
-                text = "No Results",
+                text = stringResource(R.string.search_no_results),
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
             )
             Text(
-                text = "We couldn't find any videos matching \"$query\"",
+                text = stringResource(R.string.search_no_match, query),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
                 textAlign = TextAlign.Center
@@ -350,13 +355,13 @@ fun InitialSearchState() {
                 tint = MaterialTheme.colorScheme.primary
             )
             Text(
-                text = "Search for Videos",
+                text = stringResource(R.string.search_placeholder),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
             )
             Text(
-                text = "Type something to start searching",
+                text = stringResource(R.string.search_type_to_start),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
                 textAlign = TextAlign.Center

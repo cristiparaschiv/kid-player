@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -99,7 +100,7 @@ fun GameCard(
 
             // Game name with accent color
             Text(
-                text = gameInfo.name.uppercase(),
+                text = stringResource(gameInfo.nameResId).uppercase(),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = if (gameInfo.isAvailable) accentColor else Color.Gray,
@@ -109,7 +110,7 @@ fun GameCard(
 
             // Description
             Text(
-                text = gameInfo.description.uppercase(),
+                text = stringResource(gameInfo.descriptionResId).uppercase(),
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.Gray,
                 textAlign = TextAlign.Center,
@@ -119,7 +120,7 @@ fun GameCard(
             if (!gameInfo.isAvailable) {
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "COMING SOON",
+                    text = stringResource(R.string.game_coming_soon),
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Bold,
                     color = Color.Gray.copy(alpha = 0.6f)

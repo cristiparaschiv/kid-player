@@ -38,6 +38,7 @@ fun SudokuScreen(
 
     GameScaffold(
         gameName = stringResource(R.string.game_sudoku_name),
+        gameId = "sudoku",
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },

@@ -45,6 +45,7 @@ fun HangmanScreen(
 
     GameScaffold(
         gameName = stringResource(R.string.game_hangman_name),
+        gameId = "hangman",
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },
@@ -125,7 +126,8 @@ fun HangmanScreen(
                             modifier = Modifier.padding(vertical = 8.dp)
                         ) {
                             Text(
-                                text = if (puzzle.isWon) "GREAT JOB!" else "THE WORD WAS: ${puzzle.word.uppercase()}",
+                                text = if (puzzle.isWon) stringResource(R.string.hangman_great_job).uppercase()
+                                       else stringResource(R.string.hangman_word_was, puzzle.word.uppercase()).uppercase(),
                                 style = MaterialTheme.typography.titleLarge,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White,
@@ -225,7 +227,7 @@ private fun CompactHangmanLayout(
                     modifier = Modifier.padding(vertical = 4.dp)
                 ) {
                     Text(
-                        text = if (puzzle.isWon) "GREAT!" else puzzle.word.uppercase(),
+                        text = if (puzzle.isWon) stringResource(R.string.hangman_great).uppercase() else puzzle.word.uppercase(),
                         style = MaterialTheme.typography.labelLarge,
                         fontWeight = FontWeight.Bold,
                         color = Color.White,
@@ -290,7 +292,7 @@ private fun RoundInfo(
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "ROUND",
+                    text = stringResource(R.string.game_round_label).uppercase(),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSecondaryContainer
                 )
@@ -303,7 +305,7 @@ private fun RoundInfo(
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "WORDS",
+                    text = stringResource(R.string.hangman_words).uppercase(),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSecondaryContainer
                 )

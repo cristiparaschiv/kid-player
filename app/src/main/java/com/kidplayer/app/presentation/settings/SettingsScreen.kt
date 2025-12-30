@@ -5,8 +5,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Cloud
+import androidx.compose.material.icons.filled.CloudOff
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -36,6 +39,7 @@ import com.kidplayer.app.presentation.theme.KidPlayerTheme
 @Composable
 fun SettingsScreen(
     onNavigateBack: () -> Unit = {},
+    onNavigateToSetup: () -> Unit = {},
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -103,6 +107,18 @@ fun SettingsScreen(
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
+
+                // Server Connection Section
+                SettingsCategory(title = "Server Connection")
+
+                ServerConnectionCard(
+                    serverUrl = uiState.serverUrl,
+                    username = uiState.username,
+                    isConfigured = uiState.serverUrl != "Not configured",
+                    onConfigureClick = onNavigateToSetup
+                )
+
+                Divider(modifier = Modifier.padding(vertical = 8.dp))
 
                 // Playback Settings Section
                 SettingsCategory(title = stringResource(R.string.settings_playback))
@@ -308,6 +324,99 @@ private fun SettingsScreenPreview() {
                     description = "Limit daily viewing time",
                     checked = false,
                     onCheckedChange = {}
+                )
+            }
+        }
+    }
+}
+
+/**
+ * Card showing server connection status and configure button
+ */
+@Composable
+private fun ServerConnectionCard(
+    serverUrl: String,
+    username: String,
+    isConfigured: Boolean,
+    onConfigureClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = if (isConfigured)
+                MaterialTheme.colorScheme.surface
+            else
+                MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f)
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                modifier = Modifier.weight(1f),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = if (isConfigured) Icons.Default.Cloud else Icons.Default.CloudOff,
+                    contentDescription = null,
+                    modifier = Modifier.size(32.dp),
+                    tint = if (isConfigured)
+                        MaterialTheme.colorScheme.primary
+                    else
+                        MaterialTheme.colorScheme.error
+                )
+
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text(
+                        text = if (isConfigured) "Connected" else "Not Connected",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Medium,
+                        color = if (isConfigured)
+                            MaterialTheme.colorScheme.onSurface
+                        else
+                            MaterialTheme.colorScheme.error
+                    )
+                    if (isConfigured) {
+                        Text(
+                            text = "$username @ $serverUrl",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1
+                        )
+                    } else {
+                        Text(
+                            text = "Set up Jellyfin to watch videos",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+
+            Button(
+                onClick = onConfigureClick,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = if (isConfigured) "Change" else "Setup",
+                    style = MaterialTheme.typography.labelLarge
                 )
             }
         }

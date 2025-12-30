@@ -1,5 +1,7 @@
 package com.kidplayer.app.presentation.games.common
 
+import androidx.annotation.StringRes
+
 /**
  * Common game state representation for all mini-games
  * Provides a unified state model for game lifecycle
@@ -55,8 +57,8 @@ data class GameConfig(
  */
 data class GameInfo(
     val id: String,
-    val name: String,
-    val description: String,
+    @StringRes val nameResId: Int,
+    @StringRes val descriptionResId: Int,
     val route: String,
     val backgroundColor: Long, // Color as Long for Canvas
     val iconType: GameIconType,

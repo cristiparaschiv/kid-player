@@ -33,6 +33,7 @@ fun TicTacToeScreen(
 
     GameScaffold(
         gameName = stringResource(R.string.game_tictactoe_name),
+        gameId = "tictactoe",
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },

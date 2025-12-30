@@ -37,6 +37,7 @@ fun CompareScreen(
 
     GameScaffold(
         gameName = stringResource(R.string.game_compare_name),
+        gameId = "compare",
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },

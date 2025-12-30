@@ -34,6 +34,7 @@ fun LetterMatchScreen(
 
     GameScaffold(
         gameName = stringResource(R.string.game_lettermatch_name),
+        gameId = "lettermatch",
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },

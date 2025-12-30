@@ -1,6 +1,7 @@
 package com.kidplayer.app.presentation.games
 
 import androidx.lifecycle.ViewModel
+import com.kidplayer.app.R
 import com.kidplayer.app.presentation.games.common.GameIconType
 import com.kidplayer.app.presentation.games.common.GameInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,8 +30,8 @@ class GamesViewModel @Inject constructor(
         val games = listOf(
             GameInfo(
                 id = "memory",
-                name = "Memory Match",
-                description = "Find matching pairs",
+                nameResId = R.string.game_memory_name,
+                descriptionResId = R.string.game_memory_desc,
                 route = "games/memory",
                 backgroundColor = 0xFF6C63FF, // Purple
                 iconType = GameIconType.MEMORY,
@@ -38,8 +39,8 @@ class GamesViewModel @Inject constructor(
             ),
             GameInfo(
                 id = "tictactoe",
-                name = "Tic-Tac-Toe",
-                description = "Beat the computer",
+                nameResId = R.string.game_tictactoe_name,
+                descriptionResId = R.string.game_tictactoe_desc,
                 route = "games/tictactoe",
                 backgroundColor = 0xFF00BFA5, // Teal
                 iconType = GameIconType.TICTACTOE,
@@ -47,8 +48,8 @@ class GamesViewModel @Inject constructor(
             ),
             GameInfo(
                 id = "puzzle",
-                name = "Shape Puzzle",
-                description = "Match the shapes",
+                nameResId = R.string.game_puzzle_name,
+                descriptionResId = R.string.game_puzzle_desc,
                 route = "games/puzzle",
                 backgroundColor = 0xFFFF6B6B, // Coral
                 iconType = GameIconType.PUZZLE,
@@ -56,8 +57,8 @@ class GamesViewModel @Inject constructor(
             ),
             GameInfo(
                 id = "sliding",
-                name = "Sliding Puzzle",
-                description = "Slide tiles to solve",
+                nameResId = R.string.game_sliding_name,
+                descriptionResId = R.string.game_sliding_desc,
                 route = "games/sliding",
                 backgroundColor = 0xFF42A5F5, // Blue
                 iconType = GameIconType.SLIDING,
@@ -65,8 +66,8 @@ class GamesViewModel @Inject constructor(
             ),
             GameInfo(
                 id = "gridpuzzle",
-                name = "Picture Puzzle",
-                description = "Swap pieces to complete",
+                nameResId = R.string.game_gridpuzzle_name,
+                descriptionResId = R.string.game_gridpuzzle_desc,
                 route = "games/gridpuzzle",
                 backgroundColor = 0xFFAB47BC, // Purple
                 iconType = GameIconType.GRIDPUZZLE,
@@ -74,8 +75,8 @@ class GamesViewModel @Inject constructor(
             ),
             GameInfo(
                 id = "match3",
-                name = "Match 3",
-                description = "Swap & match tiles",
+                nameResId = R.string.game_match3_name,
+                descriptionResId = R.string.game_match3_desc,
                 route = "games/match3",
                 backgroundColor = 0xFFFFB347, // Orange
                 iconType = GameIconType.MATCH3,
@@ -83,8 +84,8 @@ class GamesViewModel @Inject constructor(
             ),
             GameInfo(
                 id = "coloring",
-                name = "Coloring Book",
-                description = "Color fun pictures",
+                nameResId = R.string.game_coloring_name,
+                descriptionResId = R.string.game_coloring_desc,
                 route = "games/coloring",
                 backgroundColor = 0xFF77DD77, // Pastel Green
                 iconType = GameIconType.COLORING,
@@ -92,8 +93,8 @@ class GamesViewModel @Inject constructor(
             ),
             GameInfo(
                 id = "pattern",
-                name = "Pattern",
-                description = "Complete the pattern",
+                nameResId = R.string.game_pattern_name,
+                descriptionResId = R.string.game_pattern_desc,
                 route = "games/pattern",
                 backgroundColor = 0xFF9575CD, // Light Purple
                 iconType = GameIconType.PATTERN,
@@ -101,8 +102,8 @@ class GamesViewModel @Inject constructor(
             ),
             GameInfo(
                 id = "colormix",
-                name = "Color Mix",
-                description = "Mix colors together",
+                nameResId = R.string.game_colormix_name,
+                descriptionResId = R.string.game_colormix_desc,
                 route = "games/colormix",
                 backgroundColor = 0xFFEC407A, // Pink
                 iconType = GameIconType.COLORMIX,
@@ -110,8 +111,8 @@ class GamesViewModel @Inject constructor(
             ),
             GameInfo(
                 id = "lettermatch",
-                name = "Letter Match",
-                description = "Match letters & pictures",
+                nameResId = R.string.game_lettermatch_name,
+                descriptionResId = R.string.game_lettermatch_desc,
                 route = "games/lettermatch",
                 backgroundColor = 0xFF26A69A, // Teal
                 iconType = GameIconType.LETTERMATCH,
@@ -119,8 +120,8 @@ class GamesViewModel @Inject constructor(
             ),
             GameInfo(
                 id = "maze",
-                name = "Maze Runner",
-                description = "Find your way out",
+                nameResId = R.string.game_maze_name,
+                descriptionResId = R.string.game_maze_desc,
                 route = "games/maze",
                 backgroundColor = 0xFF5C6BC0, // Indigo
                 iconType = GameIconType.MAZE,
@@ -128,8 +129,8 @@ class GamesViewModel @Inject constructor(
             ),
             GameInfo(
                 id = "dots",
-                name = "Connect Dots",
-                description = "Connect the dots",
+                nameResId = R.string.game_dots_name,
+                descriptionResId = R.string.game_dots_desc,
                 route = "games/dots",
                 backgroundColor = 0xFFFFCA28, // Amber
                 iconType = GameIconType.DOTS,
@@ -137,8 +138,8 @@ class GamesViewModel @Inject constructor(
             ),
             GameInfo(
                 id = "addition",
-                name = "Addition Adventure",
-                description = "Learn to add numbers",
+                nameResId = R.string.game_addition_name,
+                descriptionResId = R.string.game_addition_desc,
                 route = "games/addition",
                 backgroundColor = 0xFF4CAF50, // Green
                 iconType = GameIconType.ADDITION,
@@ -146,8 +147,8 @@ class GamesViewModel @Inject constructor(
             ),
             GameInfo(
                 id = "subtraction",
-                name = "Subtraction Safari",
-                description = "Learn to subtract",
+                nameResId = R.string.game_subtraction_name,
+                descriptionResId = R.string.game_subtraction_desc,
                 route = "games/subtraction",
                 backgroundColor = 0xFFFF7043, // Deep Orange
                 iconType = GameIconType.SUBTRACTION,
@@ -155,8 +156,8 @@ class GamesViewModel @Inject constructor(
             ),
             GameInfo(
                 id = "numberbonds",
-                name = "Number Bonds",
-                description = "Numbers that go together",
+                nameResId = R.string.game_numberbonds_name,
+                descriptionResId = R.string.game_numberbonds_desc,
                 route = "games/numberbonds",
                 backgroundColor = 0xFF2196F3, // Blue
                 iconType = GameIconType.NUMBERBONDS,
@@ -164,8 +165,8 @@ class GamesViewModel @Inject constructor(
             ),
             GameInfo(
                 id = "compare",
-                name = "Greater or Less",
-                description = "Compare numbers",
+                nameResId = R.string.game_compare_name,
+                descriptionResId = R.string.game_compare_desc,
                 route = "games/compare",
                 backgroundColor = 0xFFAB47BC, // Purple
                 iconType = GameIconType.COMPARE,
@@ -173,8 +174,8 @@ class GamesViewModel @Inject constructor(
             ),
             GameInfo(
                 id = "oddoneout",
-                name = "Odd One Out",
-                description = "Find what's different",
+                nameResId = R.string.game_oddoneout_name,
+                descriptionResId = R.string.game_oddoneout_desc,
                 route = "games/oddoneout",
                 backgroundColor = 0xFFFF5722, // Deep Orange
                 iconType = GameIconType.ODDONEOUT,
@@ -182,8 +183,8 @@ class GamesViewModel @Inject constructor(
             ),
             GameInfo(
                 id = "sudoku",
-                name = "Picture Sudoku",
-                description = "Fill the puzzle grid",
+                nameResId = R.string.game_sudoku_name,
+                descriptionResId = R.string.game_sudoku_desc,
                 route = "games/sudoku",
                 backgroundColor = 0xFF7C4DFF, // Deep Purple
                 iconType = GameIconType.SUDOKU,
@@ -191,8 +192,8 @@ class GamesViewModel @Inject constructor(
             ),
             GameInfo(
                 id = "ballsort",
-                name = "Ball Sort",
-                description = "Sort the colored balls",
+                nameResId = R.string.game_ballsort_name,
+                descriptionResId = R.string.game_ballsort_desc,
                 route = "games/ballsort",
                 backgroundColor = 0xFF00ACC1, // Cyan
                 iconType = GameIconType.BALLSORT,
@@ -200,8 +201,8 @@ class GamesViewModel @Inject constructor(
             ),
             GameInfo(
                 id = "hangman",
-                name = "Hangman",
-                description = "Guess the word",
+                nameResId = R.string.game_hangman_name,
+                descriptionResId = R.string.game_hangman_desc,
                 route = "games/hangman",
                 backgroundColor = 0xFF8D6E63, // Brown
                 iconType = GameIconType.HANGMAN,
@@ -209,8 +210,8 @@ class GamesViewModel @Inject constructor(
             ),
             GameInfo(
                 id = "crossword",
-                name = "Crossword",
-                description = "Solve the crossword",
+                nameResId = R.string.game_crossword_name,
+                descriptionResId = R.string.game_crossword_desc,
                 route = "games/crossword",
                 backgroundColor = 0xFF5C6BC0, // Indigo
                 iconType = GameIconType.CROSSWORD,
@@ -218,8 +219,8 @@ class GamesViewModel @Inject constructor(
             ),
             GameInfo(
                 id = "counting",
-                name = "Counting",
-                description = "Count the objects",
+                nameResId = R.string.game_counting_name,
+                descriptionResId = R.string.game_counting_desc,
                 route = "games/counting",
                 backgroundColor = 0xFF66BB6A, // Green
                 iconType = GameIconType.COUNTING,
@@ -227,8 +228,8 @@ class GamesViewModel @Inject constructor(
             ),
             GameInfo(
                 id = "shapes",
-                name = "Shapes Quiz",
-                description = "Learn your shapes",
+                nameResId = R.string.game_shapes_name,
+                descriptionResId = R.string.game_shapes_desc,
                 route = "games/shapes",
                 backgroundColor = 0xFFE91E63, // Pink
                 iconType = GameIconType.SHAPES,
@@ -236,8 +237,8 @@ class GamesViewModel @Inject constructor(
             ),
             GameInfo(
                 id = "spelling",
-                name = "Spelling Bee",
-                description = "Spell the word",
+                nameResId = R.string.game_spelling_name,
+                descriptionResId = R.string.game_spelling_desc,
                 route = "games/spelling",
                 backgroundColor = 0xFFFFB300, // Amber
                 iconType = GameIconType.SPELLING,
@@ -245,8 +246,8 @@ class GamesViewModel @Inject constructor(
             ),
             GameInfo(
                 id = "wordsearch",
-                name = "Word Search",
-                description = "Find hidden words",
+                nameResId = R.string.game_wordsearch_name,
+                descriptionResId = R.string.game_wordsearch_desc,
                 route = "games/wordsearch",
                 backgroundColor = 0xFF29B6F6, // Light Blue
                 iconType = GameIconType.WORDSEARCH,
@@ -254,8 +255,8 @@ class GamesViewModel @Inject constructor(
             ),
             GameInfo(
                 id = "spotdiff",
-                name = "Spot Difference",
-                description = "Find the differences",
+                nameResId = R.string.game_spotdiff_name,
+                descriptionResId = R.string.game_spotdiff_desc,
                 route = "games/spotdiff",
                 backgroundColor = 0xFF8E24AA, // Purple
                 iconType = GameIconType.SPOTDIFF,

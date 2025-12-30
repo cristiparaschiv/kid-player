@@ -37,6 +37,7 @@ fun OddOneOutScreen(
 
     GameScaffold(
         gameName = stringResource(R.string.game_oddoneout_name),
+        gameId = "oddoneout",
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },

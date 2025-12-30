@@ -39,6 +39,7 @@ fun NumberBondsScreen(
 
     GameScaffold(
         gameName = stringResource(R.string.game_numberbonds_name),
+        gameId = "numberbonds",
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },

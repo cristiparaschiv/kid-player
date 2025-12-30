@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -106,7 +107,7 @@ fun DownloadedTopBar(
         title = {
             Column {
                 Text(
-                    text = "My Downloads",
+                    text = stringResource(R.string.downloads_title),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold
                 )
@@ -224,7 +225,7 @@ fun LoadingState() {
                 strokeWidth = 6.dp
             )
             Text(
-                text = "Loading downloads...",
+                text = stringResource(R.string.downloads_loading),
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onBackground
             )
@@ -296,13 +297,13 @@ fun EmptyState() {
                 tint = MaterialTheme.colorScheme.primary
             )
             Text(
-                text = "No Downloads Yet",
+                text = stringResource(R.string.downloads_empty),
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
             )
             Text(
-                text = "Download videos to watch them offline!\n\nTap the download button on any video to save it.",
+                text = stringResource(R.string.downloads_empty_desc),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
                 textAlign = TextAlign.Center

@@ -41,6 +41,7 @@ fun ShapesScreen(
 
     GameScaffold(
         gameName = stringResource(R.string.game_shapes_name),
+        gameId = "shapes",
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },

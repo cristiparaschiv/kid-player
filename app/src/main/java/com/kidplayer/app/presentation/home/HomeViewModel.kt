@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.kidplayer.app.data.network.NetworkMonitor
 import com.kidplayer.app.data.network.NetworkState
 import com.kidplayer.app.domain.model.Result
+import com.kidplayer.app.domain.repository.JellyfinRepository
 import com.kidplayer.app.domain.usecase.CancelDownloadUseCase
 import com.kidplayer.app.domain.usecase.GetFavoritesUseCase
 import com.kidplayer.app.domain.usecase.GetLibrariesUseCase
@@ -26,6 +27,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    private val jellyfinRepository: JellyfinRepository,
     private val getLibrariesUseCase: GetLibrariesUseCase,
     private val getMediaItemsUseCase: GetMediaItemsUseCase,
     private val startDownloadUseCase: StartDownloadUseCase,
@@ -45,8 +47,28 @@ class HomeViewModel @Inject constructor(
     }
 
     init {
-        loadLibraries()
-        loadFavorites()
+        checkServerConfiguration()
+    }
+
+    /**
+     * Check if server is configured and load content accordingly
+     */
+    private fun checkServerConfiguration() {
+        viewModelScope.launch {
+            val serverConfig = jellyfinRepository.getServerConfig()
+            val isConfigured = serverConfig != null
+
+            _uiState.update { it.copy(isServerConfigured = isConfigured) }
+
+            if (isConfigured) {
+                // Server configured - load media content
+                loadLibraries()
+                loadFavorites()
+            } else {
+                // No server configured - stay in offline mode
+                Timber.d("No server configured - running in offline mode")
+            }
+        }
     }
 
     /**

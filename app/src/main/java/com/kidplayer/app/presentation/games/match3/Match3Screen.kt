@@ -41,6 +41,7 @@ fun Match3Screen(
 
     GameScaffold(
         gameName = stringResource(R.string.game_match3_name),
+        gameId = "match3",
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },

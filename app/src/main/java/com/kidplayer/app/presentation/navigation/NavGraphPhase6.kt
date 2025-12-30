@@ -128,17 +128,12 @@ fun KidPlayerNavGraphPhase6(
         modifier = modifier
     ) {
         // Splash Screen with Auto-Login
+        // Now navigates to Home in both cases (valid session or offline mode)
         composable(route = Screen.Splash.route) {
             SplashScreen(
                 onNavigateToHome = {
-                    // Session is valid, navigate to home and clear back stack
+                    // Navigate to home and clear back stack (both for valid session and offline mode)
                     navController.navigate(Screen.Home.route) {
-                        popUpTo(Screen.Splash.route) { inclusive = true }
-                    }
-                },
-                onNavigateToSetup = {
-                    // No valid session, navigate to setup and clear back stack
-                    navController.navigate(Screen.Setup.route) {
                         popUpTo(Screen.Splash.route) { inclusive = true }
                     }
                 }

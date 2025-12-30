@@ -39,6 +39,7 @@ fun AdditionScreen(
 
     GameScaffold(
         gameName = stringResource(R.string.game_addition_name),
+        gameId = "addition",
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },
@@ -138,7 +139,8 @@ private fun CompactAdditionLayout(
         ) {
             if (showResult) {
                 Text(
-                    text = if (isCorrect) "GREAT!" else "TRY AGAIN!",
+                    text = if (isCorrect) stringResource(R.string.addition_great).uppercase()
+                           else stringResource(R.string.addition_try_again).uppercase(),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = if (isCorrect) Color(0xFF4CAF50) else Color(0xFFFF9800)
@@ -278,7 +280,7 @@ private fun RoundIndicator(
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "QUESTION",
+                    text = stringResource(R.string.game_question_label).uppercase(),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSecondaryContainer
                 )
@@ -291,7 +293,7 @@ private fun RoundIndicator(
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "CORRECT",
+                    text = stringResource(R.string.game_correct_label).uppercase(),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSecondaryContainer
                 )

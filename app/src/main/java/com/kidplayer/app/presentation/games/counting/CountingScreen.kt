@@ -52,6 +52,7 @@ fun CountingScreen(
 
     GameScaffold(
         gameName = stringResource(R.string.game_counting_name),
+        gameId = "counting",
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },

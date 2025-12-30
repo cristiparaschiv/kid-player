@@ -52,6 +52,7 @@ fun SubtractionScreen(
 
     GameScaffold(
         gameName = stringResource(R.string.game_subtraction_name),
+        gameId = "subtraction",
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },
@@ -155,7 +156,7 @@ private fun CompactSubtractionLayout(
         ) {
             AnimatedVisibility(visible = showCrossedOut && !showResult) {
                 Text(
-                    text = "HOW MANY LEFT?",
+                    text = stringResource(R.string.subtraction_how_many_left).uppercase(),
                     style = MaterialTheme.typography.titleSmall,
                     color = Color(0xFF795548),
                     modifier = Modifier.padding(bottom = 8.dp)
@@ -163,7 +164,8 @@ private fun CompactSubtractionLayout(
             }
             if (showResult) {
                 Text(
-                    text = if (isCorrect) "EXCELLENT!" else "TRY AGAIN!",
+                    text = if (isCorrect) stringResource(R.string.subtraction_excellent).uppercase()
+                           else stringResource(R.string.subtraction_try_again).uppercase(),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = if (isCorrect) Color(0xFF4CAF50) else Color(0xFFFF9800)
@@ -232,7 +234,7 @@ private fun CompactProblemDisplay(
             )
             if (showResult) {
                 Text(
-                    text = "${problem.correctAnswer} LEFT!",
+                    text = stringResource(R.string.subtraction_left, problem.correctAnswer).uppercase(),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = if (isCorrect) Color(0xFF4CAF50) else Color(0xFFFF9800)
@@ -337,7 +339,7 @@ private fun RoundIndicator(
             Text(text = "🦁", fontSize = 28.sp)
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "QUESTION",
+                    text = stringResource(R.string.game_question_label).uppercase(),
                     style = MaterialTheme.typography.labelSmall,
                     color = Color(0xFF795548)
                 )
@@ -350,7 +352,7 @@ private fun RoundIndicator(
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "CORRECT",
+                    text = stringResource(R.string.game_correct_label).uppercase(),
                     style = MaterialTheme.typography.labelSmall,
                     color = Color(0xFF795548)
                 )
@@ -412,7 +414,7 @@ private fun SubtractionProblemDisplay(
                     exit = fadeOut()
                 ) {
                     Text(
-                        text = "${problem.takeAway} RAN AWAY! HOW MANY ARE LEFT?",
+                        text = stringResource(R.string.subtraction_ran_away, problem.takeAway).uppercase(),
                         style = MaterialTheme.typography.bodyLarge,
                         color = Color(0xFF795548),
                         textAlign = TextAlign.Center
@@ -428,13 +430,14 @@ private fun SubtractionProblemDisplay(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "${problem.correctAnswer} LEFT!",
+                            text = stringResource(R.string.subtraction_left, problem.correctAnswer).uppercase(),
                             fontSize = 32.sp,
                             fontWeight = FontWeight.Bold,
                             color = if (isCorrect) Color(0xFF4CAF50) else Color(0xFFFF9800)
                         )
                         Text(
-                            text = if (isCorrect) "EXCELLENT!" else "THE ANSWER WAS ${problem.correctAnswer}",
+                            text = if (isCorrect) stringResource(R.string.subtraction_excellent).uppercase()
+                                   else stringResource(R.string.subtraction_answer_was, problem.correctAnswer).uppercase(),
                             style = MaterialTheme.typography.titleMedium,
                             color = if (isCorrect) Color(0xFF4CAF50) else Color(0xFFFF9800)
                         )

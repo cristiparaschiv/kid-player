@@ -20,10 +20,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kidplayer.app.R
 import com.kidplayer.app.presentation.browse.components.VideoCard
 import com.kidplayer.app.presentation.components.ErrorState
 import com.kidplayer.app.presentation.components.ErrorType
@@ -92,8 +94,8 @@ fun BrowseScreen(
                     uiState.isEmpty() -> {
                         // Empty state
                         com.kidplayer.app.presentation.components.EmptyState(
-                            title = "No Videos Yet",
-                            description = "Videos will appear here when they're added to your library"
+                            title = stringResource(R.string.empty_no_videos),
+                            description = stringResource(R.string.empty_videos_appear)
                         )
                     }
                     else -> {
@@ -152,7 +154,7 @@ fun BrowseScreen(
                             TextButton(
                                 onClick = { viewModel.dismissError() }
                             ) {
-                                Text("OK")
+                                Text(stringResource(R.string.ok))
                             }
                         }
                     }
@@ -171,7 +173,7 @@ fun BrowseTopBar(
     TopAppBar(
         title = {
             Text(
-                text = "Videos",
+                text = stringResource(R.string.browse_videos),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
@@ -180,13 +182,13 @@ fun BrowseTopBar(
             IconButton(onClick = onRefreshClick) {
                 Icon(
                     imageVector = Icons.Default.Refresh,
-                    contentDescription = "Refresh"
+                    contentDescription = stringResource(R.string.browse_refresh)
                 )
             }
             IconButton(onClick = onSettingsClick) {
                 Icon(
                     imageVector = Icons.Default.Settings,
-                    contentDescription = "Settings"
+                    contentDescription = stringResource(R.string.browse_settings)
                 )
             }
         },
@@ -307,9 +309,9 @@ fun VideoGrid(
                 ) {
                     Text(
                         text = if (hasMoreItems) {
-                            "Showing ${mediaItems.size} of $totalItemCount videos"
+                            stringResource(R.string.browse_showing_videos, mediaItems.size, totalItemCount)
                         } else {
-                            "All ${mediaItems.size} videos loaded"
+                            stringResource(R.string.browse_all_loaded, mediaItems.size)
                         },
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
@@ -337,7 +339,7 @@ fun LoadingState() {
                 strokeWidth = 6.dp
             )
             Text(
-                text = "Loading videos...",
+                text = stringResource(R.string.browse_loading_videos),
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onBackground
             )
@@ -362,7 +364,7 @@ fun ErrorState(
             modifier = Modifier.padding(32.dp)
         ) {
             Text(
-                text = "Oops!",
+                text = stringResource(R.string.browse_oops),
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.error
@@ -382,7 +384,7 @@ fun ErrorState(
                 shape = RoundedCornerShape(28.dp)
             ) {
                 Text(
-                    text = "Try Again",
+                    text = stringResource(R.string.browse_try_again),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
@@ -405,13 +407,13 @@ fun EmptyState() {
             modifier = Modifier.padding(32.dp)
         ) {
             Text(
-                text = "No Videos Found",
+                text = stringResource(R.string.browse_no_videos),
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
             )
             Text(
-                text = "Ask a grown-up to add some videos!",
+                text = stringResource(R.string.browse_no_videos_desc),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
                 textAlign = TextAlign.Center

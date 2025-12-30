@@ -44,6 +44,7 @@ fun CrosswordScreen(
 
     GameScaffold(
         gameName = stringResource(R.string.game_crossword_name),
+        gameId = "crossword",
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },
@@ -217,7 +218,7 @@ private fun PuzzleInfo(
         ) {
             Text(text = "📝", fontSize = if (isCompact) 18.sp else 24.sp)
             Text(
-                text = if (isCompact) "$puzzleNumber/$totalPuzzles" else "Puzzle $puzzleNumber of $totalPuzzles",
+                text = if (isCompact) "$puzzleNumber/$totalPuzzles" else stringResource(R.string.crossword_puzzle_of, puzzleNumber, totalPuzzles),
                 style = if (isCompact) MaterialTheme.typography.bodyMedium else MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSecondaryContainer
@@ -244,7 +245,7 @@ private fun PuzzleCompleteOverlay(isCompact: Boolean = false) {
                 fontSize = if (isCompact) 32.sp else 48.sp
             )
             Text(
-                text = if (isCompact) "Complete!" else "Puzzle Complete!",
+                text = if (isCompact) stringResource(R.string.crossword_complete) else stringResource(R.string.crossword_puzzle_complete),
                 style = if (isCompact) MaterialTheme.typography.titleMedium else MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
@@ -315,7 +316,7 @@ private fun HintCard(
             Text(text = hint, fontSize = if (isCompact) 20.sp else 28.sp)
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "$wordLength letters",
+                    text = stringResource(R.string.crossword_letters, wordLength),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
@@ -534,12 +535,12 @@ private fun LetterKeyboard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "TAP A LETTER",
+                        text = stringResource(R.string.crossword_tap_letter).uppercase(),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Medium
                     )
                     TextButton(onClick = onDismiss) {
-                        Text("CANCEL")
+                        Text(stringResource(R.string.crossword_cancel).uppercase())
                     }
                 }
 
@@ -579,7 +580,7 @@ private fun LetterKeyboard(
                     onClick = onClearClick,
                     modifier = Modifier.fillMaxWidth(0.5f)
                 ) {
-                    Text("CLEAR")
+                    Text(stringResource(R.string.crossword_clear).uppercase())
                 }
             }
         }

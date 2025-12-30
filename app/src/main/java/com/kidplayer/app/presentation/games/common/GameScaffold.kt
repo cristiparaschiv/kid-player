@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color // Still needed for overlays
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -30,12 +31,24 @@ import com.kidplayer.app.R
 import com.kidplayer.app.presentation.components.StarCelebration
 import com.kidplayer.app.presentation.components.StarDisplay
 import com.kidplayer.app.presentation.components.rememberHapticFeedback
+import com.kidplayer.app.presentation.games.GameMusicManager
 import com.kidplayer.app.presentation.util.bouncyClickable
 import com.kidplayer.app.ui.theme.Dimensions
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
+
+@EntryPoint
+@InstallIn(SingletonComponent::class)
+interface GameMusicManagerEntryPoint {
+    fun gameMusicManager(): GameMusicManager
+}
 
 /**
  * Common scaffold wrapper for all games
  * Provides consistent header, pause/restart controls, and completion dialog
+ * Plays intro sound when game starts and completion sound when finished
  */
 @Composable
 fun GameScaffold(
@@ -46,6 +59,7 @@ fun GameScaffold(
     onRestartClick: () -> Unit,
     onResumeClick: () -> Unit,
     modifier: Modifier = Modifier,
+    gameId: String = "",  // Game ID for playing intro sound
     showScore: Boolean = true,
     totalStars: Int = 0,
     starsEarned: Int = 0,
@@ -53,6 +67,34 @@ fun GameScaffold(
     content: @Composable BoxScope.() -> Unit
 ) {
     val haptic = rememberHapticFeedback()
+    val context = LocalContext.current
+
+    // Get music manager via Hilt entry point
+    val musicManager = remember {
+        EntryPointAccessors.fromApplication(
+            context.applicationContext,
+            GameMusicManagerEntryPoint::class.java
+        ).gameMusicManager()
+    }
+
+    // Play intro sound when game screen first appears
+    LaunchedEffect(gameId) {
+        if (gameId.isNotEmpty()) {
+            kotlinx.coroutines.delay(200) // Small delay for smooth transition
+            musicManager.playGameIntro(gameId)
+        }
+    }
+
+    // Play completion sound when game completes
+    var hasPlayedCompletionSound by remember { mutableStateOf(false) }
+    LaunchedEffect(gameState) {
+        if (gameState is GameState.Completed && !hasPlayedCompletionSound) {
+            musicManager.playGameComplete()
+            hasPlayedCompletionSound = true
+        } else if (gameState !is GameState.Completed) {
+            hasPlayedCompletionSound = false
+        }
+    }
 
     Box(
         modifier = modifier

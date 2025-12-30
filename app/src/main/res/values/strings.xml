@@ -61,6 +61,7 @@
     <string name="game_back_to_games_desc">Back to games</string>
     <string name="game_restart_desc">Restart game</string>
     <string name="game_pause_desc">Pause game</string>
+    <string name="game_coming_soon">COMING SOON</string>
     <string name="stars">Stars</string>
 
     <!-- Setup Screen -->
@@ -111,6 +112,13 @@
     <string name="settings_unknown_error">Unknown error</string>
     <string name="settings_adjust_limit">Adjust the maximum viewing time per day</string>
     <string name="settings_lock">Lock Settings</string>
+    <string name="settings_change_server">Change Server</string>
+    <string name="settings_change_server_desc">Connect to a different Jellyfin server</string>
+    <string name="settings_setup_server">Setup Jellyfin Server</string>
+    <string name="settings_setup_server_desc">Connect to watch videos from your media library</string>
+    <string name="settings_sign_out_return">Sign out and return to setup</string>
+    <string name="settings_logout_confirm_title">Logout?</string>
+    <string name="settings_logout_confirm_message">You will need to re-enter your server credentials to watch videos again.</string>
 
     <!-- PIN Dialog -->
     <string name="pin_set_title">Set Parent PIN</string>
@@ -148,9 +156,6 @@
     <!-- Server Settings New -->
     <string name="server_url">Server URL</string>
     <string name="server_username">Username</string>
-    <string name="settings_logout_confirm_title">Logout Confirmation</string>
-    <string name="settings_logout_confirm_message">Are you sure you want to logout? You will need to enter server credentials again on next launch.</string>
-    <string name="settings_sign_out_return">Sign out and return to setup screen</string>
 
     <!-- About Section -->
     <string name="about_version">Version 1.0.0 (Phase 5)</string>
@@ -194,12 +199,29 @@
     <!-- Game Common (older section - some strings moved above) -->
     <string name="game_score">SCORE: %d</string>
     <string name="game_level">Level %d</string>
+    <string name="game_level_label">Level</string>
+    <string name="game_moves_label">Moves</string>
+    <string name="game_moves_count">Moves: %d</string>
     <string name="game_round">Round %1$d of %2$d</string>
+    <string name="game_round_label">Round</string>
+    <string name="game_question_label">Question</string>
+    <string name="game_correct_label">Correct</string>
     <string name="game_complete">Complete!</string>
     <string name="game_correct">Correct!</string>
     <string name="game_wrong">Try again!</string>
     <string name="game_hint">Hint</string>
     <string name="game_new_game">New Game</string>
+    <string name="game_level_complete">Level %d Complete!</string>
+    <string name="game_start_puzzle">Start Puzzle!</string>
+    <string name="game_tap_to_select">Tap a piece to select</string>
+    <string name="game_tap_to_swap">Tap another to swap</string>
+    <string name="game_tap_letter">Tap a letter</string>
+    <string name="game_how_many_left">How many left?</string>
+    <string name="game_ran_away">%d ran away! How many are left?</string>
+    <string name="game_left">%d left!</string>
+    <string name="game_difficulty_easy">Easy 3x3</string>
+    <string name="game_difficulty_medium">Medium 4x4</string>
+    <string name="game_difficulty_hard">Hard 5x5</string>
 
     <!-- Game Names -->
     <string name="game_memory_name">Memory Match</string>
@@ -266,6 +288,13 @@
     <string name="crossword_across">Across</string>
     <string name="crossword_down">Down</string>
     <string name="crossword_filled">%1$d of %2$d filled</string>
+    <string name="crossword_puzzle_of">Puzzle %1$d of %2$d</string>
+    <string name="crossword_complete">Complete!</string>
+    <string name="crossword_puzzle_complete">Puzzle Complete!</string>
+    <string name="crossword_letters">%d letters</string>
+    <string name="crossword_tap_letter">Tap a letter</string>
+    <string name="crossword_cancel">Cancel</string>
+    <string name="crossword_clear">Clear</string>
 
     <string name="spelling_spell_word">Spell the word!</string>
     <string name="spelling_drag_letters">Drag letters to spell</string>
@@ -299,9 +328,24 @@
 
     <string name="colormix_mix_colors">Mix the colors!</string>
     <string name="colormix_make_color">Make %s</string>
+    <string name="colormix_what_color">What color?</string>
+    <string name="colormix_what_color_make">What color do these make?</string>
+    <string name="colormix_correct">Correct!</string>
+    <string name="colormix_try_again">Try again!</string>
+    <string name="colormix_makes">%1$s + %2$s = %3$s!</string>
+    <string name="colormix_not_quite">Not quite! It makes %s</string>
+    <string name="colormix_round_of">Round %1$d of %2$d</string>
 
     <string name="addition_solve">Solve: %1$d + %2$d = ?</string>
+    <string name="addition_great">Great!</string>
+    <string name="addition_try_again">Try again!</string>
     <string name="subtraction_solve">Solve: %1$d - %2$d = ?</string>
+    <string name="subtraction_how_many_left">How many left?</string>
+    <string name="subtraction_excellent">Excellent!</string>
+    <string name="subtraction_try_again">Try again!</string>
+    <string name="subtraction_left">%d left!</string>
+    <string name="subtraction_ran_away">%d ran away! How many are left?</string>
+    <string name="subtraction_answer_was">The answer was %d</string>
 
     <string name="compare_which_bigger">Which is bigger?</string>
     <string name="compare_which_smaller">Which is smaller?</string>
@@ -318,12 +362,22 @@
 
     <string name="ballsort_sort_balls">Sort the balls by color!</string>
     <string name="ballsort_moves">Moves: %d</string>
+    <string name="ballsort_instruction">Tap a tube to select, then tap another to pour</string>
 
     <string name="sudoku_fill_grid">Fill the grid!</string>
     <string name="sudoku_each_row">Each row needs all shapes</string>
 
     <string name="spotdiff_find_differences">Find %d differences!</string>
     <string name="spotdiff_found">Found: %1$d of %2$d</string>
+    <string name="spotdiff_instruction">Find the differences in the bottom picture!</string>
+    <string name="spotdiff_original">Original</string>
+    <string name="spotdiff_find_here">Find differences here!</string>
+    <string name="spotdiff_all_found">All found! Next round...</string>
+
+    <string name="hangman_great_job">Great job!</string>
+    <string name="hangman_great">Great!</string>
+    <string name="hangman_word_was">The word was: %s</string>
+    <string name="hangman_words">Words</string>
 
     <!-- Categories -->
     <string name="category_animals">Animals</string>
@@ -366,4 +420,89 @@
     <!-- Stars/Rewards -->
     <string name="stars_earned">You earned %d stars!</string>
     <string name="total_stars">Total: %d stars</string>
+
+    <!-- Home Screen -->
+    <string name="home_all_videos">All Videos</string>
+    <string name="home_want_videos">Want to watch videos?</string>
+    <string name="home_ask_grownup">Ask a grown-up to set up the connection!</string>
+    <string name="home_ask_grownup_long">Ask a grown-up to connect to your video server!</string>
+    <string name="home_setup">Setup</string>
+    <string name="home_parent_setup">Parent Setup</string>
+    <string name="home_meanwhile_games">Meanwhile, you can play games!</string>
+
+    <!-- Downloads Screen -->
+    <string name="downloads_title">My Downloads</string>
+    <string name="downloads_loading">Loading downloads...</string>
+    <string name="downloads_empty">No Downloads Yet</string>
+    <string name="downloads_empty_desc">Download videos to watch offline</string>
+
+    <!-- Favorites Screen -->
+    <string name="favorites_title">My Favorites</string>
+    <string name="favorites_loading">Loading favorites...</string>
+    <string name="favorites_empty">No Favorites Yet</string>
+    <string name="favorites_empty_desc">Tap the heart on videos you love to add them here!</string>
+
+    <!-- Search Screen -->
+    <string name="search_title">Search</string>
+    <string name="search_placeholder">Search for Videos</string>
+    <string name="search_hint">Search videos...</string>
+    <string name="search_no_results">No Results</string>
+    <string name="search_no_match">We couldn\'t find any videos matching \"%s\"</string>
+    <string name="search_try_different">Try a different search term</string>
+    <string name="search_recent">Recent Searches</string>
+    <string name="search_searching">Searching...</string>
+    <string name="search_type_to_start">Type something to start searching</string>
+    <string name="search_result_count">%d result</string>
+    <string name="search_result_count_plural">%d results</string>
+    <string name="search_go_back">Go back</string>
+    <string name="search_clear">Clear search</string>
+
+    <!-- Browse Screen -->
+    <string name="browse_videos">Videos</string>
+    <string name="browse_loading_videos">Loading videos...</string>
+    <string name="browse_oops">Oops!</string>
+    <string name="browse_refresh">Refresh</string>
+    <string name="browse_settings">Settings</string>
+    <string name="browse_no_videos">No Videos Found</string>
+    <string name="browse_no_videos_desc">Ask a grown-up to add some videos!</string>
+    <string name="browse_showing_videos">Showing %1$d of %2$d videos</string>
+    <string name="browse_all_loaded">All %d videos loaded</string>
+    <string name="browse_try_again">Try Again</string>
+
+    <!-- Player Components -->
+    <string name="player_up_next">Up Next</string>
+    <string name="player_playing_in">Playing in %d seconds</string>
+    <string name="player_times_up">Time\'s Up!</string>
+    <string name="player_reached_limit">You\'ve reached your screen time limit of %d minutes for today.</string>
+    <string name="player_come_back">Come back tomorrow to watch more videos!</string>
+    <string name="player_parent_options">Parent Options</string>
+    <string name="player_oops">Oops! Something went wrong</string>
+    <string name="player_go_back">Go Back</string>
+    <string name="player_screen_time_options">Screen Time Options</string>
+    <string name="player_used_today">Used today: %1$d of %2$d minutes</string>
+    <string name="player_add_more_time">Add More Time:</string>
+
+    <!-- Time Limit Screen -->
+    <string name="timelimit_great_job">Great job watching!</string>
+    <string name="timelimit_used_all">You\'ve used all your screen time for today</string>
+    <string name="timelimit_daily_limit">Daily limit:</string>
+    <string name="timelimit_what_to_do">What to do instead:</string>
+    <string name="timelimit_come_back">Come back tomorrow for more videos!</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_app_name">Kid Player</string>
+    <string name="splash_tagline">Safe, Simple, Fun</string>
+    <string name="splash_connecting">Connecting...</string>
+
+    <!-- Setup/Onboarding Screen -->
+    <string name="setup_welcome">Welcome to Kid Player</string>
+    <string name="setup_connect_subtitle">Connect to your Jellyfin server to get started</string>
+    <string name="setup_connecting">Connecting...</string>
+    <string name="setup_connect_server">Connect to Server</string>
+    <string name="setup_test_connection">Test Connection</string>
+    <string name="setup_play_games_only">Play Games Only</string>
+    <string name="setup_skip_server">Skip server setup and play educational games offline</string>
+    <string name="setup_make_sure">Make sure your Jellyfin server is accessible from this device</string>
+    <string name="setup_not_connected">Not Connected</string>
+    <string name="setup_set_up_jellyfin">Set up Jellyfin to watch videos</string>
 </resources>

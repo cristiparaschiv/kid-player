@@ -39,6 +39,7 @@ fun SpellingScreen(
 
     GameScaffold(
         gameName = stringResource(R.string.game_spelling_name),
+        gameId = "spelling",
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },

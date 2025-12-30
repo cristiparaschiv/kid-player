@@ -22,12 +22,11 @@ import timber.log.Timber
 /**
  * Splash Screen with Auto-Login
  * Displays while validating saved session
- * Navigates to Home if session is valid, Setup if invalid
+ * Always navigates to Home (with or without valid session for offline mode)
  */
 @Composable
 fun SplashScreen(
     onNavigateToHome: () -> Unit = {},
-    onNavigateToSetup: () -> Unit = {},
     viewModel: SplashViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -41,8 +40,8 @@ fun SplashScreen(
                 viewModel.resetValidationState()
             }
             ValidationResult.FAILED -> {
-                Timber.d("Session invalid, navigating to Setup")
-                onNavigateToSetup()
+                Timber.d("Session invalid, navigating to Home in offline mode")
+                onNavigateToHome()
                 viewModel.resetValidationState()
             }
             ValidationResult.PENDING -> {

@@ -94,6 +94,7 @@ class SettingsViewModel @Inject constructor(
 
                 // Load server info
                 val serverConfig = jellyfinRepository.getServerConfig()
+                val isConfigured = serverConfig != null
                 val serverUrl = serverConfig?.url ?: "Not configured"
                 val username = serverConfig?.username ?: "Not configured"
 
@@ -104,7 +105,8 @@ class SettingsViewModel @Inject constructor(
                         screenTimeEnabled = parentalControls.screenTimeConfig.isEnabled,
                         screenTimeDailyLimit = parentalControls.screenTimeConfig.dailyLimitMinutes,
                         serverUrl = serverUrl,
-                        username = username
+                        username = username,
+                        isServerConfigured = isConfigured
                     )
                 }
             } catch (e: Exception) {
@@ -244,6 +246,7 @@ data class SettingsUiState(
     val screenTimeDailyLimit: Int = 60,
     val serverUrl: String = "",
     val username: String = "",
+    val isServerConfigured: Boolean = false,
     val shouldNavigateToSetup: Boolean = false,
     val currentLanguage: AppLanguage = AppLanguage.ENGLISH,
     val error: String? = null

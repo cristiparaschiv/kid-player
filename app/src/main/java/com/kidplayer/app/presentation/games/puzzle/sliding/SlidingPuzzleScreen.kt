@@ -52,6 +52,7 @@ fun SlidingPuzzleScreen(
 
     GameScaffold(
         gameName = stringResource(R.string.game_sliding_name),
+        gameId = "sliding",
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },
@@ -115,9 +116,9 @@ fun SlidingPuzzleScreen(
                 // Difficulty selector
                 KidFriendlyDifficultySelector(
                     difficulties = listOf(
-                        "EASY" to "Easy 3x3",
-                        "MEDIUM" to "Medium 4x4",
-                        "HARD" to "Hard 5x5"
+                        "EASY" to stringResource(R.string.game_difficulty_easy),
+                        "MEDIUM" to stringResource(R.string.game_difficulty_medium),
+                        "HARD" to stringResource(R.string.game_difficulty_hard)
                     ),
                     selectedDifficultyId = uiState.config.difficulty.name,
                     onDifficultySelect = { id ->
@@ -128,7 +129,7 @@ fun SlidingPuzzleScreen(
 
                 // Start button
                 KidFriendlyStartButton(
-                    text = "Start Puzzle!",
+                    text = stringResource(R.string.game_start_puzzle),
                     onClick = { viewModel.startNewGame() },
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
@@ -157,7 +158,7 @@ fun SlidingPuzzleScreen(
                     }
 
                     Text(
-                        text = "Moves: ${uiState.moves}",
+                        text = stringResource(R.string.game_moves_count, uiState.moves),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary

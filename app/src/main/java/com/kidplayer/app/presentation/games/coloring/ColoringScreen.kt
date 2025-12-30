@@ -51,6 +51,7 @@ fun ColoringScreen(
 
     GameScaffold(
         gameName = stringResource(R.string.game_coloring_name),
+        gameId = "coloring",
         gameState = if (uiState.isColoring) GameState.Playing() else GameState.Ready,
         onBackClick = {
             if (uiState.isColoring) {

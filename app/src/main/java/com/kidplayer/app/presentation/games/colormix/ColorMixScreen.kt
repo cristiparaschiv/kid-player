@@ -44,6 +44,7 @@ fun ColorMixScreen(
 
     GameScaffold(
         gameName = stringResource(R.string.game_colormix_name),
+        gameId = "colormix",
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },
@@ -135,9 +136,10 @@ private fun CompactColorMixLayout(
             // Question text
             Text(
                 text = if (showResult) {
-                    if (isCorrect) "CORRECT!" else "TRY AGAIN!"
+                    if (isCorrect) stringResource(R.string.colormix_correct).uppercase()
+                    else stringResource(R.string.colormix_try_again).uppercase()
                 } else {
-                    "WHAT COLOR?"
+                    stringResource(R.string.colormix_what_color).uppercase()
                 },
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
@@ -196,12 +198,15 @@ private fun StandardColorMixLayout(
         Text(
             text = if (showResult) {
                 if (isCorrect) {
-                    "${puzzle.color1.displayName.uppercase()} + ${puzzle.color2.displayName.uppercase()} = ${puzzle.correctAnswer.displayName.uppercase()}!"
+                    stringResource(R.string.colormix_makes,
+                        puzzle.color1.displayName.uppercase(),
+                        puzzle.color2.displayName.uppercase(),
+                        puzzle.correctAnswer.displayName.uppercase())
                 } else {
-                    "NOT QUITE! IT MAKES ${puzzle.correctAnswer.displayName.uppercase()}"
+                    stringResource(R.string.colormix_not_quite, puzzle.correctAnswer.displayName.uppercase()).uppercase()
                 }
             } else {
-                "WHAT COLOR DO THESE MAKE?"
+                stringResource(R.string.colormix_what_color_make).uppercase()
             },
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
@@ -271,7 +276,7 @@ private fun RoundIndicator(
                 fontSize = 24.sp
             )
             Text(
-                text = "ROUND $round OF $totalRounds",
+                text = stringResource(R.string.colormix_round_of, round, totalRounds).uppercase(),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSecondaryContainer

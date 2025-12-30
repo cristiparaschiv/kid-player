@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -73,7 +74,7 @@ fun FavoritesTopBar(onNavigateBack: () -> Unit) {
     TopAppBar(
         title = {
             Text(
-                text = "My Favorites",
+                text = stringResource(R.string.favorites_title),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
@@ -138,7 +139,7 @@ fun LoadingState() {
                 strokeWidth = 6.dp
             )
             Text(
-                text = "Loading favorites...",
+                text = stringResource(R.string.favorites_loading),
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onBackground
             )
@@ -160,13 +161,13 @@ fun EmptyState() {
             modifier = Modifier.padding(32.dp)
         ) {
             Text(
-                text = "No Favorites Yet",
+                text = stringResource(R.string.favorites_empty),
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
             )
             Text(
-                text = "Tap the heart on videos you love to add them here!",
+                text = stringResource(R.string.favorites_empty_desc),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
                 textAlign = TextAlign.Center

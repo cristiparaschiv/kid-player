@@ -49,6 +49,7 @@ fun MazeScreen(
 
     GameScaffold(
         gameName = stringResource(R.string.game_maze_name),
+        gameId = "maze",
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },

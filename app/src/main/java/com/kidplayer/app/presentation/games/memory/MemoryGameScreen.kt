@@ -34,6 +34,7 @@ fun MemoryGameScreen(
 
     GameScaffold(
         gameName = stringResource(R.string.game_memory_name),
+        gameId = "memory",
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },

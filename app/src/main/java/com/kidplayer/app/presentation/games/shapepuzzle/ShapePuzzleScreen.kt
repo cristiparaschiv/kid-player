@@ -62,6 +62,7 @@ fun ShapePuzzleScreen(
 
     GameScaffold(
         gameName = stringResource(R.string.game_puzzle_name),
+        gameId = "puzzle",
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },

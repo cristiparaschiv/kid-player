@@ -40,6 +40,7 @@ fun PatternScreen(
 
     GameScaffold(
         gameName = stringResource(R.string.game_pattern_name),
+        gameId = "pattern",
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },

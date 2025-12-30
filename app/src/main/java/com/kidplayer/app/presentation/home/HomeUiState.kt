@@ -9,6 +9,9 @@ import com.kidplayer.app.domain.model.MediaItem
  * Phase 6: Updated to show ALL content with pagination like Browse screen
  */
 data class HomeUiState(
+    // Server configuration state
+    val isServerConfigured: Boolean = true,
+
     // All media items displayed in grid
     val mediaItems: List<MediaItem> = emptyList(),
 

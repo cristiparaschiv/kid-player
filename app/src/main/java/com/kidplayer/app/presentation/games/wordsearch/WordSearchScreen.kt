@@ -37,6 +37,7 @@ fun WordSearchScreen(
 
     GameScaffold(
         gameName = stringResource(R.string.game_wordsearch_name),
+        gameId = "wordsearch",
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },

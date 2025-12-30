@@ -36,6 +36,7 @@ fun SpotDiffScreen(
 
     GameScaffold(
         gameName = stringResource(R.string.game_spotdiff_name),
+        gameId = "spotdiff",
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },
@@ -73,7 +74,7 @@ fun SpotDiffScreen(
 
             // Instruction
             Text(
-                text = "FIND THE DIFFERENCES IN THE BOTTOM PICTURE!",
+                text = stringResource(R.string.spotdiff_instruction).uppercase(),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
@@ -84,7 +85,7 @@ fun SpotDiffScreen(
             // Base picture (reference)
             PictureGrid(
                 grid = uiState.baseGrid,
-                title = "ORIGINAL",
+                title = stringResource(R.string.spotdiff_original).uppercase(),
                 isClickable = false,
                 onCellClick = { _, _ -> },
                 modifier = Modifier
@@ -97,7 +98,7 @@ fun SpotDiffScreen(
             // Difference picture (clickable)
             PictureGrid(
                 grid = uiState.diffGrid,
-                title = "FIND DIFFERENCES HERE!",
+                title = stringResource(R.string.spotdiff_find_here).uppercase(),
                 isClickable = true,
                 onCellClick = { row, col ->
                     haptic.performMedium()
@@ -282,7 +283,7 @@ private fun RoundCompleteIndicator() {
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "ALL FOUND! NEXT ROUND...",
+                text = stringResource(R.string.spotdiff_all_found).uppercase(),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = Color.White

@@ -43,6 +43,7 @@ fun DotsScreen(
 
     GameScaffold(
         gameName = stringResource(R.string.game_dots_name),
+        gameId = "dots",
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },

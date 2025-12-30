@@ -45,6 +45,7 @@ fun BallSortScreen(
 
     GameScaffold(
         gameName = stringResource(R.string.game_ballsort_name),
+        gameId = "ballsort",
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },
@@ -69,7 +70,7 @@ fun BallSortScreen(
 
                 // Instructions
                 Text(
-                    text = "Tap a tube to select, then tap another to pour",
+                    text = stringResource(R.string.ballsort_instruction),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
@@ -114,13 +115,13 @@ fun BallSortScreen(
                             fontSize = 48.sp
                         )
                         Text(
-                            text = "Level ${uiState.level} Complete!",
+                            text = stringResource(R.string.game_level_complete, uiState.level),
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Bold,
                             color = Color.White
                         )
                         Text(
-                            text = "Moves: ${uiState.moves}",
+                            text = stringResource(R.string.game_moves_count, uiState.moves),
                             style = MaterialTheme.typography.bodyLarge,
                             color = Color.White.copy(alpha = 0.9f)
                         )
@@ -149,7 +150,7 @@ private fun LevelInfo(
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "Level",
+                    text = stringResource(R.string.game_level_label),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSecondaryContainer
                 )
@@ -162,7 +163,7 @@ private fun LevelInfo(
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "Moves",
+                    text = stringResource(R.string.game_moves_label),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSecondaryContainer
                 )

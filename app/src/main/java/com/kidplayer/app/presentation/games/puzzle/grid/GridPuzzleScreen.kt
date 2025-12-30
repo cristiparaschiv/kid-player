@@ -52,6 +52,7 @@ fun GridPuzzleScreen(
 
     GameScaffold(
         gameName = stringResource(R.string.game_gridpuzzle_name),
+        gameId = "gridpuzzle",
         gameState = uiState.gameState,
         onBackClick = onNavigateBack,
         onPauseClick = { viewModel.pauseGame() },
@@ -115,9 +116,9 @@ fun GridPuzzleScreen(
                 // Difficulty selector
                 KidFriendlyDifficultySelector(
                     difficulties = listOf(
-                        "EASY" to "Easy 3x3",
-                        "MEDIUM" to "Medium 4x4",
-                        "HARD" to "Hard 5x5"
+                        "EASY" to stringResource(R.string.game_difficulty_easy),
+                        "MEDIUM" to stringResource(R.string.game_difficulty_medium),
+                        "HARD" to stringResource(R.string.game_difficulty_hard)
                     ),
                     selectedDifficultyId = uiState.config.difficulty.name,
                     onDifficultySelect = { id ->
@@ -128,7 +129,7 @@ fun GridPuzzleScreen(
 
                 // Start button
                 KidFriendlyStartButton(
-                    text = "Start Puzzle!",
+                    text = stringResource(R.string.game_start_puzzle),
                     onClick = { viewModel.startNewGame() },
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
@@ -160,14 +161,14 @@ fun GridPuzzleScreen(
                     ) {
                         Text(
                             text = if (uiState.selectedPiecePosition != null)
-                                "Tap another to swap"
+                                stringResource(R.string.game_tap_to_swap)
                             else
-                                "Tap a piece to select",
+                                stringResource(R.string.game_tap_to_select),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
-                            text = "Moves: ${uiState.moves}",
+                            text = stringResource(R.string.game_moves_count, uiState.moves),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary

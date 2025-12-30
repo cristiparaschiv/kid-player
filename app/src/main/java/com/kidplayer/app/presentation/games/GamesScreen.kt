@@ -6,12 +6,13 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,14 +32,11 @@ fun GamesScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    // Start background music when entering games hub
-    // Music continues playing when navigating to individual games
-    DisposableEffect(Unit) {
-        viewModel.musicManager.startMusic()
-        onDispose {
-            // Don't stop here - individual games will keep music playing
-            // Music stops when navigating completely out of games section
-        }
+    // Play "pick a game" sound when entering games hub
+    // Background music is managed globally by GameMusicController
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(300) // Small delay for smooth transition
+        viewModel.musicManager.playPickAGame()
     }
 
     KidFriendlyBackgroundWrapper(
@@ -106,13 +104,13 @@ private fun GamesTopBar() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Games",
+                text = stringResource(R.string.games_title),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
             )
             Text(
-                text = "Pick a game to play!",
+                text = stringResource(R.string.games_subtitle),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center

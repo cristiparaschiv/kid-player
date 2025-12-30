@@ -152,7 +152,7 @@ object HangmanWords {
         WordWithHint("WIND", "VÂNT", "💨", "Nature", "Natură"),
         WordWithHint("ROSE", "TRANDAFIR", "🌹", "Nature", "Natură"),
         WordWithHint("ROCK", "PIATRĂ", "⛰️", "Nature", "Natură"),
-        WordWithHint("POND", "IAZPOND", "🏞️", "Nature", "Natură"),
+        WordWithHint("POND", "IAZ", "🏞️", "Nature", "Natură"),
         WordWithHint("LAKE", "LAC", "🏞️", "Nature", "Natură"),
         WordWithHint("CAVE", "PEȘTERĂ", "🕳️", "Nature", "Natură"),
         WordWithHint("HILL", "DEAL", "⛰️", "Nature", "Natură"),
