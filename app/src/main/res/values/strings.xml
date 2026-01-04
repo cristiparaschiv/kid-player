@@ -276,6 +276,12 @@
     <string name="game_wordsearch_desc">Find hidden words</string>
     <string name="game_spotdiff_name">Spot Difference</string>
     <string name="game_spotdiff_desc">Find the differences</string>
+    <string name="game_analogclock_name">Tell Time</string>
+    <string name="game_analogclock_desc">Read the clock</string>
+
+    <!-- Analog Clock Game -->
+    <string name="analogclock_what_time">What time is it?</string>
+    <string name="analogclock_answer_is">The time is %s</string>
 
     <!-- Specific Game Instructions -->
     <string name="hangman_guess_letter">Guess a letter!</string>

@@ -94,5 +94,6 @@ enum class GameIconType {
     SHAPES,      // Geometric shapes
     SPELLING,    // Letter tiles
     WORDSEARCH,  // Letter grid
-    SPOTDIFF     // Two pictures
+    SPOTDIFF,    // Two pictures
+    ANALOGCLOCK  // Analog clock face
 }

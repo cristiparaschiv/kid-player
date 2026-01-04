@@ -40,7 +40,8 @@ object GameIntroSounds {
         "shapes" to R.raw.intro_shapes,
         "spelling" to R.raw.intro_spelling,
         "wordsearch" to R.raw.intro_word_search,
-        "spotdiff" to R.raw.intro_spot_the_diference
+        "spotdiff" to R.raw.intro_spot_the_diference,
+        "analogclock" to R.raw.intro_analog_clock
     )
 
     fun getIntroSound(gameId: String): Int? = introMap[gameId]

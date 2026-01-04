@@ -165,6 +165,7 @@ fun GameIcon(
         GameIconType.SPELLING -> R.drawable.ic_game_spelling
         GameIconType.WORDSEARCH -> R.drawable.ic_game_wordsearch
         GameIconType.SPOTDIFF -> R.drawable.ic_game_spotdiff
+        GameIconType.ANALOGCLOCK -> R.drawable.ic_game_analog_clock
     }
 
     Image(

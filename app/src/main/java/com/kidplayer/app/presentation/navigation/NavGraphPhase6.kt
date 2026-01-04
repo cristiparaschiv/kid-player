@@ -28,6 +28,7 @@ import com.kidplayer.app.presentation.games.colormix.ColorMixScreen
 import com.kidplayer.app.presentation.games.shapes.ShapesScreen
 import com.kidplayer.app.presentation.games.spelling.SpellingScreen
 import com.kidplayer.app.presentation.games.spotdiff.SpotDiffScreen
+import com.kidplayer.app.presentation.games.analogclock.AnalogClockScreen
 import com.kidplayer.app.presentation.games.wordsearch.WordSearchScreen
 import com.kidplayer.app.presentation.games.compare.CompareScreen
 import com.kidplayer.app.presentation.games.dots.DotsScreen
@@ -325,6 +326,9 @@ fun KidPlayerNavGraphPhase6(
                     onNavigateBack = { navController.popBackStack() }
                 )
                 "spotdiff" -> SpotDiffScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+                "analogclock" -> AnalogClockScreen(
                     onNavigateBack = { navController.popBackStack() }
                 )
                 // Add more games here as they are implemented

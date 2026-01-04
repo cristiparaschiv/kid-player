@@ -276,6 +276,12 @@
     <string name="game_wordsearch_desc">Găsește cuvintele</string>
     <string name="game_spotdiff_name">Găsește Diferențele</string>
     <string name="game_spotdiff_desc">Găsește diferențele</string>
+    <string name="game_analogclock_name">Citește Ceasul</string>
+    <string name="game_analogclock_desc">Ce oră este?</string>
+
+    <!-- Analog Clock Game -->
+    <string name="analogclock_what_time">Ce oră este?</string>
+    <string name="analogclock_answer_is">Ora este %s</string>
 
     <!-- Specific Game Instructions -->
     <string name="hangman_guess_letter">Ghicește o literă!</string>

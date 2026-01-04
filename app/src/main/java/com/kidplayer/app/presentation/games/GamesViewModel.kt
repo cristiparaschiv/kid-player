@@ -261,6 +261,15 @@ class GamesViewModel @Inject constructor(
                 backgroundColor = 0xFF8E24AA, // Purple
                 iconType = GameIconType.SPOTDIFF,
                 isAvailable = true
+            ),
+            GameInfo(
+                id = "analogclock",
+                nameResId = R.string.game_analogclock_name,
+                descriptionResId = R.string.game_analogclock_desc,
+                route = "games/analogclock",
+                backgroundColor = 0xFF5C6BC0, // Indigo
+                iconType = GameIconType.ANALOGCLOCK,
+                isAvailable = true
             )
         )
 
