@@ -6,8 +6,10 @@ import com.kidplayer.app.data.local.dao.DownloadDao
 import com.kidplayer.app.data.local.dao.MediaItemDao
 import com.kidplayer.app.data.local.mapper.EntityMapper
 import com.kidplayer.app.domain.model.MediaItem
+import com.kidplayer.app.domain.model.PinVerificationResult
 import com.kidplayer.app.domain.usecase.CancelDownloadUseCase
 import com.kidplayer.app.domain.usecase.DeleteDownloadUseCase
+import com.kidplayer.app.domain.usecase.VerifyParentPinUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,6 +30,7 @@ class DownloadedViewModel @Inject constructor(
     private val mediaItemDao: MediaItemDao,
     private val cancelDownloadUseCase: CancelDownloadUseCase,
     private val deleteDownloadUseCase: DeleteDownloadUseCase,
+    private val verifyParentPinUseCase: VerifyParentPinUseCase,
     private val securePreferences: com.kidplayer.app.data.local.SecurePreferences
 ) : ViewModel() {
 
@@ -74,9 +77,12 @@ class DownloadedViewModel @Inject constructor(
                     }.sortedByDescending { it.title }
 
                     // Get media items for active downloads and convert to domain models
+                    // Use progress from DownloadEntity (updated by worker) for accurate real-time progress
                     val activeMediaItems = activeDownloads.mapNotNull { download ->
                         mediaItemDao.getMediaItemByIdOnly(download.mediaItemId)?.let { entity ->
-                            EntityMapper.entityToMediaItem(entity)
+                            EntityMapper.entityToMediaItem(entity).copy(
+                                downloadProgress = download.progress // Use progress from download entity
+                            )
                         }
                     }.sortedByDescending { it.title }
 
@@ -132,9 +138,72 @@ class DownloadedViewModel @Inject constructor(
     }
 
     /**
-     * Delete a downloaded item
+     * Request to delete a downloaded item - shows PIN dialog first
      */
-    fun deleteDownload(mediaItemId: String) {
+    fun requestDeleteDownload(mediaItemId: String) {
+        _uiState.update {
+            it.copy(
+                showPinDialog = true,
+                pendingDeleteMediaItemId = mediaItemId,
+                pinError = false,
+                pinErrorMessage = null
+            )
+        }
+    }
+
+    /**
+     * Verify PIN and delete if successful
+     */
+    fun verifyPinAndDelete(pin: String) {
+        viewModelScope.launch {
+            val pendingMediaItemId = _uiState.value.pendingDeleteMediaItemId
+            if (pendingMediaItemId == null) {
+                dismissPinDialog()
+                return@launch
+            }
+
+            when (verifyParentPinUseCase(pin)) {
+                is PinVerificationResult.Success -> {
+                    // PIN correct - proceed with delete
+                    dismissPinDialog()
+                    performDelete(pendingMediaItemId)
+                }
+                is PinVerificationResult.Failure -> {
+                    // Wrong PIN
+                    _uiState.update {
+                        it.copy(
+                            pinError = true,
+                            pinErrorMessage = "Incorrect PIN. Please try again."
+                        )
+                    }
+                }
+                is PinVerificationResult.NotSet -> {
+                    // No PIN set - allow delete (parent hasn't set up PIN yet)
+                    dismissPinDialog()
+                    performDelete(pendingMediaItemId)
+                }
+            }
+        }
+    }
+
+    /**
+     * Dismiss PIN dialog
+     */
+    fun dismissPinDialog() {
+        _uiState.update {
+            it.copy(
+                showPinDialog = false,
+                pendingDeleteMediaItemId = null,
+                pinError = false,
+                pinErrorMessage = null
+            )
+        }
+    }
+
+    /**
+     * Actually delete a downloaded item (internal, called after PIN verification)
+     */
+    private fun performDelete(mediaItemId: String) {
         viewModelScope.launch {
             try {
                 Timber.d("Deleting download: $mediaItemId")
@@ -190,7 +259,12 @@ data class DownloadedUiState(
     val downloadedItems: List<MediaItem> = emptyList(),
     val downloadingItems: List<MediaItem> = emptyList(),
     val isLoading: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+    // PIN dialog state for delete protection
+    val showPinDialog: Boolean = false,
+    val pendingDeleteMediaItemId: String? = null,
+    val pinError: Boolean = false,
+    val pinErrorMessage: String? = null
 ) {
     fun isEmpty(): Boolean = downloadedItems.isEmpty() && downloadingItems.isEmpty() && !isLoading
 

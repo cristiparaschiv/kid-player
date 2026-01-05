@@ -10,6 +10,8 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import com.kidplayer.app.data.local.ScreenTimeManager
 import com.kidplayer.app.data.local.dao.MediaItemDao
+import com.kidplayer.app.data.network.NetworkMonitor
+import com.kidplayer.app.data.network.NetworkState
 import com.kidplayer.app.domain.model.Result
 import com.kidplayer.app.domain.usecase.GetAutoplaySettingUseCase
 import com.kidplayer.app.domain.usecase.GetMediaItemUseCase
@@ -28,7 +30,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import android.net.Uri
 import timber.log.Timber
+import java.io.File
 import javax.inject.Inject
 
 /**
@@ -50,6 +54,7 @@ class PlayerViewModel @Inject constructor(
     private val mediaItemDao: MediaItemDao,
     private val screenTimeManager: ScreenTimeManager,
     private val verifyParentPinUseCase: com.kidplayer.app.domain.usecase.VerifyParentPinUseCase,
+    private val networkMonitor: NetworkMonitor,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -153,10 +158,32 @@ class PlayerViewModel @Inject constructor(
         }
 
         override fun onPlayerError(error: PlaybackException) {
-            Timber.e(error, "Player error occurred")
+            val errorDetails = buildString {
+                append("Player error: ${error.message}")
+                append("\nError code: ${error.errorCode}")
+                error.cause?.let { cause ->
+                    append("\nCause: ${cause.message}")
+                    append("\nCause class: ${cause.javaClass.simpleName}")
+                }
+            }
+            Timber.e(error, errorDetails)
+
+            // User-friendly error message
+            val userMessage = when (error.errorCode) {
+                PlaybackException.ERROR_CODE_IO_FILE_NOT_FOUND ->
+                    "Video file not found. The download may be corrupted."
+                PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED,
+                PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT ->
+                    "Network connection failed. Check your internet connection."
+                PlaybackException.ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED,
+                PlaybackException.ERROR_CODE_PARSING_MANIFEST_UNSUPPORTED ->
+                    "This video format is not supported."
+                else -> "Playback error: ${error.message}"
+            }
+
             _uiState.update {
                 it.copy(
-                    error = "Playback error: ${error.message}",
+                    error = userMessage,
                     isLoading = false,
                     isBuffering = false
                 )
@@ -170,6 +197,34 @@ class PlayerViewModel @Inject constructor(
         loadVideo()
         loadRecommendedVideos()
         startScreenTimeTracking()
+        observeNetworkState()
+    }
+
+    /**
+     * Observe network state changes and reload recommendations when connectivity changes
+     */
+    private fun observeNetworkState() {
+        viewModelScope.launch {
+            networkMonitor.networkState.collect { state ->
+                val isOffline = state == NetworkState.OFFLINE
+                val wasOffline = _uiState.value.isNetworkOffline
+
+                _uiState.update { it.copy(isNetworkOffline = isOffline) }
+
+                // Reload recommendations if network state changed
+                if (isOffline != wasOffline) {
+                    Timber.d("Network state changed: offline=$isOffline, reloading recommendations")
+                    loadRecommendedVideos()
+                }
+            }
+        }
+    }
+
+    /**
+     * Check if device is currently offline
+     */
+    private fun isOffline(): Boolean {
+        return !networkMonitor.isOnline()
     }
 
     /**
@@ -181,35 +236,77 @@ class PlayerViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
 
+            val isCurrentlyOffline = isOffline()
+            Timber.d("=== Loading video: $videoId ===")
+            Timber.d("Network status: offline=$isCurrentlyOffline")
+
             // First, check if video is downloaded locally
             val mediaItemEntity = mediaItemDao.getMediaItemByIdOnly(videoId)
-            val isOfflineAvailable = mediaItemEntity?.isDownloaded == true &&
-                                     !mediaItemEntity.localFilePath.isNullOrEmpty()
+
+            if (mediaItemEntity == null) {
+                Timber.e("Media item not found in database for ID: $videoId")
+                _uiState.update {
+                    it.copy(
+                        error = "Video not found in database",
+                        isLoading = false
+                    )
+                }
+                return@launch
+            }
+
+            Timber.d("Media item found: title=${mediaItemEntity.title}, isDownloaded=${mediaItemEntity.isDownloaded}")
+            Timber.d("localFilePath=${mediaItemEntity.localFilePath}")
+            Timber.d("jellyfinItemId=${mediaItemEntity.jellyfinItemId}")
+
+            val localFilePath = mediaItemEntity.localFilePath
+            val hasLocalFile = mediaItemEntity.isDownloaded && !localFilePath.isNullOrEmpty()
+
+            // Verify local file actually exists on disk
+            val localFileExists = if (hasLocalFile && localFilePath != null) {
+                val file = File(localFilePath)
+                val exists = file.exists()
+                val size = if (exists) file.length() else 0L
+                Timber.d("Local file check: exists=$exists, size=$size bytes, path=$localFilePath")
+                exists && size > 0
+            } else {
+                Timber.d("No local file to check (hasLocalFile=$hasLocalFile)")
+                false
+            }
+
+            val isOfflineAvailable = hasLocalFile && localFileExists
+            Timber.d("Offline playback available: $isOfflineAvailable (hasLocalFile=$hasLocalFile, localFileExists=$localFileExists)")
 
             // Get resume position - fetch fresh data from Jellyfin API for accurate position
+            // Skip API call if offline - use cached position
             var resumePositionMs = 0L
-            when (val mediaItemResult = getMediaItemUseCase(videoId)) {
-                is Result.Success -> {
-                    val freshMediaItem = mediaItemResult.data
-                    resumePositionMs = freshMediaItem.getResumePositionMs()
+            if (!isCurrentlyOffline) {
+                when (val mediaItemResult = getMediaItemUseCase(videoId)) {
+                    is Result.Success -> {
+                        val freshMediaItem = mediaItemResult.data
+                        resumePositionMs = freshMediaItem.getResumePositionMs()
+                    }
+                    is Result.Error -> {
+                        // Fall back to cached position if API fails
+                        val cachedPositionTicks = mediaItemEntity?.playbackPositionTicks ?: 0L
+                        resumePositionMs = cachedPositionTicks / 10_000
+                        Timber.w("Failed to get fresh media item data, using cached position")
+                    }
+                    is Result.Loading -> {
+                        // Shouldn't happen, but use cached position
+                        val cachedPositionTicks = mediaItemEntity?.playbackPositionTicks ?: 0L
+                        resumePositionMs = cachedPositionTicks / 10_000
+                    }
                 }
-                is Result.Error -> {
-                    // Fall back to cached position if API fails
-                    val cachedPositionTicks = mediaItemEntity?.playbackPositionTicks ?: 0L
-                    resumePositionMs = cachedPositionTicks / 10_000
-                    Timber.w("Failed to get fresh media item data, using cached position")
-                }
-                is Result.Loading -> {
-                    // Shouldn't happen, but use cached position
-                    val cachedPositionTicks = mediaItemEntity?.playbackPositionTicks ?: 0L
-                    resumePositionMs = cachedPositionTicks / 10_000
-                }
+            } else {
+                // Offline - use cached position from database
+                val cachedPositionTicks = mediaItemEntity?.playbackPositionTicks ?: 0L
+                resumePositionMs = cachedPositionTicks / 10_000
+                Timber.d("Offline mode: using cached resume position ${resumePositionMs}ms")
             }
 
             val videoUrl = if (isOfflineAvailable) {
                 // Play from local file
-                val localPath = mediaItemEntity!!.localFilePath!!
-                Timber.d("Playing from local file: $localPath")
+                Timber.d("Playing from local file: $localFilePath")
 
                 _uiState.update {
                     it.copy(
@@ -217,7 +314,20 @@ class PlayerViewModel @Inject constructor(
                     )
                 }
 
-                "file://$localPath"
+                // Use Uri.fromFile for proper file URI handling (handles special characters in path)
+                val fileUri = Uri.fromFile(File(localFilePath!!))
+                Timber.d("File URI: $fileUri")
+                fileUri.toString()
+            } else if (isCurrentlyOffline) {
+                // Offline but no local file available
+                Timber.e("Cannot play: offline and no downloaded file available")
+                _uiState.update {
+                    it.copy(
+                        error = "This video is not available offline. Please download it first or connect to the internet.",
+                        isLoading = false
+                    )
+                }
+                return@launch
             } else {
                 // Stream from Jellyfin
                 Timber.d("Streaming from Jellyfin server")
@@ -257,8 +367,10 @@ class PlayerViewModel @Inject constructor(
             player.setMediaItem(mediaItem)
             player.prepare()
 
-            // Report playback started to Jellyfin (required for progress tracking)
-            reportPlaybackStartedUseCase(videoId)
+            // Report playback started to Jellyfin (only when online - required for progress tracking)
+            if (!isCurrentlyOffline) {
+                reportPlaybackStartedUseCase(videoId)
+            }
 
             // Auto-play: Start playback immediately when media is ready
             player.play()
@@ -277,9 +389,13 @@ class PlayerViewModel @Inject constructor(
      * - For movies/standalone: Show videos from same library
      * - Exclude current video
      * - Max 8 recommendations
+     * - When offline: Only show downloaded videos
      */
     private fun loadRecommendedVideos() {
         viewModelScope.launch {
+            val offlineMode = isOffline()
+            Timber.d("Loading recommendations, offline mode: $offlineMode")
+
             when (val result = getMediaItemsUseCase(null)) {
                 is Result.Success -> {
                     val allItems = result.data
@@ -290,7 +406,11 @@ class PlayerViewModel @Inject constructor(
                         return@launch
                     }
 
-                    val recommendations = buildRecommendationsList(currentItem, allItems)
+                    val recommendations = buildRecommendationsList(
+                        currentItem = currentItem,
+                        allItems = allItems,
+                        offlineOnly = offlineMode
+                    )
 
                     _uiState.update {
                         it.copy(
@@ -299,7 +419,7 @@ class PlayerViewModel @Inject constructor(
                         )
                     }
 
-                    Timber.d("Loaded ${recommendations.size} recommended videos for ${currentItem.title}")
+                    Timber.d("Loaded ${recommendations.size} recommended videos for ${currentItem.title} (offline=$offlineMode)")
                 }
                 is Result.Error -> {
                     Timber.e("Failed to load recommendations: ${result.message}")
@@ -314,11 +434,24 @@ class PlayerViewModel @Inject constructor(
     /**
      * Build list of recommended videos
      * Returns up to 8 videos for the recommendation row
+     * @param offlineOnly When true, only include downloaded videos
      */
     private fun buildRecommendationsList(
         currentItem: com.kidplayer.app.domain.model.MediaItem,
-        allItems: List<com.kidplayer.app.domain.model.MediaItem>
+        allItems: List<com.kidplayer.app.domain.model.MediaItem>,
+        offlineOnly: Boolean = false
     ): List<com.kidplayer.app.domain.model.MediaItem> {
+        // Filter to downloaded-only if in offline mode
+        val availableItems = if (offlineOnly) {
+            allItems.filter { it.isDownloaded }
+        } else {
+            allItems
+        }
+
+        if (offlineOnly) {
+            Timber.d("Offline mode: filtering to ${availableItems.size} downloaded videos")
+        }
+
         val recommendations = mutableListOf<com.kidplayer.app.domain.model.MediaItem>()
 
         // Strategy 1: If it's an episode, get next episodes in series
@@ -328,7 +461,7 @@ class PlayerViewModel @Inject constructor(
 
         if (seriesName != null && seasonNumber != null && episodeNumber != null) {
             // Get next episodes from current season
-            val nextEpisodes = allItems
+            val nextEpisodes = availableItems
                 .filter {
                     it.seriesName == seriesName &&
                     it.seasonNumber == seasonNumber &&
@@ -343,7 +476,7 @@ class PlayerViewModel @Inject constructor(
 
             // If we need more, get episodes from next season
             if (recommendations.size < 5) {
-                val nextSeasonEpisodes = allItems
+                val nextSeasonEpisodes = availableItems
                     .filter {
                         it.seriesName == seriesName &&
                         it.seasonNumber != null &&
@@ -363,7 +496,7 @@ class PlayerViewModel @Inject constructor(
 
         // Strategy 2: Fill remaining slots with videos from same library (shuffled for variety)
         if (recommendations.size < MAX_RECOMMENDATIONS) {
-            val sameLibraryVideos = allItems
+            val sameLibraryVideos = availableItems
                 .filter {
                     it.libraryId == currentItem.libraryId &&
                     it.id != currentItem.id &&
@@ -528,6 +661,7 @@ class PlayerViewModel @Inject constructor(
     /**
      * Handle playback ended
      * Checks autoplay setting and starts countdown if enabled
+     * When offline, only considers downloaded videos for autoplay
      */
     private fun onPlaybackEnded() {
         viewModelScope.launch {
@@ -545,12 +679,15 @@ class PlayerViewModel @Inject constructor(
                 return@launch
             }
 
-            // Get next video
-            when (val result = getNextVideoUseCase(videoId)) {
+            // Get next video (only downloaded videos if offline)
+            val offlineMode = isOffline()
+            Timber.d("Getting next video, offline mode: $offlineMode")
+
+            when (val result = getNextVideoUseCase(videoId, offlineOnly = offlineMode)) {
                 is Result.Success -> {
                     val nextVideo = result.data
                     if (nextVideo != null) {
-                        Timber.d("Next video found: ${nextVideo.title}")
+                        Timber.d("Next video found: ${nextVideo.title} (downloaded: ${nextVideo.isDownloaded})")
                         _uiState.update {
                             it.copy(
                                 nextMediaItem = nextVideo,
@@ -559,7 +696,7 @@ class PlayerViewModel @Inject constructor(
                         }
                         startAutoplayCountdown()
                     } else {
-                        Timber.d("No next video available")
+                        Timber.d("No next video available${if (offlineMode) " (offline mode - no downloaded videos)" else ""}")
                     }
                 }
                 is Result.Error -> {

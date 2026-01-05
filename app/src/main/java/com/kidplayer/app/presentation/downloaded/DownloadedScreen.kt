@@ -22,6 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.kidplayer.app.domain.model.MediaItem
 import com.kidplayer.app.presentation.browse.components.VideoCard
 import com.kidplayer.app.presentation.components.KidFriendlyBackgroundWrapper
+import com.kidplayer.app.presentation.settings.components.PinEntryDialog
 import com.kidplayer.app.R
 
 /**
@@ -35,6 +36,17 @@ fun DownloadedScreen(
     viewModel: DownloadedViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+
+    // PIN verification dialog for delete protection
+    PinEntryDialog(
+        isVisible = uiState.showPinDialog,
+        title = stringResource(R.string.pin_required),
+        subtitle = stringResource(R.string.pin_delete_video_subtitle),
+        onPinEntered = { pin -> viewModel.verifyPinAndDelete(pin) },
+        onDismiss = { viewModel.dismissPinDialog() },
+        isError = uiState.pinError,
+        errorMessage = uiState.pinErrorMessage
+    )
 
     KidFriendlyBackgroundWrapper(
         backgroundImageRes = R.drawable.cartoon_background
@@ -72,7 +84,7 @@ fun DownloadedScreen(
                             downloadingItems = uiState.downloadingItems,
                             onVideoClick = onVideoClick,
                             onCancelDownload = { viewModel.cancelDownload(it) },
-                            onDeleteDownload = { viewModel.deleteDownload(it) }
+                            onDeleteDownload = { viewModel.requestDeleteDownload(it) } // Now requires PIN
                         )
                     }
                 }
@@ -163,7 +175,8 @@ fun DownloadedContent(
                     mediaItem = mediaItem,
                     onClick = { /* Don't allow playback while downloading */ },
                     onDownloadClick = { onCancelDownload(mediaItem.id) },
-                    showFavorite = false
+                    showFavorite = false,
+                    isActivelyDownloading = true // Show progress indicator even at 0%
                 )
             }
         }

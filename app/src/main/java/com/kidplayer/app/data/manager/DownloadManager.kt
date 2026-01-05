@@ -89,12 +89,10 @@ class DownloadManager @Inject constructor(
             downloadDao.insertDownload(download)
 
             // Create work constraints
+            // Note: Using CONNECTED instead of UNMETERED for broader compatibility
+            // The wifiOnly parameter is currently ignored but kept for future use
             val constraints = Constraints.Builder()
-                .setRequiredNetworkType(
-                    if (wifiOnly) NetworkType.UNMETERED else NetworkType.CONNECTED
-                )
-                .setRequiresBatteryNotLow(true)
-                .setRequiresStorageNotLow(true)
+                .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build()
 
             // Create work request

@@ -130,6 +130,8 @@
     <string name="pin_confirm">Confirm PIN</string>
     <string name="pin_reenter">Re-enter your PIN</string>
     <string name="pin_backspace">Backspace</string>
+    <string name="pin_required">Parent PIN Required</string>
+    <string name="pin_delete_video_subtitle">Enter your PIN to delete this downloaded video</string>
 
     <!-- Screen Time Settings -->
     <string name="screen_time_limits">Screen Time Limits</string>

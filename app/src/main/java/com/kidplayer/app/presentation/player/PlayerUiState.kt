@@ -19,6 +19,7 @@ data class PlayerUiState(
     val autoplayCountdown: Int = 0, // seconds until next video plays
     val nextMediaItem: MediaItem? = null,
     val isOfflinePlayback: Boolean = false, // true if playing from local storage
+    val isNetworkOffline: Boolean = false, // true if device has no network connection
     val screenTimeRemaining: Int? = null, // remaining minutes (null if disabled)
     val isTimeLimitReached: Boolean = false, // true if time limit reached
     val recommendedVideos: List<MediaItem> = emptyList(), // videos to show in recommendation row

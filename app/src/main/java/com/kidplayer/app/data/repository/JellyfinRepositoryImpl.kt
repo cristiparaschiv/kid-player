@@ -219,12 +219,13 @@ class JellyfinRepositoryImpl @Inject constructor(
                 )
 
                 // Cache media items locally with userId for user-scoped caching
+                // Use smart upsert that preserves download status
                 val mediaItemEntities = EntityMapper.mediaItemListToEntityList(
                     mediaItems = mediaItems,
                     userId = server.userId,
                     libraryId = libraryId
                 )
-                mediaItemDao.insertMediaItems(mediaItemEntities)
+                upsertMediaItemsPreservingDownloads(mediaItemEntities)
 
                 Result.Success(mediaItems)
             } else {
@@ -327,12 +328,13 @@ class JellyfinRepositoryImpl @Inject constructor(
                 )
 
                 // Cache media items locally with userId for user-scoped caching
+                // Use smart upsert that preserves download status
                 val mediaItemEntities = EntityMapper.mediaItemListToEntityList(
                     mediaItems = mediaItems,
                     userId = server.userId,
                     libraryId = libraryId
                 )
-                mediaItemDao.insertMediaItems(mediaItemEntities)
+                upsertMediaItemsPreservingDownloads(mediaItemEntities)
 
                 // Create paginated result with total count
                 val paginatedResult = PaginatedResult.create(
@@ -747,6 +749,59 @@ class JellyfinRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             Timber.e(e, "Error reporting playback stopped")
             Result.Error("Failed to report stopped: ${e.message ?: "Unknown error"}")
+        }
+    }
+
+    /**
+     * Smart upsert that preserves download status when syncing from server
+     * - For new items: insert them
+     * - For existing items: update all fields EXCEPT download-related fields
+     */
+    private suspend fun upsertMediaItemsPreservingDownloads(
+        entities: List<com.kidplayer.app.data.local.entity.MediaItemEntity>
+    ) {
+        if (entities.isEmpty()) return
+
+        // Get IDs of items we're about to upsert
+        val itemIds = entities.map { it.id }
+
+        // Find which items already exist in the database
+        val existingItems = mediaItemDao.getMediaItemsByIds(itemIds)
+        val existingIds = existingItems.map { it.id }.toSet()
+
+        // Separate new items from existing items
+        val newItems = entities.filter { it.id !in existingIds }
+        val existingUpdates = entities.filter { it.id in existingIds }
+
+        // Insert new items (they have no download status to preserve)
+        if (newItems.isNotEmpty()) {
+            mediaItemDao.insertMediaItems(newItems)
+            Timber.d("Inserted ${newItems.size} new media items")
+        }
+
+        // Update existing items while preserving download status
+        for (entity in existingUpdates) {
+            mediaItemDao.updateMediaItemPreservingDownload(
+                id = entity.id,
+                title = entity.title,
+                overview = entity.overview,
+                thumbnailUrl = entity.thumbnailUrl,
+                backdropUrl = entity.backdropUrl,
+                duration = entity.duration,
+                jellyfinItemId = entity.jellyfinItemId,
+                type = entity.type,
+                seriesName = entity.seriesName,
+                seasonNumber = entity.seasonNumber,
+                episodeNumber = entity.episodeNumber,
+                year = entity.year,
+                watchedPercentage = entity.watchedPercentage,
+                libraryId = entity.libraryId,
+                lastModifiedTimestamp = entity.lastModifiedTimestamp,
+                playbackPositionTicks = entity.playbackPositionTicks
+            )
+        }
+        if (existingUpdates.isNotEmpty()) {
+            Timber.d("Updated ${existingUpdates.size} existing media items (preserving download status)")
         }
     }
 

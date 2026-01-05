@@ -16,9 +16,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+// Kid-friendly error colors with good contrast
+private val ErrorBackgroundColor = Color(0xFFE53935) // Bright red
+private val ErrorTextColor = Color.White
+private val ErrorIconBackgroundColor = Color.White
+private val ErrorIconColor = Color(0xFFE53935)
+
 /**
  * Error display for player screen
  * Shows kid-friendly error message with retry option
+ * Uses high contrast colors for readability
  */
 @Composable
 fun PlayerError(
@@ -38,21 +45,29 @@ fun PlayerError(
             verticalArrangement = Arrangement.spacedBy(24.dp),
             modifier = Modifier
                 .background(
-                    color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.9f),
+                    color = ErrorBackgroundColor,
                     shape = RoundedCornerShape(24.dp)
                 )
                 .padding(48.dp)
         ) {
-            Icon(
-                imageVector = Icons.Default.Error,
-                contentDescription = null,
-                modifier = Modifier.size(80.dp),
-                tint = MaterialTheme.colorScheme.error
-            )
+            // Error icon with white background circle for visibility
+            Box(
+                modifier = Modifier
+                    .size(80.dp)
+                    .background(ErrorIconBackgroundColor, RoundedCornerShape(40.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Error,
+                    contentDescription = null,
+                    modifier = Modifier.size(56.dp),
+                    tint = ErrorIconColor
+                )
+            }
 
             Text(
                 text = "Oops! Something went wrong",
-                color = MaterialTheme.colorScheme.onErrorContainer,
+                color = ErrorTextColor,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
@@ -60,7 +75,7 @@ fun PlayerError(
 
             Text(
                 text = message,
-                color = MaterialTheme.colorScheme.onErrorContainer,
+                color = ErrorTextColor.copy(alpha = 0.95f),
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.widthIn(max = 600.dp)
@@ -78,7 +93,8 @@ fun PlayerError(
                         .height(64.dp)
                         .widthIn(min = 140.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.surface
+                        containerColor = Color.White,
+                        contentColor = ErrorBackgroundColor
                     )
                 ) {
                     Text(
@@ -95,7 +111,8 @@ fun PlayerError(
                         .height(64.dp)
                         .widthIn(min = 140.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = Color.White
                     )
                 ) {
                     Icon(

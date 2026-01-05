@@ -44,6 +44,7 @@ fun VideoCard(
     showFavorite: Boolean = false,
     isFavorite: Boolean = false,
     onFavoriteClick: (() -> Unit)? = null,
+    isActivelyDownloading: Boolean = false, // Explicitly indicates download in progress
     modifier: Modifier = Modifier
 ) {
     val haptic = rememberHapticFeedback()
@@ -223,36 +224,56 @@ fun VideoCard(
                                 }
                             }
                         }
-                        // Downloading - show progress circle
-                        mediaItem.downloadProgress > 0f && mediaItem.downloadProgress < 1f -> {
-                            Box(
-                                modifier = Modifier.size(Dimensions.touchTargetRecommended),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                CircularProgressIndicator(
-                                    progress = mediaItem.downloadProgress,
-                                    modifier = Modifier.size(Dimensions.touchTargetRecommended),
-                                    color = MaterialTheme.colorScheme.primary,
-                                    strokeWidth = 4.dp
-                                )
-                                // Cancel button in center
-                                IconButton(
-                                    onClick = {
+                        // Downloading - show progress circle (or indeterminate if progress is 0)
+                        isActivelyDownloading || (mediaItem.downloadProgress > 0f && mediaItem.downloadProgress < 1f) -> {
+                            Surface(
+                                modifier = Modifier
+                                    .size(Dimensions.touchTargetRecommended)
+                                    .clickable {
                                         haptic.performMedium()
                                         onDownloadClick()
-                                    },
-                                    modifier = Modifier
-                                        .size(Dimensions.touchTargetMin)
-                                        .semantics {
-                                            contentDescription = "Cancel download of ${mediaItem.getDisplayTitle()}"
+                                    }
+                                    .semantics {
+                                        contentDescription = if (mediaItem.downloadProgress > 0f) {
+                                            "Downloading ${mediaItem.getDisplayTitle()}, ${(mediaItem.downloadProgress * 100).toInt()}% complete. Tap to cancel."
+                                        } else {
+                                            "Starting download of ${mediaItem.getDisplayTitle()}. Tap to cancel."
                                         }
+                                    },
+                                shape = CircleShape,
+                                color = Color.Black.copy(alpha = 0.7f)
+                            ) {
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.Center
                                 ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Cancel,
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.primary,
-                                        modifier = Modifier.size(Dimensions.iconMedium)
-                                    )
+                                    if (mediaItem.downloadProgress > 0f) {
+                                        // Show determinate progress
+                                        CircularProgressIndicator(
+                                            progress = { mediaItem.downloadProgress },
+                                            modifier = Modifier.fillMaxSize().padding(4.dp),
+                                            color = MaterialTheme.colorScheme.primary,
+                                            strokeWidth = 4.dp,
+                                            trackColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                                            strokeCap = StrokeCap.Round
+                                        )
+                                        // Show percentage text in center
+                                        Text(
+                                            text = "${(mediaItem.downloadProgress * 100).toInt()}%",
+                                            style = MaterialTheme.typography.labelSmall,
+                                            fontWeight = FontWeight.Bold,
+                                            color = Color.White
+                                        )
+                                    } else {
+                                        // Show indeterminate progress (download starting)
+                                        CircularProgressIndicator(
+                                            modifier = Modifier.fillMaxSize().padding(4.dp),
+                                            color = MaterialTheme.colorScheme.primary,
+                                            strokeWidth = 4.dp,
+                                            trackColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                                            strokeCap = StrokeCap.Round
+                                        )
+                                    }
                                 }
                             }
                         }

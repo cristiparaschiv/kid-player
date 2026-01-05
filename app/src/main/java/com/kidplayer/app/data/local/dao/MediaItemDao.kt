@@ -140,4 +140,52 @@ interface MediaItemDao {
      */
     @Query("SELECT COUNT(*) FROM media_items WHERE userId = :userId AND isDownloaded = 1")
     suspend fun getDownloadedMediaItemCount(userId: String): Int
+
+    /**
+     * Get multiple media items by their IDs (for batch operations)
+     */
+    @Query("SELECT * FROM media_items WHERE id IN (:itemIds)")
+    suspend fun getMediaItemsByIds(itemIds: List<String>): List<MediaItemEntity>
+
+    /**
+     * Update a media item from server data while preserving download status
+     * This updates all fields EXCEPT isDownloaded, downloadProgress, and localFilePath
+     */
+    @Query("""
+        UPDATE media_items SET
+            title = :title,
+            overview = :overview,
+            thumbnailUrl = :thumbnailUrl,
+            backdropUrl = :backdropUrl,
+            duration = :duration,
+            jellyfinItemId = :jellyfinItemId,
+            type = :type,
+            seriesName = :seriesName,
+            seasonNumber = :seasonNumber,
+            episodeNumber = :episodeNumber,
+            year = :year,
+            watchedPercentage = :watchedPercentage,
+            libraryId = :libraryId,
+            lastModifiedTimestamp = :lastModifiedTimestamp,
+            playbackPositionTicks = :playbackPositionTicks
+        WHERE id = :id
+    """)
+    suspend fun updateMediaItemPreservingDownload(
+        id: String,
+        title: String,
+        overview: String?,
+        thumbnailUrl: String?,
+        backdropUrl: String?,
+        duration: Long,
+        jellyfinItemId: String,
+        type: String,
+        seriesName: String?,
+        seasonNumber: Int?,
+        episodeNumber: Int?,
+        year: Int?,
+        watchedPercentage: Float,
+        libraryId: String?,
+        lastModifiedTimestamp: Long,
+        playbackPositionTicks: Long
+    )
 }

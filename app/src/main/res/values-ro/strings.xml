@@ -130,6 +130,8 @@
     <string name="pin_confirm">Confirmă PIN-ul</string>
     <string name="pin_reenter">Reintroduceți PIN-ul</string>
     <string name="pin_backspace">Șterge</string>
+    <string name="pin_required">PIN Parental Necesar</string>
+    <string name="pin_delete_video_subtitle">Introdu PIN-ul pentru a șterge acest video descărcat</string>
 
     <!-- Screen Time Settings -->
     <string name="screen_time_limits">Limite Timp Ecran</string>

@@ -3,6 +3,7 @@ package com.kidplayer.app.presentation.player
 import androidx.media3.common.C
 import androidx.media3.common.Format
 import androidx.media3.common.TrackSelectionParameters
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import timber.log.Timber
 
@@ -10,6 +11,7 @@ import timber.log.Timber
  * Utility object for audio track management and diagnostics
  * Provides helper functions to ensure audio is properly configured and playing
  */
+@UnstableApi
 object AudioTrackUtil {
 
     /**
