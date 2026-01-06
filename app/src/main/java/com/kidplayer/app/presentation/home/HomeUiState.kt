@@ -3,6 +3,7 @@ package com.kidplayer.app.presentation.home
 import com.kidplayer.app.domain.model.ContinueWatchingItem
 import com.kidplayer.app.domain.model.Library
 import com.kidplayer.app.domain.model.MediaItem
+import com.kidplayer.app.domain.model.Playlist
 
 /**
  * UI state for Home screen
@@ -18,6 +19,10 @@ data class HomeUiState(
     // Libraries for filtering
     val libraries: List<Library> = emptyList(),
     val selectedLibraryId: String? = null,
+
+    // Playlists (shown as additional tabs)
+    val playlists: List<Playlist> = emptyList(),
+    val selectedPlaylistId: String? = null,  // null = library mode, non-null = playlist mode
 
     // Favorites
     val favoriteIds: Set<String> = emptySet(),

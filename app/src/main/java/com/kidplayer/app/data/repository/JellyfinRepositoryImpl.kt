@@ -13,6 +13,7 @@ import com.kidplayer.app.domain.model.JellyfinServer
 import com.kidplayer.app.domain.model.Library
 import com.kidplayer.app.domain.model.MediaItem
 import com.kidplayer.app.domain.model.PaginatedResult
+import com.kidplayer.app.domain.model.Playlist
 import com.kidplayer.app.domain.model.Result
 import com.kidplayer.app.domain.repository.JellyfinRepository
 import kotlinx.coroutines.Dispatchers
@@ -169,6 +170,47 @@ class JellyfinRepositoryImpl @Inject constructor(
             } catch (cacheError: Exception) {
                 Result.Error("Failed to fetch libraries: ${e.message ?: "Unknown error"}")
             }
+        }
+    }
+
+    override suspend fun getPlaylists(): Result<List<Playlist>> = withContext(Dispatchers.IO) {
+        try {
+            val server = getServerConfig()
+                ?: return@withContext Result.Error("Not authenticated")
+
+            // Check network state before making API call
+            if (!networkMonitor.isOnline()) {
+                Timber.d("Device is offline, playlists require network connection")
+                return@withContext Result.Success(emptyList())
+            }
+
+            val api = apiProvider.getApi(server.url)
+            val response = api.getPlaylists(
+                userId = server.userId,
+                authToken = server.authToken
+            )
+
+            if (response.isSuccessful && response.body() != null) {
+                val playlists = response.body()!!.items.map { dto ->
+                    val primaryTag = dto.imageTags?.get("Primary")
+                    Playlist(
+                        id = dto.id,
+                        name = dto.name,
+                        itemCount = dto.childCount ?: 0,
+                        imageUrl = if (primaryTag != null) {
+                            "${server.url}/Items/${dto.id}/Images/Primary?tag=$primaryTag"
+                        } else null
+                    )
+                }
+                Timber.d("Loaded ${playlists.size} playlists")
+                Result.Success(playlists)
+            } else {
+                Timber.w("Failed to fetch playlists: ${response.code()}")
+                Result.Success(emptyList())
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "Error fetching playlists")
+            Result.Success(emptyList()) // Return empty list on error, don't block the UI
         }
     }
 

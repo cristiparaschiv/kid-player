@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kidplayer.app.domain.model.ContinueWatchingItem
 import com.kidplayer.app.domain.model.MediaItem
+import com.kidplayer.app.domain.model.Playlist
 import com.kidplayer.app.presentation.browse.components.VideoCard
 import com.kidplayer.app.presentation.components.ErrorState
 import com.kidplayer.app.presentation.components.ErrorType
@@ -152,14 +153,20 @@ fun HomeScreen(
                     else -> {
                         // Content with library tabs and grid
                         Column(modifier = Modifier.fillMaxSize()) {
-                            // Library tabs if multiple libraries
-                            if (uiState.libraries.size > 1) {
+                            // Library and playlist tabs (show if multiple libraries or any playlists)
+                            if (uiState.libraries.size > 1 || uiState.playlists.isNotEmpty()) {
                                 LibraryTabs(
                                     libraries = uiState.libraries,
+                                    playlists = uiState.playlists,
                                     selectedLibraryId = uiState.selectedLibraryId,
+                                    selectedPlaylistId = uiState.selectedPlaylistId,
                                     onLibrarySelected = {
                                         haptic.performLight()
                                         viewModel.selectLibrary(it)
+                                    },
+                                    onPlaylistSelected = {
+                                        haptic.performLight()
+                                        viewModel.selectPlaylist(it)
                                     }
                                 )
                             }
@@ -288,37 +295,123 @@ fun HomeTopBar(
 @Composable
 fun LibraryTabs(
     libraries: List<com.kidplayer.app.domain.model.Library>,
+    playlists: List<Playlist>,
     selectedLibraryId: String?,
-    onLibrarySelected: (String) -> Unit
+    selectedPlaylistId: String?,
+    onLibrarySelected: (String?) -> Unit,
+    onPlaylistSelected: (String) -> Unit
 ) {
+    // Calculate selected tab index
+    // Order: "All Videos" (index 0), Libraries (if >1), Playlists
+    // Show individual library tabs only if there are multiple libraries
+    val showLibraryTabs = libraries.size > 1
+    val libraryTabCount = if (showLibraryTabs) libraries.size else 0
+
+    val selectedIndex = when {
+        selectedPlaylistId != null -> {
+            val playlistIndex = playlists.indexOfFirst { it.id == selectedPlaylistId }
+            // +1 for "All Videos" tab
+            if (playlistIndex >= 0) 1 + libraryTabCount + playlistIndex else 0
+        }
+        selectedLibraryId != null && showLibraryTabs -> {
+            val libraryIndex = libraries.indexOfFirst { it.id == selectedLibraryId }
+            // +1 for "All Videos" tab
+            if (libraryIndex >= 0) 1 + libraryIndex else 0
+        }
+        else -> 0 // "All Videos" is selected
+    }
+
     ScrollableTabRow(
-        selectedTabIndex = libraries.indexOfFirst { it.id == selectedLibraryId }.coerceAtLeast(0),
+        selectedTabIndex = selectedIndex,
         containerColor = MaterialTheme.colorScheme.surface,
         edgePadding = Dimensions.paddingL
     ) {
-        libraries.forEach { library ->
+        // "All Videos" tab - always first
+        val allVideosSelected = selectedLibraryId == null && selectedPlaylistId == null
+        Tab(
+            selected = allVideosSelected,
+            onClick = { onLibrarySelected(null) },
+            modifier = Modifier
+                .height(Dimensions.touchTargetMin)
+                .semantics {
+                    contentDescription = if (allVideosSelected) {
+                        "All Videos, selected"
+                    } else {
+                        "All Videos"
+                    }
+                },
+            text = {
+                Text(
+                    text = stringResource(R.string.home_all_videos),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = if (allVideosSelected) FontWeight.Bold else FontWeight.Normal
+                )
+            }
+        )
+
+        // Library tabs (only show if multiple libraries)
+        if (showLibraryTabs) {
+            libraries.forEach { library ->
+                val isSelected = library.id == selectedLibraryId && selectedPlaylistId == null
+                Tab(
+                    selected = isSelected,
+                    onClick = { onLibrarySelected(library.id) },
+                    modifier = Modifier
+                        .height(Dimensions.touchTargetMin)
+                        .semantics {
+                            contentDescription = if (isSelected) {
+                                "${library.name} library, selected"
+                            } else {
+                                "${library.name} library"
+                            }
+                        },
+                    text = {
+                        Text(
+                            text = library.name,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                        )
+                    }
+                )
+            }
+        }
+
+        // Playlist tabs (with visual distinction)
+        playlists.forEach { playlist ->
+            val isSelected = playlist.id == selectedPlaylistId
             Tab(
-                selected = library.id == selectedLibraryId,
-                onClick = { onLibrarySelected(library.id) },
+                selected = isSelected,
+                onClick = { onPlaylistSelected(playlist.id) },
                 modifier = Modifier
                     .height(Dimensions.touchTargetMin)
                     .semantics {
-                        contentDescription = if (library.id == selectedLibraryId) {
-                            "${library.name} library, selected"
+                        contentDescription = if (isSelected) {
+                            "${playlist.name} playlist, selected"
                         } else {
-                            "${library.name} library"
+                            "${playlist.name} playlist"
                         }
                     },
                 text = {
-                    Text(
-                        text = library.name,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = if (library.id == selectedLibraryId) {
-                            FontWeight.Bold
-                        } else {
-                            FontWeight.Normal
-                        }
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.PlayCircle,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp),
+                            tint = if (isSelected) {
+                                MaterialTheme.colorScheme.primary
+                            } else {
+                                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                            }
+                        )
+                        Text(
+                            text = playlist.name,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                        )
+                    }
                 }
             )
         }

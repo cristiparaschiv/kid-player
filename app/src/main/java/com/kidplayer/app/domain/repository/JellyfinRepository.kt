@@ -4,6 +4,7 @@ import com.kidplayer.app.domain.model.JellyfinServer
 import com.kidplayer.app.domain.model.Library
 import com.kidplayer.app.domain.model.MediaItem
 import com.kidplayer.app.domain.model.PaginatedResult
+import com.kidplayer.app.domain.model.Playlist
 import com.kidplayer.app.domain.model.Result
 
 /**
@@ -43,6 +44,13 @@ interface JellyfinRepository {
      * @return Result containing list of libraries or error
      */
     suspend fun getLibraries(): Result<List<Library>>
+
+    /**
+     * Get all playlists available to the authenticated user
+     *
+     * @return Result containing list of playlists or error
+     */
+    suspend fun getPlaylists(): Result<List<Playlist>>
 
     /**
      * Get media items from a specific library or all libraries

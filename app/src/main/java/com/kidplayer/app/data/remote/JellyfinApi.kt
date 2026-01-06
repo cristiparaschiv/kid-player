@@ -57,6 +57,28 @@ interface JellyfinApi {
     ): Response<LibrariesResponse>
 
     /**
+     * Get user's playlists
+     * Returns all playlists created by or accessible to the user
+     *
+     * @param userId User ID obtained from authentication
+     * @param includeItemTypes Filter to only return Playlist items
+     * @param recursive Search recursively
+     * @param sortBy Field to sort by
+     * @param enableUserData Include UserData
+     * @param authToken Authentication token
+     */
+    @GET("Users/{userId}/Items")
+    suspend fun getPlaylists(
+        @Path("userId") userId: String,
+        @Query("includeItemTypes") includeItemTypes: String = "Playlist",
+        @Query("recursive") recursive: Boolean = true,
+        @Query("sortBy") sortBy: String = "SortName",
+        @Query("sortOrder") sortOrder: String = "Ascending",
+        @Query("enableUserData") enableUserData: Boolean = true,
+        @Header("X-Emby-Token") authToken: String
+    ): Response<ItemsResponse>
+
+    /**
      * Get library items (videos, movies, episodes)
      * Can be filtered by parent library ID
      *

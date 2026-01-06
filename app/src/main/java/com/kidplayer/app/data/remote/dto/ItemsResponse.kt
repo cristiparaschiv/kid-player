@@ -74,7 +74,10 @@ data class MediaItemDto(
     val isFolder: Boolean = false,
 
     @SerializedName("ParentId")
-    val parentId: String? = null
+    val parentId: String? = null,
+
+    @SerializedName("ChildCount")
+    val childCount: Int? = null  // Number of items in playlist/folder
 )
 
 /**

@@ -10,6 +10,7 @@ import com.kidplayer.app.domain.usecase.CancelDownloadUseCase
 import com.kidplayer.app.domain.usecase.GetFavoritesUseCase
 import com.kidplayer.app.domain.usecase.GetLibrariesUseCase
 import com.kidplayer.app.domain.usecase.GetMediaItemsUseCase
+import com.kidplayer.app.domain.usecase.GetPlaylistsUseCase
 import com.kidplayer.app.domain.usecase.StartDownloadUseCase
 import com.kidplayer.app.domain.usecase.ToggleFavoriteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,6 +31,7 @@ class HomeViewModel @Inject constructor(
     private val jellyfinRepository: JellyfinRepository,
     private val getLibrariesUseCase: GetLibrariesUseCase,
     private val getMediaItemsUseCase: GetMediaItemsUseCase,
+    private val getPlaylistsUseCase: GetPlaylistsUseCase,
     private val startDownloadUseCase: StartDownloadUseCase,
     private val cancelDownloadUseCase: CancelDownloadUseCase,
     private val getFavoritesUseCase: GetFavoritesUseCase,
@@ -63,6 +65,7 @@ class HomeViewModel @Inject constructor(
             if (isConfigured) {
                 // Server configured - load media content
                 loadLibraries()
+                loadPlaylists()
                 loadFavorites()
             } else {
                 // No server configured - stay in offline mode
@@ -141,10 +144,35 @@ class HomeViewModel @Inject constructor(
     }
 
     /**
-     * Load media items from all libraries or specific library
-     * Uses pagination to load initial batch of items
+     * Load playlists from repository
      */
-    private fun loadMediaItems(libraryId: String?) {
+    private fun loadPlaylists() {
+        viewModelScope.launch {
+            when (val result = getPlaylistsUseCase()) {
+                is Result.Success -> {
+                    val playlists = result.data
+                    Timber.d("Loaded ${playlists.size} playlists")
+                    _uiState.update { it.copy(playlists = playlists) }
+                }
+                is Result.Error -> {
+                    Timber.w("Error loading playlists: ${result.message}")
+                    // Don't show error for playlists - just leave them empty
+                }
+                is Result.Loading -> {
+                    // Loading
+                }
+            }
+        }
+    }
+
+    /**
+     * Load media items from all libraries or specific library/playlist
+     * Uses pagination to load initial batch of items
+     *
+     * @param libraryId Library ID to load items from (null for all libraries)
+     * @param playlistId Playlist ID to load items from (takes precedence over libraryId)
+     */
+    private fun loadMediaItems(libraryId: String?, playlistId: String? = null) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -155,8 +183,11 @@ class HomeViewModel @Inject constructor(
                 )
             }
 
+            // For playlists, use playlistId as parentId
+            val parentId = playlistId ?: libraryId
+
             when (val result = getMediaItemsUseCase.getPaginated(
-                libraryId = libraryId,
+                libraryId = parentId,
                 limit = PAGE_SIZE,
                 startIndex = 0
             )) {
@@ -170,7 +201,8 @@ class HomeViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             mediaItems = shuffledItems,
-                            selectedLibraryId = libraryId,
+                            selectedLibraryId = if (playlistId == null) libraryId else null,
+                            selectedPlaylistId = playlistId,
                             totalItemCount = paginatedResult.totalCount,
                             hasMoreItems = paginatedResult.hasMore,
                             currentPage = 0,
@@ -215,8 +247,11 @@ class HomeViewModel @Inject constructor(
 
             _uiState.update { it.copy(isLoadingMore = true, error = null) }
 
+            // Use playlist ID if in playlist mode, otherwise library ID
+            val parentId = currentState.selectedPlaylistId ?: currentState.selectedLibraryId
+
             when (val result = getMediaItemsUseCase.getPaginated(
-                libraryId = currentState.selectedLibraryId,
+                libraryId = parentId,
                 limit = PAGE_SIZE,
                 startIndex = startIndex
             )) {
@@ -254,14 +289,24 @@ class HomeViewModel @Inject constructor(
 
     /**
      * Select a library to display its media items
+     * Clears any playlist selection
      */
-    fun selectLibrary(libraryId: String) {
+    fun selectLibrary(libraryId: String?) {
         Timber.d("Selecting library: $libraryId")
-        loadMediaItems(libraryId)
+        loadMediaItems(libraryId, playlistId = null)
     }
 
     /**
-     * Refresh both libraries and media items
+     * Select a playlist to display its media items
+     * Clears any library selection
+     */
+    fun selectPlaylist(playlistId: String) {
+        Timber.d("Selecting playlist: $playlistId")
+        loadMediaItems(libraryId = null, playlistId = playlistId)
+    }
+
+    /**
+     * Refresh libraries, playlists, and media items
      */
     fun refresh() {
         viewModelScope.launch {
@@ -272,47 +317,52 @@ class HomeViewModel @Inject constructor(
                 is Result.Success -> {
                     val libraries = result.data.filter { it.isVideoLibrary() }
                     _uiState.update { it.copy(libraries = libraries) }
+                }
+                is Result.Error -> {
+                    Timber.w("Error refreshing libraries: ${result.message}")
+                }
+                is Result.Loading -> { }
+            }
 
-                    // Reload media items (reset to first page)
-                    val currentLibraryId = _uiState.value.selectedLibraryId
-                    when (val itemsResult = getMediaItemsUseCase.getPaginated(
-                        libraryId = currentLibraryId,
-                        limit = PAGE_SIZE,
-                        startIndex = 0
-                    )) {
-                        is Result.Success -> {
-                            val paginatedResult = itemsResult.data
-                            // Randomize video order on refresh for discovery
-                            val shuffledItems = paginatedResult.items.shuffled()
-                            _uiState.update {
-                                it.copy(
-                                    mediaItems = shuffledItems,
-                                    totalItemCount = paginatedResult.totalCount,
-                                    hasMoreItems = paginatedResult.hasMore,
-                                    currentPage = 0,
-                                    isRefreshing = false,
-                                    error = null
-                                )
-                            }
-                        }
-                        is Result.Error -> {
-                            _uiState.update {
-                                it.copy(
-                                    isRefreshing = false,
-                                    error = itemsResult.message
-                                )
-                            }
-                        }
-                        is Result.Loading -> {
-                            // Already in loading state
-                        }
+            // Reload playlists
+            when (val result = getPlaylistsUseCase()) {
+                is Result.Success -> {
+                    _uiState.update { it.copy(playlists = result.data) }
+                }
+                is Result.Error -> {
+                    Timber.w("Error refreshing playlists: ${result.message}")
+                }
+                is Result.Loading -> { }
+            }
+
+            // Reload media items (reset to first page)
+            val currentState = _uiState.value
+            val parentId = currentState.selectedPlaylistId ?: currentState.selectedLibraryId
+            when (val itemsResult = getMediaItemsUseCase.getPaginated(
+                libraryId = parentId,
+                limit = PAGE_SIZE,
+                startIndex = 0
+            )) {
+                is Result.Success -> {
+                    val paginatedResult = itemsResult.data
+                    // Randomize video order on refresh for discovery
+                    val shuffledItems = paginatedResult.items.shuffled()
+                    _uiState.update {
+                        it.copy(
+                            mediaItems = shuffledItems,
+                            totalItemCount = paginatedResult.totalCount,
+                            hasMoreItems = paginatedResult.hasMore,
+                            currentPage = 0,
+                            isRefreshing = false,
+                            error = null
+                        )
                     }
                 }
                 is Result.Error -> {
                     _uiState.update {
                         it.copy(
                             isRefreshing = false,
-                            error = result.message
+                            error = itemsResult.message
                         )
                     }
                 }
@@ -334,10 +384,15 @@ class HomeViewModel @Inject constructor(
      * Retry loading after an error
      */
     fun retry() {
-        if (_uiState.value.libraries.isEmpty()) {
+        val currentState = _uiState.value
+        if (currentState.libraries.isEmpty()) {
             loadLibraries()
+            loadPlaylists()
         } else {
-            loadMediaItems(_uiState.value.selectedLibraryId)
+            loadMediaItems(
+                libraryId = currentState.selectedLibraryId,
+                playlistId = currentState.selectedPlaylistId
+            )
         }
     }
 
