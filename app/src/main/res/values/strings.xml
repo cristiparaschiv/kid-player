@@ -162,6 +162,7 @@
     <!-- About Section -->
     <string name="about_version">Version 1.0.0 (Phase 5)</string>
     <string name="about_description">A kid-friendly video player with parental controls</string>
+    <string name="about_music_credit">Track: Candy Town\nMusic by https://www.fiftysounds.com</string>
 
     <!-- Locked Settings -->
     <string name="settings_locked">Settings Locked</string>

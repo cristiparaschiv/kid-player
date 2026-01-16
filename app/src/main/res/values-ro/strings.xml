@@ -162,6 +162,7 @@
     <!-- About Section -->
     <string name="about_version">Versiunea 1.0.0 (Faza 5)</string>
     <string name="about_description">Un player video prietenos pentru copii cu control parental</string>
+    <string name="about_music_credit">Track: Candy Town\nMusic by https://www.fiftysounds.com</string>
 
     <!-- Locked Settings -->
     <string name="settings_locked">Setări Blocate</string>
